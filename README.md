@@ -23,13 +23,13 @@ UML diagram represents the relationships between entities and their attributes a
 
 
 
-StoryBoard shows the user interface when implementin functions.
+StoryBoard shows the user interface as it is implemented.
 ![StoryBoard](https://user-images.githubusercontent.com/59704757/96054295-9544b000-0e3e-11eb-84aa-00f848e0098e.png)
 <br /><br /><br /><br /><br /><br />
 
 ## License
 
-[Apache 2.0](https://choosealicense.com/licenses/apache-2.0/)
+[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
 <br /><br /><br /><br /><br /><br />
 
 
