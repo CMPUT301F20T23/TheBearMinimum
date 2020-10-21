@@ -16,4 +16,5 @@
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_network">No internet connection</string>
     <string name="unknown_error">An unknown error occured</string>
+    <string name="invalid_profile_changes">Information not correct</string>
 </resources>
