@@ -17,4 +17,5 @@
     <string name="no_network">No internet connection</string>
     <string name="unknown_error">An unknown error occured</string>
     <string name="invalid_profile_changes">Information not correct</string>
+    <string name="fail_image_load">Failed to load image</string>
 </resources>

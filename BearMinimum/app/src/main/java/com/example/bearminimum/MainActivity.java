@@ -3,6 +3,8 @@ package com.example.bearminimum;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -49,13 +51,16 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        Button profile = findViewById(R.id.profileBtn);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Snackbar.make(navView, "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
     }
-
-    //sign out process should be changed to not use onStop()
-    @Override
-    protected void onStop() {
-        super.onStop();
-        AuthUI.getInstance().signOut(this);
-    }
+    
 }
