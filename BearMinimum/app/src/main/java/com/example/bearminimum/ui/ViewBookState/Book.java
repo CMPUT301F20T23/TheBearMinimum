@@ -4,7 +4,9 @@ public class Book implements Comparable<Book>{
     private String BookName;
     private String author;
     private String ISBN;
-    public Book(String BookName,String author,String ISBN){
+    private boolean state = false;
+    private  String Borrower;
+    public Book(String BookName, String author, String ISBN){
         this.BookName = BookName;
         this.author = author;
         this.ISBN = ISBN;
@@ -18,6 +20,22 @@ public class Book implements Comparable<Book>{
     }
     public String getISBN(){
         return getISBN();
+    }
+    public void setBorrower(String Name){
+        this.Borrower = Name;
+
+    }
+    public String getBorrower(){
+        return this.Borrower;
+
+    }
+    public void setState(boolean state){
+        this.state = state;
+
+    }
+    public boolean getState(){
+        return this.state;
+
     }
 
     @Override
