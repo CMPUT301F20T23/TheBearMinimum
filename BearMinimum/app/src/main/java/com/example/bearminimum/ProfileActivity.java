@@ -5,7 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,9 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,9 +37,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.installations.local.PersistedInstallationEntry;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,9 +63,12 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference usersRef;
     private DocumentReference userRef;
+    StorageReference storageRef;
 
     private int usernameQueryResult = 1;
     private String newUsername;
+
+    private static final int PICK_IMAGE = 1188;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +103,21 @@ public class ProfileActivity extends AppCompatActivity {
         email.setText(user.getEmail());
 
         profileImg = findViewById(R.id.profileImage);
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid() + ".png");
+        storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid());
         Glide.with(this.getBaseContext())
                 .load(storageRef)
                 .placeholder(R.drawable.logo_books)
                 .apply(new RequestOptions().override(profileImg.getHeight()))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(profileImg);
+
+        profileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeProfileImage();
+            }
+        });
 
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,5 +248,41 @@ public class ProfileActivity extends AppCompatActivity {
                     Log.d("MyDebug", task.getException().toString());
             }
         });
+    }
+
+    private void changeProfileImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE) {
+            Uri imageUri = data.getData();
+            UploadTask uploadTask = storageRef.putFile(imageUri);
+
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("MyDebug", "failed upload", e);
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("MyDebug", "uploaded as " + taskSnapshot.getMetadata().getPath());
+                    Glide.with(getBaseContext())
+                            .load(storageRef)
+                            .placeholder(R.drawable.logo_books)
+                            .apply(new RequestOptions().override(profileImg.getHeight()))
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(profileImg);
+                }
+            });
+        }
     }
 }
