@@ -1,0 +1,4 @@
+I did not config the username and email at the beginning, so all my commits are using the
+default name "Henry He", however in dashboard of CMPUT301F20T23, it can be ensured that
+the action is done on behalf of the account with username "Henry417E1610", which is my
+GitHub account. I apologize for any of the inconvenience and misunderstanding.
