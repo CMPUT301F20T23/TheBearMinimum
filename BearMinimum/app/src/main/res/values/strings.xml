@@ -3,17 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-
-    <!-- branded orange colour -->
-    <color name="orange">#FF7455</color>
-    <!-- branded navy colour -->
-    <color name="blue">#445370</color>
-    <!-- white -->
-    <color name="white">#FFFFFF</color>
-    <!-- black -->
-    <color name="black">#000000</color>
-
-
     <string name="name">unRead</string>
     <string name="signin">sign in</string>
     <string name="signup">sign up</string>
