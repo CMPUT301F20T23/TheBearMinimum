@@ -75,13 +75,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //init firebase
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection("users");
         userRef = usersRef.document(user.getUid());
+        storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid());
 
-        Log.d("MyDebug", usersRef.getId());
-        Log.d("MyDebug", userRef.getId());
-
+        /*
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -92,7 +92,9 @@ public class ProfileActivity extends AppCompatActivity {
                     Log.d("MyDebug", "no such doc");
             }
         });
+         */
 
+        //get layout elements
         username = findViewById(R.id.edit_username);
         email = findViewById(R.id.edit_email);
         phonenumber = findViewById(R.id.edit_phone);
@@ -100,10 +102,11 @@ public class ProfileActivity extends AppCompatActivity {
         signout = findViewById(R.id.signout);
         checkName = findViewById(R.id.checkName);
 
+        apply.setEnabled(false);
         email.setText(user.getEmail());
 
+        //load profile image
         profileImg = findViewById(R.id.profileImage);
-        storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid());
         Glide.with(this.getBaseContext())
                 .load(storageRef)
                 .placeholder(R.drawable.logo_books)
@@ -125,7 +128,6 @@ public class ProfileActivity extends AppCompatActivity {
                 updateUserProfile();
             }
         });
-        apply.setEnabled(false);
 
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,20 +151,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        email.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (usernameQueryResult == 1 && username.getText().toString().length() > 0 && email.getText().toString().length() > 0) {
-                    apply.setEnabled(true);
-                } else
-                    apply.setEnabled(false);
-            }
-        });
-
         username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -181,10 +169,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                if (usernameQueryResult == 1 && username.getText().toString().length() > 0 && email.getText().toString().length() > 0) {
-                    apply.setEnabled(true);
-                } else
-                    apply.setEnabled(false);
+                apply.setEnabled(false);
             }
         });
 
@@ -193,7 +178,6 @@ public class ProfileActivity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
                 if (snapshot != null && snapshot.exists()) {
                     username.setText((String) snapshot.getData().get("username"));
-                    //email.setText((String) snapshot.getData().get("email"));
                     phonenumber.setText((String) snapshot.getData().get("phonenumber"));
                     Log.d("MyDebug", "document event");
                 } else {

@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
         checkInfoBtn.setVisibility(View.INVISIBLE);
 
         continueAuthBtn = findViewById(R.id.signupin_button);
-        continueAuthBtn.setText("sign in");
         continueAuthBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
