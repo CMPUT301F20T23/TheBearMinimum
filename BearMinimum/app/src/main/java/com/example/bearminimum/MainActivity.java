@@ -71,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             // These are a method which gets executed when the task is succeeded
-                            Log.d(TAG, "Data has been deleted successfully!");
+                            Log.d(TAG, "Book has been deleted successfully!");
                         }
                     }
             ).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // These are a method which gets executed if there’s any problem
-                    Log.d(TAG, "Data could not be deleted!" + e.toString());
+                    Log.d(TAG, "Book could not be deleted!" + e.toString());
                 }
             });
 
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 .get();
         Map<String, Object> updates = new HashMap<>();
         updates.put("photo", FieldValue.delete());
-        // Update and delete the "capital" field in the document
+        // Update and delete the "photo" field in the document
         ApiFuture<WriteResult> writeResult = docRef.update(updates);
         System.out.println("Update time : " + writeResult.get());
 
