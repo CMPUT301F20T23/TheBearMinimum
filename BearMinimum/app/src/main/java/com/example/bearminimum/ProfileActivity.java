@@ -5,10 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,6 +24,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -37,18 +37,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.installations.local.PersistedInstallationEntry;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragmentInteractionListener{
 
     private EditText username;
     private EditText email;
@@ -64,8 +57,8 @@ public class ProfileActivity extends AppCompatActivity {
     private CollectionReference usersRef;
     private DocumentReference userRef;
     StorageReference storageRef;
+    AuthCredential credential;
 
-    private int usernameQueryResult = 1;
     private String newUsername;
 
     private static final int PICK_IMAGE = 1188;
@@ -75,24 +68,14 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        user.reload();
+        Log.d("MyDebug", "user reloaded");
+
         //init firebase
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection("users");
         userRef = usersRef.document(user.getUid());
         storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid());
-
-        /*
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists())
-                    Log.d("MyDebug", "gettem");
-                else
-                    Log.d("MyDebug", "no such doc");
-            }
-        });
-         */
 
         //get layout elements
         username = findViewById(R.id.edit_username);
@@ -101,12 +84,12 @@ public class ProfileActivity extends AppCompatActivity {
         apply = findViewById(R.id.apply_profile_changes);
         signout = findViewById(R.id.signout);
         checkName = findViewById(R.id.checkName);
+        profileImg = findViewById(R.id.profileImage);
 
+        //init elements
         apply.setEnabled(false);
         email.setText(user.getEmail());
-
         //load profile image
-        profileImg = findViewById(R.id.profileImage);
         Glide.with(this.getBaseContext())
                 .load(storageRef)
                 .placeholder(R.drawable.logo_books)
@@ -114,21 +97,18 @@ public class ProfileActivity extends AppCompatActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(profileImg);
-
         profileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changeProfileImage();
             }
         });
-
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateUserProfile();
             }
         });
-
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,6 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        //text listeners
         username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -161,7 +142,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
         phonenumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -173,6 +153,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        //get user info from firestore
         userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
@@ -182,12 +163,14 @@ public class ProfileActivity extends AppCompatActivity {
                     Log.d("MyDebug", "document event");
                 } else {
                     Log.d("MyDebug", "doc snapshot null");
-                    Log.d("MyDebug", user.getUid());
                 }
             }
         });
     }
 
+    /**
+     * attempts to apply requested changes
+     */
     private void updateUserProfile() {
         newUsername = username.getText().toString();
         String newEmail = email.getText().toString();
@@ -200,8 +183,12 @@ public class ProfileActivity extends AppCompatActivity {
             Snackbar.make(findViewById(R.id.profile_view), R.string.invalid_profile_changes, Snackbar.LENGTH_LONG).show();
             return;
         }
+
         user.updateProfile(profileChangeRequest);
-        user.verifyBeforeUpdateEmail(newEmail);
+
+        if (!user.getEmail().equals(email.getText().toString())) {
+            new Reauth().show(getSupportFragmentManager(), "REAUTH");
+        }
 
         //update firestore record
         userRef.update("username", newUsername, "phonenumber", newPhonenumber);
@@ -218,12 +205,10 @@ public class ProfileActivity extends AppCompatActivity {
                     if (task.getResult().isEmpty()) {
                         Log.d("MyDebug", "username is free");
                         //user does not exist
-                        usernameQueryResult = 1;
                         if (email.getText().toString().length() > 0) {
                             apply.setEnabled(true);
                         }
                     } else {
-                        usernameQueryResult = 0;
                         Snackbar.make(findViewById(R.id.profile_view), "Username Taken", Snackbar.LENGTH_LONG).show();
                         apply.setEnabled(false);
                         Log.d("MyDebug", "username not free");
@@ -234,10 +219,14 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * use system dialog to select image
+     */
     private void changeProfileImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        //pass to callback to handle image upload
         startActivityForResult(Intent.createChooser(intent, "Select Image"), PICK_IMAGE);
     }
 
@@ -245,6 +234,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //upload chosen image to firestore as profile image
         if (requestCode == PICK_IMAGE) {
             Uri imageUri = data.getData();
             UploadTask uploadTask = storageRef.putFile(imageUri);
@@ -258,6 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.d("MyDebug", "uploaded as " + taskSnapshot.getMetadata().getPath());
+                    //force glide to update image
                     Glide.with(getBaseContext())
                             .load(storageRef)
                             .placeholder(R.drawable.logo_books)
@@ -268,5 +259,36 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onOkPressed(String pass) {
+        //get user credential
+        credential = EmailAuthProvider.getCredential(user.getEmail(), pass);
+        user.reauthenticate(credential);
+
+        //continue with email update after reauth
+        user.verifyBeforeUpdateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (!task.isSuccessful()) {
+                    try {
+                        throw task.getException();
+                    }
+                    catch (Exception e) {
+                        Log.d("MyDebug", e.getMessage());
+                    }
+                } else {
+                    Log.d("MyDebug", "sent verify to " + email.getText().toString());
+                    Snackbar.make(findViewById(R.id.profile_view), "Sent email, changes will be visible on next login after verification", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("DISMISS", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
     }
 }

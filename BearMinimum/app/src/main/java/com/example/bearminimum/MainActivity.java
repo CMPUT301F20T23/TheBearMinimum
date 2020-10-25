@@ -51,15 +51,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Button profile = findViewById(R.id.profileBtn);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
         Snackbar.make(navView, "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
     }
     

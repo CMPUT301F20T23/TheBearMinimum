@@ -15,7 +15,10 @@ import android.view.View;
 import android.widget.Button;
 
 public class AuthPage extends AppCompatActivity {
+    //activity result code
     private static final int RC_SIGN_IN = 123;
+
+    //ui elements
     private Button signinBtn;
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -28,10 +31,11 @@ public class AuthPage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //if user signed in previously and hasn't signed out, skip signin
         if (auth.getCurrentUser() != null) {
-            finish();
             Intent intent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -40,6 +44,7 @@ public class AuthPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authpage);
 
+        //start login activity
         signinBtn = findViewById(R.id.button_signin);
         signinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,21 +57,7 @@ public class AuthPage extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null && getIntent().getExtras() == null) {
-            startActivity(MainActivity.createIntent(this, null));
-            finish();
-        }
-    }
-
-    @Override
     public void onBackPressed() {
-        //prevent going back
-        /*finish();
-        System.exit(0);
-
-         */
+        //prevent going back once signed out
     }
 }
