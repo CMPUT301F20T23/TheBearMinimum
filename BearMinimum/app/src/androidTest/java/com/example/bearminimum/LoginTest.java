@@ -43,21 +43,18 @@ public class LoginTest {
     private String newUid = "";
     private String newEmail = "";
     private String newName = "";
-    private String newPhone = "";
     private String newPassword = "";
 
     //2 sample test users (already in database)
     //sample user1 login info
     private String uid1 = "";
     private String email1 = "";
-    private String name1 = "";
-    private String phone1 = "";
+    private String uName1 = "";
     private String password1 = "";
     //sample user2 login info
     private String uid2 = "";
     private String email2 = "";
-    private String name2 = "";
-    private String phone2 = "";
+    private String uName2 = "";
     private String password2 = "";
 
     private Solo solo;
@@ -92,7 +89,7 @@ public class LoginTest {
      */
     @Test
     public void createAcc(){
-        //asserts that current activity is login activity (AuthPage) when user opens app.
+        //asserts that current activity is login activity (LoginActivity) when user opens app.
         solo.assertCurrentActivity("Wrong Activity", AuthPage.class);
 
         //TODO
@@ -100,15 +97,21 @@ public class LoginTest {
         // edit EditText views to match
 
         //click sign up button
-        solo.clickOnButton("Sign up");
+        solo.clickOnButton("Sign in");
+        solo.waitForActivity("LoginActivity");
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
 
         //get views for input fields
         //enter new acc info
-        solo.enterText((EditText) solo.getView(R.id.newUid), newUid);
-        solo.enterText((EditText) solo.getView(R.id.newEmail), newEmail);
-        solo.enterText((EditText) solo.getView(R.id.newName), newName);
-        solo.enterText((EditText) solo.getView(R.id.newphone), newPhone);
-        solo.clickOnButton("CONFIRM");  //confirm acc creation
+        solo.enterText((EditText) solo.getView(R.id.email_box), newEmail);
+
+        //press continue
+        solo.clickOnButton("CONTINUE");
+        solo.sleep(2000);
+
+        solo.enterText((EditText) solo.getView(R.id.username_box), newUid);
+        solo.enterText((EditText) solo.getView(R.id.password_box), newPassword);
+        solo.clickOnButton("CHECK");  //check for duplicate accs
 
         //access Firestore
         db = FirebaseFirestore.getInstance();
@@ -134,11 +137,9 @@ public class LoginTest {
                         String uid = document.getString("uid");
                         String email = document.getString("email");
                         String username = document.getString("username");
-                        String phoneNumber = document.getString("phonenumber");
                         assertEquals(newUid, uid);
                         assertEquals(newEmail, email);
                         assertEquals(newName, username);
-                        assertEquals(newPhone, phoneNumber);
 
                     } else {
                         Log.d(TAG, "No such document");
@@ -164,20 +165,23 @@ public class LoginTest {
      */
     @Test
     public void login(){
-        //asserts that current activity is login activity (AuthPage) when user opens app.
-        solo.assertCurrentActivity("Wrong Activity", AuthPage.class);
+        //asserts that current activity is login activity (LoginActivity) when user opens app.
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
 
-        //TODO
-        // edit buttons to fit
-
-        //click sign in button
+        //click sign up button
         solo.clickOnButton("Sign in");
+        solo.waitForActivity("LoginActivity");
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
 
         //get views for input fields
         //enter login info
-        //test user1 log in
-        solo.enterText((EditText) solo.getView(R.id.signInUid), uid1);
-        solo.enterText((EditText) solo.getView(R.id.signInPassword), password1);
+        solo.enterText((EditText) solo.getView(R.id.email_box), email1);
+
+        //press continue
+        solo.clickOnButton("CONTINUE");
+        solo.sleep(2000);
+
+        solo.enterText((EditText) solo.getView(R.id.password_box), password1);
         solo.clickOnButton("CONFIRM");  //confirm info to login
 
         //check if it navigates to MainActivity after login

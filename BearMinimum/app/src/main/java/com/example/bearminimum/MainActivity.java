@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     //delete book
     //TODO
     // call this under deletebutton.setOnClickListener
+    // or however we decide to select the book
     public void deleteBook() {
 
         if (selectedBook != null) {
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userID = user.getUid();
 
+        //delete photo
         DocumentReference docRef = db.collection("books")
                 .whereEqualTo("owner", userID)
                 .whereEqualTo("ISBN", ISBN)

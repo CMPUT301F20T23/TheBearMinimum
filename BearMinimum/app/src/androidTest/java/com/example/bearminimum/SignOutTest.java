@@ -22,6 +22,7 @@ public class SignOutTest {
 
     //sample user acc info
     private String uid = "";
+    private String email = "";
     private String password = "";
 
     //firebase
@@ -44,13 +45,20 @@ public class SignOutTest {
     public void setUp() throws Exception{
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
 
-        //login
+        //click sign up button
         solo.clickOnButton("Sign in");
+        solo.waitForActivity("LoginActivity");
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
 
         //get views for input fields
-        //enter sample user login info
-        solo.enterText((EditText) solo.getView(R.id.signInUid), uid);
-        solo.enterText((EditText) solo.getView(R.id.signInPassword), password);
+        //enter login info
+        solo.enterText((EditText) solo.getView(R.id.email_box), email);
+
+        //press continue
+        solo.clickOnButton("CONTINUE");
+        solo.sleep(2000);
+
+        solo.enterText((EditText) solo.getView(R.id.password_box), password);
         solo.clickOnButton("CONFIRM");  //confirm info to login
 
         //check if it navigates to MainActivity after login
