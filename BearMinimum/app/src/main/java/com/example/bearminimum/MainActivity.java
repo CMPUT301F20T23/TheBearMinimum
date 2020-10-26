@@ -22,7 +22,13 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+
+
+
 public class MainActivity extends AppCompatActivity {
+
+    //custom adapter
+    NavigationListAdapter adapter;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @Nullable IdpResponse response) {
@@ -30,10 +36,16 @@ public class MainActivity extends AppCompatActivity {
                 .putExtra(ExtraConstants.IDP_RESPONSE, response);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.navigation_main);
+
+        //
+        //adapter = new NavigationListAdapter(this, R.layout.navigation_list, bookList);
+        //
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
