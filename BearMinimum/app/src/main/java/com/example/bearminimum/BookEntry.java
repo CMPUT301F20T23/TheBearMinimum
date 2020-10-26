@@ -24,7 +24,6 @@ public class BookEntry extends AppCompatDialogFragment {
     private String descr;
     private String author;
     private String ISBN;
-    private String owner;
     private Book thisBook;
 
 
@@ -36,7 +35,6 @@ public class BookEntry extends AppCompatDialogFragment {
         edit_author=view.findViewById(R.id.editAuthor);
         edit_descr=view.findViewById(R.id.editDescr);
         edit_ISBN=view.findViewById(R.id.editISBN);
-        edit_Owner=view.findViewById(R.id.editOwner);
         edit_title=view.findViewById(R.id.editTitle);
 
         if(getArguments()!=null){
@@ -47,7 +45,6 @@ public class BookEntry extends AppCompatDialogFragment {
             edit_author.setText(thisBook.getAuthor());
             edit_descr.setText(thisBook.getDescription());
             edit_ISBN.setText(thisBook.getISBN());
-            edit_Owner.setText(thisBook.getOwner());
             edit_title.setText(thisBook.getTitle());
         }
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
@@ -66,16 +63,14 @@ public class BookEntry extends AppCompatDialogFragment {
                         title=edit_title.getText().toString();
                         descr=edit_descr.getText().toString();
                         ISBN=edit_ISBN.getText().toString();
-                        owner=edit_Owner.getText().toString();
                         author=edit_author.getText().toString();
 
                         if (thisBook==null){
-                            listner.applyText(title, descr, ISBN, owner,author);
+                            listner.applyText(title, descr, ISBN, author);
                         } else {
                             thisBook.setAuthor(author);
                             thisBook.setDescription(descr);
                             thisBook.setISBN(ISBN);
-                            thisBook.setOwner(owner);
                             thisBook.setTitle(title);
                         }
                     }
@@ -87,7 +82,7 @@ public class BookEntry extends AppCompatDialogFragment {
     }
 
     public interface dialoglistner{
-        void applyText(String title, String descr, String ISBN, String owner,String author);
+        void applyText(String title, String descr, String ISBN, String author);
     }
 
     @Override
@@ -104,7 +99,7 @@ public class BookEntry extends AppCompatDialogFragment {
         Bundle args;
         if (thisitem!=null){
             args=new Bundle();
-            args.putSerializable("gear",thisitem);
+            args.putSerializable("book",thisitem);
 
         }else args=null;
 
