@@ -21,14 +21,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    //custom adapter
-    NavigationListAdapter adapter;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @Nullable IdpResponse response) {
@@ -37,14 +37,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //array for books
+    //for RecyclerView
+    ArrayList<Book> books;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
 
-        //
-        //adapter = new NavigationListAdapter(this, R.layout.navigation_list, bookList);
-        //
+        //connect to RecyclerView
+        //UI
+        RecyclerView rvBooks = (RecyclerView) findViewById(R.id.list_of_books);
+        //initialize books
+        //need to set books to list from firebase?
+
+        //here
+
+        //create adapter passing in user data
+        NavigationListAdapter adapter = new NavigationListAdapter(books);
+        //attach adapter to recyclerview to populate
+        rvBooks.setAdapter(adapter);
+        //set layout manager to position the items
+        rvBooks.setLayoutManager(new LinearLayoutManager(this));
+
+        //to add to existing list
+        //make change to data source directly and notify adapter of changes
+        //books.addALL(existing list);
+        //books.add(0, new Book(x,y,z));
+        //adapter.notifyItemInserted(0);
+        //need to explicitly inform adapter of event
+        //do no rely on notifyDataSetChanged() - more granular should be used
+        //ie
+        //int currentSize = adapter.getItemCount();
+        //ArrayList<Book> newBooks = list;
+        //books.addAll(newItems);
+        //adapter.notifyItemRangeInserted(curSize, newItems.size());
+        //like that
+
+
+
+
+
+
+
+
+
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
