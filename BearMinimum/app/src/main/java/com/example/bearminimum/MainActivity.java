@@ -13,8 +13,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.firestore.v1.WriteResult;
 
 import androidx.annotation.NonNull;
@@ -24,7 +27,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -52,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
     //delete book
     //TODO
     // call this under deletebutton.setOnClickListener
-    // or however we decide to select the book
+    // simplify/organize
     public void deleteBook() {
+
+        String bookToDelete;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (selectedBook != null) {
 
@@ -62,28 +70,43 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String userID = user.getUid();
 
-            //delete book
+            //query for all books under user
             db.collection("books")
                     .whereEqualTo("owner", userID)
-                    .whereEqualTo("ISBN", ISBN1)
-                    .delete()
-                    .addOnSuccessListener(
-                    new OnSuccessListener<Void>() {
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            // These are a method which gets executed when the task is succeeded
-                            Log.d(TAG, "Book has been deleted successfully!");
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    //find the book
+                                    if (document.getString("ISBN") == ISBN) {
+                                        Log.d(TAG, document.getId() + " found book");
+
+                                        //delete the book
+                                        db.collection("books").document(document.getId())
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "book successfully deleted!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error deleting book", e);
+                                                    }
+                                                });
+                                    }
+
+                                }
+                            } else {
+                                Log.d(TAG, "Error getting books: ", task.getException());
+                            }
                         }
-                    }
-            ).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // These are a method which gets executed if there’s any problem
-                    Log.d(TAG, "Book could not be deleted!" + e.toString());
-                }
-            });
-
-
+                    });
 
         }
         
@@ -99,17 +122,32 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userID = user.getUid();
 
-        //delete photo
+        //get corresponding book
         DocumentReference docRef = db.collection("books")
                 .whereEqualTo("owner", userID)
                 .whereEqualTo("ISBN", ISBN)
                 .get();
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("photo", FieldValue.delete());
-        // Update and delete the "photo" field in the document
-        ApiFuture<WriteResult> writeResult = docRef.update(updates);
-        System.out.println("Update time : " + writeResult.get());
 
+        //get id
+        String bookID = docRef.getId();
+
+        //get storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        // Create a reference to the file to delete
+        StorageReference ref = storage.getReference().child("book_cover_images/" + bookID + ".jpg");
+
+        // Delete the file
+        ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "deleted photo corresponding to" + bookID);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "couldn't delete photo");
+            }
+        });
     }
 
 
