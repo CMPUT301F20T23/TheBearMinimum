@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     String owner = (String) doc.getData().get("owner");
-                    if (owner == CurrentUser.getDisplayName() ){
+                    if (owner == CurrentUser.getUid() ){
                         String BookId = doc.getId();
                         String BookName = (String) doc.getData().get("title");
                         String author = (String) doc.getData().get("author");
