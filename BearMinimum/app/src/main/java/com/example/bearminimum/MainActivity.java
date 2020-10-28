@@ -10,10 +10,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,59 +59,64 @@ public class MainActivity extends AppCompatActivity {
     //delete book
     //TODO
     // call this under deletebutton.setOnClickListener
-    // simplify/organize
     public void deleteBook() {
 
-        String bookToDelete;
+        String isbn;
+        String userId;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (selectedBook != null) {
 
             //get book ISBN, and user id
-            String ISBN = selectedBook.getISBN();
+            isbn = selectedBook.getISBN();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            String userID = user.getUid();
+            userId = user.getUid();
 
-            //query for all books under user
-            db.collection("books")
-                    .whereEqualTo("owner", userID)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+            //query for the one book
+            DocumentReference bookToDelete = db.collection("books")
+                    .whereEqualTo()
 
-                                    //find the book
-                                    if (document.getString("ISBN") == ISBN) {
-                                        Log.d(TAG, document.getId() + " found book");
+            //query for the book (matching owner and isbn)
+            CollectionReference booksRef = db.collection("books");
+            booksRef.whereEqualTo("owner",  userId).whereEqualTo("isbn", isbn);
 
-                                        //delete the book
-                                        db.collection("books").document(document.getId())
-                                                .delete()
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "book successfully deleted!");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w(TAG, "Error deleting book", e);
-                                                    }
-                                                });
-                                    }
+            booksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                }
-                            } else {
-                                Log.d(TAG, "Error getting books: ", task.getException());
+                            //find the book
+                            if (document.getString("ISBN") == ISBN) {
+                                Log.d(TAG, document.getId() + " found book");
+
+                                //delete the book
+                                db.collection("books").document(document.getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "book successfully deleted!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error deleting book", e);
+                                            }
+                                        });
+
                             }
-                        }
-                    });
 
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting books: ", task.getException());
+                    }
+                }
+            });
+            
         }
-        
+
     }
 
     //delete book photo
