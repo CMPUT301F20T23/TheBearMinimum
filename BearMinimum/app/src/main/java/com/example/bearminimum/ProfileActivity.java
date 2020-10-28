@@ -64,6 +64,17 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
     private static final int PICK_IMAGE = 1188;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            startActivity(AuthPage.createIntent(this));
+            finish();
+            return;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);

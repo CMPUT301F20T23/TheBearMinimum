@@ -52,7 +52,7 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     //custom adapter
     NavigationListAdapter adapter;
@@ -76,46 +76,62 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
 
-        //
-        //adapter = new NavigationListAdapter(this, R.layout.navigation_list, bookList);
-        //
+        adapter = new NavigationListAdapter(this, R.layout.navigation_list, bookDataList);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            startActivity(AuthPage.createIntent(this));
+            finish();
+            return;
+        }
+
+        Snackbar.make(findViewById(R.id.main_view), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
     }
 
 
     //delete book
     //TODO
     // call this under deletebutton.setOnClickListener
-    public void deleteBook() {
+    public void deleteBook(Book selectedBook) {
 
-        String isbn;
-        String userId;
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String bookID;
 
         if (selectedBook != null) {
 
             //get book ISBN, and user id
-            isbn = selectedBook.getISBN();
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            userId = user.getUid();
+            bookID = selectedBook.getBid();
 
+            db.collection("books").document(bookID)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "book successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting book", e);
+                        }
+                    });
+
+            /*
             //query for the book (matching owner and isbn)
             CollectionReference booksRef = db.collection("books");
-            booksRef.whereEqualTo("owner",  userId).whereEqualTo("isbn", isbn);
+            booksRef.whereEqualTo("bookid", bookID);
+
 
             booksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            Log.d("MyDebug", "Selected book does not exist!");
+                            return;
+                        } else if (task.getResult().size() > 1) {
+                            Log.d("MyDebug", "Fatal: database integrity fault");
+                        }
                         for (QueryDocumentSnapshot document : task.getResult()) {
 
                             //find the book
@@ -147,33 +163,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+             */
         }
-
     }
 
     //delete book photo
     //TODO
     // call this under edit book
-    public void deleteBookPhoto() {
+    public void deleteBookPhoto(Book selectedBook) {
 
-        //get book ISBN, and user id
-        String ISBN = selectedBook.getISBN();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userID = user.getUid();
-
-        //get corresponding book
-        DocumentReference docRef = db.collection("books")
-                .whereEqualTo("owner", userID)
-                .whereEqualTo("ISBN", ISBN)
-                .get();
-
-        //get id
-        String bookID = docRef.getId();
+        //get bookid
+        String bookID = selectedBook.getBid();
 
         //get storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
         // Create a reference to the file to delete
-        StorageReference ref = storage.getReference().child("book_cover_images/" + bookID + ".jpg");
+        StorageReference ref = storage.getReference().child("book_cover_images/" + bookID);
 
         // Delete the file
         ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -188,18 +193,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            startActivity(AuthPage.createIntent(this));
-            finish();
-            return;
-        }
-
-        Snackbar.make(findViewById(R.id.main_view), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
-    }
-
-
 
     /******************Collection/ filter status START*********************/
     // here we get all information from database and create a bookList for current user
