@@ -72,10 +72,6 @@ public class MainActivity extends AppCompatActivity {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             userId = user.getUid();
 
-            //query for the one book
-            DocumentReference bookToDelete = db.collection("books")
-                    .whereEqualTo()
-
             //query for the book (matching owner and isbn)
             CollectionReference booksRef = db.collection("books");
             booksRef.whereEqualTo("owner",  userId).whereEqualTo("isbn", isbn);
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            
+
         }
 
     }
