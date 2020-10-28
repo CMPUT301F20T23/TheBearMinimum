@@ -4,6 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firestore.v1.WriteResult;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,12 +28,8 @@ import android.widget.Button;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -24,6 +37,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -31,7 +45,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -71,6 +89,105 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+    }
+
+
+    //delete book
+    //TODO
+    // call this under deletebutton.setOnClickListener
+    public void deleteBook() {
+
+        String isbn;
+        String userId;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if (selectedBook != null) {
+
+            //get book ISBN, and user id
+            isbn = selectedBook.getISBN();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            userId = user.getUid();
+
+            //query for the book (matching owner and isbn)
+            CollectionReference booksRef = db.collection("books");
+            booksRef.whereEqualTo("owner",  userId).whereEqualTo("isbn", isbn);
+
+            booksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                            //find the book
+                            if (document.getString("ISBN") == ISBN) {
+                                Log.d(TAG, document.getId() + " found book");
+
+                                //delete the book
+                                db.collection("books").document(document.getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "book successfully deleted!");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error deleting book", e);
+                                            }
+                                        });
+
+                            }
+
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting books: ", task.getException());
+                    }
+                }
+            });
+
+        }
+
+    }
+
+    //delete book photo
+    //TODO
+    // call this under edit book
+    public void deleteBookPhoto() {
+
+        //get book ISBN, and user id
+        String ISBN = selectedBook.getISBN();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = user.getUid();
+
+        //get corresponding book
+        DocumentReference docRef = db.collection("books")
+                .whereEqualTo("owner", userID)
+                .whereEqualTo("ISBN", ISBN)
+                .get();
+
+        //get id
+        String bookID = docRef.getId();
+
+        //get storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        // Create a reference to the file to delete
+        StorageReference ref = storage.getReference().child("book_cover_images/" + bookID + ".jpg");
+
+        // Delete the file
+        ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "deleted photo corresponding to" + bookID);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "couldn't delete photo");
+            }
+        });
+    }
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -161,5 +278,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /******************Collection/ filter status END*********************/
-    
 }
