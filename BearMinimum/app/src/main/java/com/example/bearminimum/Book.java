@@ -11,7 +11,9 @@ public class Book implements Serializable {
     private String ISBN;
     private String status;
 
-    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status){
+    private String bid;
+
+    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid){
         this.title = title;
         this.author = author;
         this.owner = owner;
@@ -19,6 +21,7 @@ public class Book implements Serializable {
         this.description = description;
         this.ISBN = ISBN;
         this.status = status;
+        this.bid = bid;
     }
 
     public String getTitle() {
@@ -77,4 +80,11 @@ public class Book implements Serializable {
         this.status = status;
     }
 
+    public String getBid() {
+        return bid;
+    }
+
+    public void setBid(String bid) {
+        this.bid = bid;
+    }
 }

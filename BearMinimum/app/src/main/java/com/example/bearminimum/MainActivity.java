@@ -62,16 +62,6 @@ public class MainActivity extends AppCompatActivity {
         //adapter = new NavigationListAdapter(this, R.layout.navigation_list, bookList);
         //
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             startActivity(AuthPage.createIntent(this));
@@ -79,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Snackbar.make(navView, "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.main_view), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
     }
 
 
@@ -106,8 +96,9 @@ public class MainActivity extends AppCompatActivity {
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
                         String Description = (String) doc.getData().get("description");
+                        String bid = (String) doc.getData().get("bookid");
 
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status);
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, bid);
                         book.setBorrower(Borrower);
                         Log.i("Test",status);
 

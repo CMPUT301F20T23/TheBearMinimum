@@ -4,13 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 
 //assumes Book class exists
-public class NavigationListAdapter extends ArrayAdapter<Book>{
+public class NavigationListAdapter extends ArrayAdapter<Book> {
 
     //attributes
     private Context mContext;
@@ -36,8 +37,8 @@ public class NavigationListAdapter extends ArrayAdapter<Book>{
         //get the book information
         //assume book name, username, status for V1
         //getters may have different names
-        String book = getItem(position).getName();
-        String username = getItem(position).getUsername();
+        String book = getItem(position).getTitle();
+        String username = getItem(position).getOwner();
         String status = getItem(position).getStatus();
 
         //instantiate contents of layout xml into
