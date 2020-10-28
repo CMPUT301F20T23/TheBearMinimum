@@ -33,4 +33,12 @@
     <string name="signup">sign up</string>
     <string name="collection">collection</string>
     <string name="borrowed">borrowed</string>
+    <string name="profile">profile</string>
+    <string name="incoming_requests">incoming requests</string>
+    <string name="outgoing_requests">outgoing requests</string>
+    <string name="add_book">add book</string>
+    <string name="search">search</string>
+    <string name="sign_out">sign out</string>
+    <string name="navigation_drawer_open" />
+    <string name="navigation_drawer_close" />
 </resources>

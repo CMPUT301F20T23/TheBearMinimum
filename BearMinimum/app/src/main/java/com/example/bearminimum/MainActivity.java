@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.view.Menu;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,10 +26,13 @@ import com.google.firestore.v1.WriteResult;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import androidx.appcompat.widget.Toolbar;
+
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.util.ExtraConstants;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -37,12 +42,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,13 +72,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     /******************Collection/ filter status END*********************/
-
     @NonNull
     public static Intent createIntent(@NonNull Context context, @Nullable IdpResponse response) {
         return new Intent().setClass(context, MainActivity.class)
                 .putExtra(ExtraConstants.IDP_RESPONSE, response);
     }
 
+
+    //array for books
+    //for RecyclerView
+    ArrayList<Book> books;
+
+    //design components
+    DrawerLayout drawerLayout;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,47 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Snackbar.make(findViewById(R.id.main_view), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
+        //references to components
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        //code to make navigation bar visible
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+
+        //connect to RecyclerView
+        //UI
+        RecyclerView rvBooks = (RecyclerView) findViewById(R.id.list_of_books);
+        //initialize books
+        //need to set books to list from firebase?
+
+        //here
+
+        //create adapter passing in user data
+        NavigationListAdapter adapter = new NavigationListAdapter(books);
+        //attach adapter to recyclerview to populate
+        rvBooks.setAdapter(adapter);
+        //set layout manager to position the items
+        rvBooks.setLayoutManager(new LinearLayoutManager(this));
+
+        //to add to existing list
+        //make change to data source directly and notify adapter of changes
+        //books.addALL(existing list);
+        //books.add(0, new Book(x,y,z));
+        //adapter.notifyItemInserted(0);
+        //need to explicitly inform adapter of event
+        //do no rely on notifyDataSetChanged() - more granular should be used
+        //ie
+        //int currentSize = adapter.getItemCount();
+        //ArrayList<Book> newBooks = list;
+        //books.addAll(newItems);
+        //adapter.notifyItemRangeInserted(curSize, newItems.size());
+        //like that
     }
 
 
@@ -272,4 +329,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /******************Collection/ filter status END*********************/
+
+    //implement for back pressed with menu open
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
 }
