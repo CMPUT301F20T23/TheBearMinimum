@@ -123,16 +123,7 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AuthUI.getInstance()
-                        .signOut(v.getContext())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Intent intent = new Intent(getBaseContext(), AuthPage.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
+                signOut(v);
             }
         });
         checkName.setOnClickListener(new View.OnClickListener() {
@@ -302,4 +293,18 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
             }
         });
     }
+
+    public void signOut(View v) {
+        AuthUI.getInstance()
+                .signOut(v.getContext())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Intent intent = new Intent(getBaseContext(), AuthPage.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+    }
+
 }

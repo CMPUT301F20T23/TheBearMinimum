@@ -7,7 +7,18 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/main_menu"
+        android:layout_gravity="start"
+
+        />
 
 
     <LinearLayout
@@ -24,14 +35,7 @@
         </androidx.appcompat.widget.Toolbar>
     </LinearLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:clipToPadding="false"
-        app:menu="@menu/main_menu"
-        />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -46,7 +50,7 @@
             android:backgroundTint="@color/orange"
             android:scaleType="fitXY"
             android:src="@drawable/book_logo"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/white" />
 
@@ -60,7 +64,7 @@
             android:backgroundTint="@color/orange"
             android:scaleType="fitXY"
             android:src="@drawable/menu"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/white" />
 
@@ -188,7 +192,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/unborrowed_books2"
+            android:id="@+id/unborrowed_books"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -210,5 +214,6 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
