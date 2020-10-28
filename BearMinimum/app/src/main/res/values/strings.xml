@@ -12,7 +12,6 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="signin">SIGN IN</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_network">No internet connection</string>
     <string name="unknown_error">An unknown error occured</string>
@@ -34,4 +33,12 @@
     <string name="signup">sign up</string>
     <string name="collection">collection</string>
     <string name="borrowed">borrowed</string>
+    <string name="profile">profile</string>
+    <string name="incoming_requests">incoming requests</string>
+    <string name="outgoing_requests">outgoing requests</string>
+    <string name="add_book">add book</string>
+    <string name="search">search</string>
+    <string name="sign_out">sign out</string>
+    <string name="navigation_drawer_open" />
+    <string name="navigation_drawer_close" />
 </resources>
