@@ -238,6 +238,10 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
 
         //upload chosen image to firestore as profile image
         if (requestCode == PICK_IMAGE) {
+            if (data == null) {
+                Log.d("MyDebug", "no image selected");
+                return;
+            }
             Uri imageUri = data.getData();
             UploadTask uploadTask = storageRef.putFile(imageUri);
 
