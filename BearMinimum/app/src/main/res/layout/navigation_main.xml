@@ -9,7 +9,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    >
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
@@ -17,202 +18,178 @@
         android:layout_height="match_parent"
         app:menu="@menu/main_menu"
         android:layout_gravity="start"
-
         />
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            app:titleTextColor="@color/white"
-            android:background="@color/blue">
-        </androidx.appcompat.widget.Toolbar>
-    </LinearLayout>
-
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/orange">
+        android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/notifications"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:adjustViewBounds="true"
-            android:backgroundTint="@color/orange"
-            android:scaleType="fitXY"
-            android:src="@drawable/book_logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
 
-        <ImageButton
-            android:id="@+id/navigation"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
-            android:backgroundTint="@color/orange"
-            android:scaleType="fitXY"
-            android:src="@drawable/menu"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="@font/josefina_regular"
-            android:gravity="center"
-            android:left="60dp"
-            android:text="@string/name"
-            android:textColor="@color/blue"
-            android:textSize="60sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/collection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="64dp"
-            android:layout_marginLeft="64dp"
-            android:layout_marginBottom="36dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/collection"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.018"
-            app:layout_constraintStart_toEndOf="@+id/borrowed" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/blue"
+                android:minHeight="?attr/actionBarSize"
+                app:titleTextColor="@color/white"></androidx.appcompat.widget.Toolbar>
+        </LinearLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_of_books"
-            android:layout_width="320dp"
-            android:layout_height="420dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="24dp"
-            android:background="@color/blue"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/borrowed"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.428"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="1.0"
-            />
 
-        <Button
-            android:id="@+id/borrowed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginBottom="36dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/borrowed"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/orange"
+            android:layout_marginTop="?attr/actionBarSize">
 
-        <Button
-            android:id="@+id/all_books"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="all"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/list_of_books"
-            app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/borrowed_books"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="268dp"
-            android:layout_marginLeft="268dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="borrowed"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/list_of_books"
-            app:layout_constraintStart_toStartOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_of_books"
+                android:layout_width="320dp"
+                android:layout_height="420dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="24dp"
+                android:background="@color/blue"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@+id/borrowed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.494"
+                app:layout_constraintStart_toStartOf="parent"
 
-        <Button
-            android:id="@+id/unborrowed_books"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="140dp"
-            android:layout_marginLeft="140dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="unborrowed"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/list_of_books"
-            app:layout_constraintStart_toStartOf="parent" />
+                />
 
+            <Button
+                android:id="@+id/collection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="64dp"
+                android:layout_marginLeft="64dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/josefina_light"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/collection"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.452"
+                app:layout_constraintStart_toEndOf="@+id/borrowed"
+                app:layout_constraintTop_toBottomOf="@+id/list_of_books" />
+
+            <Button
+                android:id="@+id/borrowed_books"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="272dp"
+                android:layout_marginLeft="272dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/josefina_light"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="borrowed"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/list_of_books"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.987"
+                app:layout_goneMarginTop="24dp" />
+
+            <Button
+                android:id="@+id/unborrowed_books"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="144dp"
+                android:layout_marginLeft="144dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/josefina_light"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="unborrowed"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/list_of_books"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.987"
+                app:layout_goneMarginTop="24dp" />
+
+            <Button
+                android:id="@+id/all_books"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="44dp"
+                android:layout_marginLeft="44dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/josefina_light"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="all"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/list_of_books"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_goneMarginTop="24dp" />
+
+            <Button
+                android:id="@+id/borrowed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="44dp"
+                android:layout_marginLeft="44dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/josefina_light"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/borrowed"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
