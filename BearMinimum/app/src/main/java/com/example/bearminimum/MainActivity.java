@@ -309,6 +309,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.nav_add_book) {
 
         } else if (item.getItemId() == R.id.nav_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
 
         } else if (item.getItemId() == R.id.nav_incoming_requests) {
 
