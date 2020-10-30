@@ -8,8 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
@@ -35,12 +34,20 @@
         </androidx.appcompat.widget.Toolbar>
     </LinearLayout>
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/orange">
+
+        <Spinner
+            android:id="@+id/filter_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:spinnerMode="dialog"
+            app:layout_constraintEnd_toEndOf="@+id/list_of_books"
+            app:layout_constraintStart_toStartOf="@+id/list_of_books"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <ImageButton
             android:id="@+id/notifications"
@@ -111,9 +118,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_of_books"
             android:layout_width="320dp"
-            android:layout_height="420dp"
+            android:layout_height="0dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="24dp"
             android:background="@color/blue"
             android:textColor="@color/white"
@@ -121,9 +129,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.428"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="1.0"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/filter_spinner" />
 
         <Button
             android:id="@+id/borrowed"
@@ -145,72 +151,6 @@
             android:textColor="@color/white"
             android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/all_books"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="all"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/list_of_books"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/borrowed_books"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="268dp"
-            android:layout_marginLeft="268dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="borrowed"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/list_of_books"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/unborrowed_books"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="140dp"
-            android:layout_marginLeft="140dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/blue"
-            android:fontFamily="@font/josefina_light"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="unborrowed"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/list_of_books"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
