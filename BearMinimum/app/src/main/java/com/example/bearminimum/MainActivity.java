@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         toolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("UnRead");
 
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -122,14 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Snackbar.make(findViewById(R.id.drawer_layout), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
 
-        menuButton = findViewById(R.id.navigation);
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!drawerLayout.isOpen())
-                    drawerLayout.openDrawer(Gravity.LEFT);
-            }
-        });
 
         //connect to RecyclerView
         //UI

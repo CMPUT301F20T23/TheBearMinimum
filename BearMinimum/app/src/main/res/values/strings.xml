@@ -33,12 +33,13 @@
     <string name="signup">sign up</string>
     <string name="collection">collection</string>
     <string name="borrowed">borrowed</string>
-    <string name="nav_profile">Profile</string>
-    <string name="nav_incoming_requests">Incoming Requests</string>
-    <string name="nav_outgoing_requests">Outgoing Requests</string>
-    <string name="nav_add_book">Add Book</string>
-    <string name="nav_search">Search</string>
-    <string name="nav_sign_out">Sign Out</string>
+    <string name="nav_profile">profile</string>
+    <string name="nav_incoming_requests">incoming requests</string>
+    <string name="nav_outgoing_requests">outgoing requests</string>
+    <string name="nav_add_book">add book</string>
+    <string name="nav_search">search</string>
+    <string name="nav_notifications">notifications</string>
+    <string name="nav_sign_out">sign Out</string>
     <string name="navigation_drawer_open" />
     <string name="navigation_drawer_close" />
 </resources>
