@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigation_view);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("UnRead");
+        getSupportActionBar().setTitle("unRead");
 
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -111,13 +111,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         filterSpinner.setOnItemSelectedListener(this);
         List<String> filters = new ArrayList<>();
-        filters.add("All");
-        filters.add("Available");
-        filters.add("Requested");
-        filters.add("Accepted");
-        filters.add("Borrowed");
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, filters);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        filters.add("all");
+        filters.add("available");
+        filters.add("requested");
+        filters.add("accepted");
+        filters.add("borrowed");
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.spinner_list, filters);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
         Snackbar.make(findViewById(R.id.drawer_layout), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
