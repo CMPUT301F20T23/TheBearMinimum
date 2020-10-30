@@ -21,9 +21,11 @@ import com.google.firebase.storage.StorageReference;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -47,14 +49,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener, NavigationListAdapter.OnBookClickListener {
     //firebase
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference bookCollection = db.collection("books");
@@ -69,14 +73,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ImageButton menuButton;
 
-
     /******************Collection/ filter status START*********************/
-    private String selectedFilter = "ALL";
+    private String selectedFilter = "all";
     private ArrayList<Book> bookDataList;
     private ArrayList<Book> stateFilter;
-    private Button allButton;
-    private Button UBButton;
-    private Button BButton;
+    private Spinner filterSpinner;
 
     /******************Collection/ filter status END*********************/
 
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
-
 
         if (currentUser == null) {
             startActivity(AuthPage.createIntent(this));
@@ -107,9 +107,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         stateFilter = new ArrayList<Book>();
         bookDataList = new ArrayList<>();
-        allButton = findViewById(R.id.all_books);
-        UBButton = findViewById(R.id.unborrowed_books);
-        BButton = findViewById(R.id.borrowed_books);
+        filterSpinner = findViewById(R.id.filter_spinner);
+
+        filterSpinner.setOnItemSelectedListener(this);
+        List<String> filters = new ArrayList<>();
+        filters.add("All");
+        filters.add("Available");
+        filters.add("Requested");
+        filters.add("Accepted");
+        filters.add("Borrowed");
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, filters);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        filterSpinner.setAdapter(spinnerAdapter);
 
         Snackbar.make(findViewById(R.id.drawer_layout), "Signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG).show();
 
@@ -118,16 +127,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //UI
         RecyclerView rvBooks = (RecyclerView) findViewById(R.id.list_of_books);
         //initialize books
-        //need to set books to list from firebase?
-
-        //here
 
         //create adapter passing in user data
-        adapter = new NavigationListAdapter(stateFilter);
+        adapter = new NavigationListAdapter(stateFilter, this);
+        //set layout manager to position the items
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rvBooks.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvBooks.getContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getBaseContext().getResources().getDrawable(R.drawable.item_divider));
+        rvBooks.addItemDecoration(dividerItemDecoration);
         //attach adapter to recyclerview to populate
         rvBooks.setAdapter(adapter);
-        //set layout manager to position the items
-        rvBooks.setLayoutManager(new LinearLayoutManager(this));
 
         //to add to existing list
         //make change to data source directly and notify adapter of changes
@@ -158,35 +168,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
                         String Description = (String) doc.getData().get("description");
-                        String bid = (String) doc.getData().get("bookid");
 
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, bid);
-                        book.setBorrower(Borrower);
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId);
                         Log.i("Test",status);
 
                         bookDataList.add(book); // Adding the cities and provinces from FireStore
                     }
                 }
                 filterList(selectedFilter);
-            }
-        });
-
-        allButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterList("ALL");
-            }
-        });
-        UBButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterList("UNBORROWED");
-            }
-        });
-        BButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterList("BORROWED");
             }
         });
     }
@@ -257,16 +246,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         for(Book book:bookDataList){
             //Log.d("MyDebug", "status " + book.getStatus());
-            if (Clicked.equals("UNBORROWED")){
-                if (book.getStatus().equals("unborrowed")){
+            if (Clicked.equals("available")){
+                if (book.getStatus().equals("available")){
                     stateFilter.add(book);
                 }
-            }
-            else if (Clicked.equals("BORROWED")){
+            } else if (Clicked.equals("requested")){
+                if (book.getStatus().equals("requested")){
+                    stateFilter.add(book);
+                }
+            } else if (Clicked.equals("accepted")) {
+                if (book.getStatus().equals("accepted")){
+                    stateFilter.add(book);
+                }
+            } else if (Clicked.equals("borrowed")) {
                 if (book.getStatus().equals("borrowed")){
                     stateFilter.add(book);
                 }
-            } else if (Clicked.equals("ALL")) {
+            } else if (Clicked.equals("all")) {
                 stateFilter.add(book);
             }
 
@@ -303,10 +299,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.nav_search) {
 
         } else if (item.getItemId() == R.id.nav_incoming_requests) {
-
+            Intent intent = new Intent(this, IncomingReqs.class);
+            startActivity(intent);
         } else if (item.getItemId() == R.id.nav_outgoing_requests) {
 
         }
+        drawerLayout.close();
         return true;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0:
+                filterList("all");
+                break;
+            case 1:
+                filterList("available");
+                break;
+            case 2:
+                filterList("requested");
+                break;
+            case 3:
+                filterList("accepted");
+                break;
+            case 4:
+                filterList("borrowed");
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+    @Override
+    public void onBookClick(int position) {
+
     }
 }

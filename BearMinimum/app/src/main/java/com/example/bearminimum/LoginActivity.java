@@ -20,11 +20,14 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
@@ -98,13 +101,17 @@ public class LoginActivity extends AppCompatActivity {
         checkInfoBtn.setVisibility(View.INVISIBLE);
         usernameField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 continueAuthBtn.setEnabled(false);
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         //init firebase ref
@@ -125,16 +132,13 @@ public class LoginActivity extends AppCompatActivity {
                             //handle exception
                             try {
                                 throw task.getException();
-                            }
-                            catch (FirebaseAuthInvalidUserException wrongEmail) {
+                            } catch (FirebaseAuthInvalidUserException wrongEmail) {
                                 Log.d("MyDebug", "wrong email");
                                 Snackbar.make(findViewById(R.id.loginview), "Wrong username or password", Snackbar.LENGTH_SHORT);
-                            }
-                            catch (FirebaseAuthInvalidCredentialsException wrongPass) {
+                            } catch (FirebaseAuthInvalidCredentialsException wrongPass) {
                                 Log.d("MyDebug", "wrong pass");
                                 Snackbar.make(findViewById(R.id.loginview), "Wrong password", Snackbar.LENGTH_SHORT);
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Log.d("MyDebug", e.getMessage());
                             }
                         } else {
@@ -162,16 +166,13 @@ public class LoginActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             try {
                                 throw task.getException();
-                            }
-                            catch (FirebaseAuthWeakPasswordException weakPasswordException) {
+                            } catch (FirebaseAuthWeakPasswordException weakPasswordException) {
                                 Log.d("MyDebug", "weak pass");
                                 Snackbar.make(findViewById(R.id.loginview), "Password is too weak", Snackbar.LENGTH_SHORT);
-                            }
-                            catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                            } catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
                                 Log.d("MyDebug", "malformed email");
                                 Snackbar.make(findViewById(R.id.loginview), "Malformed email", Snackbar.LENGTH_SHORT);
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 Log.d("MyDebug", e.getMessage());
                             }
                         } else {
@@ -226,36 +227,46 @@ public class LoginActivity extends AppCompatActivity {
      * starts signup or signin flows based on signin exception using email
      */
     private void determineNewuser() {
-        auth.signInWithEmailAndPassword(emailField.getText().toString(), emailField.getText().toString())
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        waiting.setVisibility(View.INVISIBLE);
-                        if (!task.isSuccessful()) {
-                            try {
-                                throw task.getException();
-                            }
-                            catch (FirebaseAuthInvalidUserException invalidUser) {
-                                //This email is not associated with an account
-                                //start signup flow
-                                Log.d("MyDebug", "need new account");
-                                passwordField.setVisibility(View.VISIBLE);
-                                usernameField.setVisibility(View.VISIBLE);
-                                checkInfoBtn.setVisibility(View.VISIBLE);
-                                stage = 2;
-                            }
-                            catch (FirebaseAuthInvalidCredentialsException wrongPass) {
-                                //account exists, start signin flow
-                                passwordField.setVisibility(View.VISIBLE);
-                                continueAuthBtn.setEnabled(true);
-                                stage = 1;
-                            }
-                            catch (Exception e) {
-                                Log.d("MyDebug", e.getMessage());
-                            }
-                        }
+        if (emailField.getText().toString().isEmpty()) {
+            Snackbar.make(findViewById(R.id.loginview), "Enter an email", Snackbar.LENGTH_SHORT).show();
+            waiting.setVisibility(View.INVISIBLE);
+            return;
+        }
+        auth.fetchSignInMethodsForEmail(emailField.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                waiting.setVisibility(View.INVISIBLE);
+                if (!task.isSuccessful()) {
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthInvalidCredentialsException invalidCredentialsException) {
+                        Log.d("MyDebug", invalidCredentialsException.getErrorCode());
+                        Snackbar.make(findViewById(R.id.loginview), "Malformed email", Snackbar.LENGTH_SHORT).show();
                     }
-                });
+                    catch (Exception e) {
+                        Log.d("MyDebug", e.getClass().getName());
+                        Snackbar.make(findViewById(R.id.loginview), "Sign in error", Snackbar.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (task.getResult().getSignInMethods().size() == 1) {
+                        //account exists, start signin flow
+                        Log.d("MyDebug", "proceed with login");
+                        passwordField.setVisibility(View.VISIBLE);
+                        continueAuthBtn.setEnabled(true);
+                        stage = 1;
+                    } else {
+                        Log.d("MyDebug", "need new account");
+                        //This email is not associated with an account
+                        //start signup flow
+                        Log.d("MyDebug", "need new account");
+                        passwordField.setVisibility(View.VISIBLE);
+                        usernameField.setVisibility(View.VISIBLE);
+                        checkInfoBtn.setVisibility(View.VISIBLE);
+                        stage = 2;
+                    }
+                }
+            }
+        });
     }
 
     /**
