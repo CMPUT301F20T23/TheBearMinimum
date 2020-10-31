@@ -111,36 +111,34 @@ public class SearchActivity extends AppCompatActivity {
         // - not owned by user
         // - available/requested but not accepted/borrowed
         booksRef.whereNotEqualTo("owner", userID)
-                .whereIn("status", Arrays.asList("available", "requested"));
+                .whereIn("status", Arrays.asList("available", "requested"))
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            Log.d(TAG, "got books");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
 
-        //add books into the list
-        booksRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    Log.d(TAG, "got books");
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                //create book object from each document
+                                //then append to list
+                                String title = document.getString("title");
+                                String author = document.getString("author");
+                                String owner = document.getString("owner");
+                                String borrower = document.getString("borrower");
+                                String description = document.getString("description");
+                                String isbn = document.getString("isbn");
+                                String status = document.getString("status");
+                                String bid = document.getString("bookid");
 
-                        //create book object from each document
-                        //then append to list
-                        String title = document.getString("title");
-                        String author = document.getString("author");
-                        String owner = document.getString("owner");
-                        String borrower = document.getString("borrower");
-                        String description = document.getString("description");
-                        String isbn = document.getString("isbn");
-                        String status = document.getString("status");
-                        String bid = document.getString("bookid");
+                                bookList.add(new Book(title, author, owner, borrower, description, isbn, status, bid));
 
-                        bookList.add(new Book(title, author, owner, borrower, description, isbn, status, bid));
+                                Log.d(TAG, document.getId() + " :a book");
+                            }
+                        } else {
+                            Log.d(TAG, "error getting book documents");
 
-                        Log.d(TAG, document.getId() + " :a book");
+                        }
                     }
-                } else {
-                    Log.d(TAG, "error getting book documents");
-
-                }
-            }
         });
 
     }
