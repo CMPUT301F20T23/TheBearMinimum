@@ -17,7 +17,6 @@
         android:left="0px"
         android:src="@drawable/book_logo"
         android:top="37dp"
-        app:layout_constraintBottom_toTopOf="@+id/sign_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,24 +44,24 @@
         android:id="@+id/button_signin"
         android:layout_width="150dp"
         android:layout_height="70dp"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="88dp"
+        android:layout_marginTop="90dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/blue"
         android:fontFamily="@font/josefina_light"
+        android:gravity="center"
         android:paddingTop="0dp"
         android:paddingBottom="15dp"
-
-
-
         android:text="@string/signin"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.219" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

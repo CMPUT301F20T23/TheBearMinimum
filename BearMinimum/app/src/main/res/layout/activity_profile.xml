@@ -5,7 +5,8 @@
     android:id="@+id/profile_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileActivity"
+    android:background="@color/orange">
 
     <EditText
         android:id="@+id/edit_email"
@@ -13,11 +14,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="@string/fui_email_hint"
+        android:hint="email"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_username" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_username"
+        android:gravity="center"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/white"/>
 
     <EditText
         android:id="@+id/edit_phone"
@@ -25,11 +31,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="@string/fui_phone_hint"
+        android:hint="phone number"
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_email"
+        android:gravity="center"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/white"/>
 
     <EditText
         android:id="@+id/edit_username"
@@ -37,12 +48,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="username"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileImage" />
+        app:layout_constraintTop_toBottomOf="@+id/profileImage"
+        android:gravity="center"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:backgroundTint="@color/white"/>
 
     <Button
         android:id="@+id/apply_profile_changes"
@@ -55,7 +71,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/signout"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:padding="10dp"/>
 
     <ImageView
         android:id="@+id/profileImage"
@@ -83,15 +106,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/apply_profile_changes" />
+        app:layout_constraintStart_toEndOf="@+id/apply_profile_changes"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="20sp"/>
 
     <Button
         android:id="@+id/checkName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Check"
+        android:text="check"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_phone" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_phone"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
