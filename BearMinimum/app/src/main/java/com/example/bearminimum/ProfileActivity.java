@@ -182,7 +182,9 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
                 .setDisplayName(newUsername)
                 .build();
         if (username.length() == 0 || newEmail.length() == 0) {
-            Snackbar.make(findViewById(R.id.profile_view), R.string.invalid_profile_changes, Snackbar.LENGTH_LONG).show();
+            Snackbar sb = Snackbar.make(findViewById(R.id.profile_view), R.string.invalid_profile_changes, Snackbar.LENGTH_LONG);
+            sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+            sb.show();
             return;
         }
 
@@ -211,7 +213,9 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
                             apply.setEnabled(true);
                         }
                     } else {
-                        Snackbar.make(findViewById(R.id.profile_view), "Username Taken", Snackbar.LENGTH_LONG).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.profile_view), "username Taken", Snackbar.LENGTH_LONG);
+                        sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                        sb.show();
                         apply.setEnabled(false);
                         Log.d("MyDebug", "username not free");
                     }
@@ -286,13 +290,14 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
                     }
                 } else {
                     Log.d("MyDebug", "sent verify to " + email.getText().toString());
-                    Snackbar.make(findViewById(R.id.profile_view), "Sent email, changes will be visible on next login after verification", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar sb = Snackbar.make(findViewById(R.id.profile_view), "email sent, changes will be visible on next login after verification", Snackbar.LENGTH_INDEFINITE)
                             .setAction("DISMISS", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                 }
-                            })
-                            .show();
+                            });
+                    sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                    sb.show();
                 }
             }
         });

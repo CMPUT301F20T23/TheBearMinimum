@@ -14,8 +14,8 @@
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_network">No internet connection</string>
     <string name="unknown_error">An unknown error occured</string>
-    <string name="invalid_profile_changes">Information not correct</string>
-    <string name="fail_image_load">Failed to load image</string>
+    <string name="invalid_profile_changes">information not correct</string>
+    <string name="fail_image_load">failed to load image</string>
     <string name="button_signout">signout</string>
     <string name="button_apply_changes">apply changes</string>
     <string name="title_activity_login">LoginActivity</string>
