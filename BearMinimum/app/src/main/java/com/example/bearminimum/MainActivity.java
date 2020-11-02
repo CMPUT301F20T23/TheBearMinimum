@@ -199,6 +199,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 filterList(selectedFilter);
             }
         });
+        /******************ISBN add BOOK START ******************************/
+        ISBNSearchButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                isbnValue = ISBNNum.getText().toString(); // get the isbn on click
+                Log.i("Riky",isbnValue);
+                if (isbnValue.length() < 10) {
+                    Toast.makeText(MainActivity.this, "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
+                } else {
+
+
+                    String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbnValue;
+                    //Do http request
+                    Log.i("Riky",url);
+
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                            url,null, // here
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+
+
+                                    String[] result = jsonParser(response);
+                                    if (result[0] != null) {
+
+                                        Intent intent = new Intent(MainActivity.this,isbnAddBook.class);
+
+                                        intent.putExtra("name",result[0]);
+                                        intent.putExtra("des",result[1]);
+                                        intent.putExtra("author",result[2]);
+                                        intent.putExtra("isbn",isbnValue);
+                                        startActivityForResult(intent,0);
+
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    });
+                    AppController.getInstance(MainActivity.this).addToRequestQueue(request);
+                }
+            }
+        });
+
+        /******************ISBN add BOOK END ******************************/
     }
 
 
@@ -256,54 +304,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "couldn't delete photo");
             }
         });
-        /******************ISBN add BOOK START ******************************/
-        ISBNSearchButton.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                isbnValue = ISBNNum.getText().toString(); // get the isbn on click
-                Log.i("Riky",isbnValue);
-                if (isbnValue.length() < 10) {
-                    Toast.makeText(MainActivity.this, "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
-                } else {
-
-
-                    String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbnValue;
-                    //Do http request
-                    Log.i("Riky",url);
-
-                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                            url,null, // here
-                            new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-
-
-                                    String[] result = jsonParser(response);
-                                    if (result[0] != null) {
-
-                                        Intent intent = new Intent(MainActivity.this,isbnAddBook.class);
-
-                                        intent.putExtra("name",result[0]);
-                                        intent.putExtra("des",result[1]);
-                                        intent.putExtra("author",result[2]);
-                                        intent.putExtra("isbn",isbnValue);
-                                        startActivityForResult(intent,0);
-
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                        }
-                    });
-                    AppController.getInstance(MainActivity.this).addToRequestQueue(request);
-                }
-            }
-        });
-
-        /******************ISBN add BOOK END ******************************/
     }
 
     /******************Collection/ filter status START*********************/
