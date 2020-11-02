@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -17,8 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class NavigationListAdapter extends
         RecyclerView.Adapter<NavigationListAdapter.ViewHolder> {
 
+    //item click listener
+    private OnBookClickListener mOnBookClickListener;
+
     //direct reference to each view within a data item
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        //declare listener
+        OnBookClickListener onBookClickListener;
 
         //member variable for views rendered as rows
         public TextView bookTextView;
@@ -27,21 +34,34 @@ public class NavigationListAdapter extends
 
         //constructor that accepts new row
         //view lookups to find each subview
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, OnBookClickListener onBookClickListener) {
             super(itemView);
 
             bookTextView = (TextView) itemView.findViewById(R.id.book_name);
             userNameTextView = (TextView) itemView.findViewById(R.id.username);
             statusTextView = (TextView) itemView.findViewById(R.id.book_status);
+            this.onBookClickListener = onBookClickListener;
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onBookClickListener.onBookClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnBookClickListener {
+        void onBookClick(int position);
     }
 
     //member variable for book objects
     private List<Book> mBooks;
 
     //pass in the book array to the constructor
-    public NavigationListAdapter(List<Book> books) {
+    public NavigationListAdapter(List<Book> books, OnBookClickListener onBookClickListener) {
         mBooks = books;
+        this.mOnBookClickListener = onBookClickListener;
     }
 
     //adapter requires three primary methods
@@ -59,7 +79,7 @@ public class NavigationListAdapter extends
         View contactView = inflater.inflate(R.layout.navigation_list, parent, false);
 
         //return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
+        ViewHolder viewHolder = new ViewHolder(contactView, mOnBookClickListener);
         return viewHolder;
     }
 
