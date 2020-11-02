@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,8 +28,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -52,6 +58,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +91,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /******************Collection/ filter status END*********************/
 
+    /******************ISBN add BOOK START ******************************/
+    public EditText ISBNNum;
+    public Button ISBNSearchButton;
+    public String isbnValue;
+
+    /******************ISBN add BOOK END ******************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /******************ISBN add BOOK START ******************************/
+        ISBNSearchButton = findViewById(R.id.ISBNSearchButton);
+        ISBNNum = findViewById(R.id.ISBNSearch);
+
+        /******************ISBN add BOOK END ******************************/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
 
@@ -235,6 +256,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "couldn't delete photo");
             }
         });
+        /******************ISBN add BOOK START ******************************/
+        ISBNSearchButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                isbnValue = ISBNNum.getText().toString(); // get the isbn on click
+                Log.i("Riky",isbnValue);
+                if (isbnValue.length() < 10) {
+                    Toast.makeText(MainActivity.this, "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
+                } else {
+
+
+                    String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbnValue;
+                    //Do http request
+                    Log.i("Riky",url);
+
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                            url,null, // here
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+
+
+                                    String[] result = jsonParser(response);
+                                    if (result[0] != null) {
+
+                                        Intent intent = new Intent(MainActivity.this,isbnAddBook.class);
+
+                                        intent.putExtra("name",result[0]);
+                                        intent.putExtra("des",result[1]);
+                                        intent.putExtra("author",result[2]);
+                                        intent.putExtra("isbn",isbnValue);
+                                        startActivityForResult(intent,0);
+
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    });
+                    AppController.getInstance(MainActivity.this).addToRequestQueue(request);
+                }
+            }
+        });
+
+        /******************ISBN add BOOK END ******************************/
     }
 
     /******************Collection/ filter status START*********************/
@@ -339,4 +408,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBookClick(int position) {
 
     }
+    /******************ISBN add BOOK START ******************************/
+    public String[] jsonParser(JSONObject response) {
+        String[] result = new String[5]; // volume information holder
+        try {
+            String totalItems = response.optString("totalItems");
+            if (totalItems.equalsIgnoreCase("0")) {
+
+                Toast.makeText(MainActivity.this, "Invalid ISBN", Toast.LENGTH_LONG).show();
+            } else {
+                JSONArray jsonArray = response.getJSONArray("items");
+                for (int i = 0; i < jsonArray.length(); ++i) {
+                    JSONObject items = jsonArray.getJSONObject(i);
+
+                    // get title info
+                    String title = items.getJSONObject("volumeInfo").optString("title");
+                    String subtitle = items.getJSONObject("volumeInfo").optString("subtitle");
+                    result[0] = title + " : " + subtitle;
+
+                    // get author info
+                    result[1] = items.getJSONObject("volumeInfo").optString("description");
+
+                    // get category and page count info
+                    result[2] = items.getJSONObject("volumeInfo").optString("authors");
+                    result[3] = items.getJSONObject("volumeInfo").optString("identifier");
+
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    /******************ISBN add BOOK END ******************************/
 }
