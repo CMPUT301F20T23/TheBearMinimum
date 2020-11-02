@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:id="@+id/book_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="status"
+            android:textSize="15sp"
+            android:padding="4dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:id="@+id/book_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/book_status"
+            android:layout_toRightOf="@+id/book_status"
+            android:padding="4dp"
+            android:text="title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+
+        <TextView
+            android:id="@+id/book_descr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/book_title"
+            android:layout_toEndOf="@+id/book_status"
+            android:layout_toRightOf="@+id/book_status"
+            android:layout_marginLeft="8dp"
+            android:text="description"
+            android:textSize="15sp"
+            android:layout_marginStart="10dp" />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
