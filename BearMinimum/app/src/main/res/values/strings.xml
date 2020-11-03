@@ -43,4 +43,15 @@
     <string name="navigation_drawer_close" />
     <string name="username">username</string>
     <string name="check">check</string>
+    <string name="enter_your_search">enter your search</string>
+    <string name="title">title</string>
+    <string name="status">status</string>
+    <string name="description">description</string>
+    <string name="insert">insert</string>
+    <string name="author">author</string>
+    <string name="book">book</string>
+    <string name="isbn">ISBN</string>
+    <string name="descrpition">descrpition</string>
+    <string name="description">description</string>
+    <string name="books_with_requests">books with requests</string>
 </resources>
