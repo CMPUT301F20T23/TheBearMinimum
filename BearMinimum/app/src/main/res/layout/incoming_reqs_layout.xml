@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/blue">
+    android:background="@color/blue"
+    >
 
     <TextView
         android:id="@+id/requester_name"
@@ -13,7 +14,9 @@
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:layout_gravity="center"
-        android:text="Name"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:text="name"
         android:textSize="24sp" />
 
     <LinearLayout
@@ -24,22 +27,30 @@
         <Button
             android:id="@+id/decline_req_button"
             style="?android:attr/borderlessButtonStyle"
+            android:fontFamily="@font/josefina_light"
+            android:textColor="@color/orange"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="#FFFFFF"
-            android:text="Button"
-            android:textSize="12sp" />
+            android:text="button"
+            android:textAllCaps="false"
+           />
 
         <Button
             android:id="@+id/accept_req_button"
+            android:fontFamily="@font/josefina_light"
+            android:textColor="@color/orange"
+            android:textSize="20sp"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="#FFFFFF"
-            android:text="Button"
-            android:textSize="12sp" />
+            android:text="button"
+            android:textAllCaps="false"
+            />
 
     </LinearLayout>
 

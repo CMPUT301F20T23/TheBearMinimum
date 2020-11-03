@@ -5,16 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HandleIncomingReqsActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/orange">
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Requests" />
+        android:text="requests"
+        android:layout_gravity="center"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:layout_marginTop="24dp"/>
 
     <ListView
         android:id="@+id/request_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/blue"
+        />
 </LinearLayout>
