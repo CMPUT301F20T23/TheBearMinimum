@@ -1,6 +1,5 @@
- verspackage com.example.bearminimum;
+package com.example.bearminimum;
 
-import java.io.Serializable;
 
 public class Book  {
     private String title;
