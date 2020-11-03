@@ -17,7 +17,12 @@ public class Book {
         this.borrower = borrower;
         this.description = description;
         this.ISBN = ISBN;
+<<<<<<< Updated upstream
         this.status = status;
+=======
+        this.status = "available";
+        this.bid = bid;
+>>>>>>> Stashed changes
     }
 
     public String getTitle() {
