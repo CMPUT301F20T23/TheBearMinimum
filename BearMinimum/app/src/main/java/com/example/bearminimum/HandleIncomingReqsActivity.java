@@ -30,16 +30,22 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_handle_incoming_reqs);
 
+        //get listview for requests
         requestView = findViewById(R.id.request_view);
 
+        //an array of firebase user ids that are requesting the book in question
         uids = new ArrayList<>();
+        //an array of usernames associated with the uids requesting the book
         users = new ArrayList<>();
 
+        //custom adapter for displaying lists
         adapter = new IncomingRequestsAdapter(users, this);
         requestView.setAdapter(adapter);
 
+        //the book id for the selected book
         bid = getIntent().getExtras().getString("bookid");
 
+        //get the specified book from firestore
         FirebaseFirestore.getInstance().collection("books").document(bid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -55,15 +61,20 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
                     uids = (ArrayList<String>) data.get("requests");
                     book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,bid);
 
+                    //fill users array from uid gotten from firestore
                     getUsers();
                 }
             }
         });
     }
 
+    /**
+     * This takes the list of uids and gets the associated usernames from the firestore users collection
+     */
     private void getUsers() {
         CollectionReference usersRef = FirebaseFirestore.getInstance().collection("users");
         for (String uid : uids) {
+            //for each uid, get the user from firestore
             usersRef.document(uid).get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
