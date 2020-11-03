@@ -45,6 +45,18 @@
             </TextView>
 
             <TextView
+                android:id="@+id/book_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/josefina_light"
+                android:padding="5dp"
+                android:text="owner"
+                android:textColor="@color/white"
+                android:textSize="20sp">
+
+            </TextView>
+
+            <TextView
                 android:id="@+id/book_descr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
