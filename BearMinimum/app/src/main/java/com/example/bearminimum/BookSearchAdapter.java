@@ -25,6 +25,7 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
         private TextView titleView;
         private TextView descrView;
         private TextView statusView;
+        private TextView ownerView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -33,6 +34,7 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
             titleView = itemView.findViewById(R.id.book_title);
             descrView = itemView.findViewById(R.id.book_descr);
             statusView = itemView.findViewById(R.id.book_status);
+            ownerView = itemView.findViewById(R.id.book_owner);
         }
     }
 
@@ -58,6 +60,7 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
         holder.titleView.setText(currentBook.getTitle());
         holder.descrView.setText(currentBook.getDescription());
         holder.statusView.setText(currentBook.getStatus());
+        holder.ownerView.setText(currentBook.getOwner());
     }
 
     @Override
