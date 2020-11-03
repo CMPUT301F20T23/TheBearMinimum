@@ -1,26 +1,26 @@
-package com.example.bearminimum;
+ verspackage com.example.bearminimum;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book  {
     private String title;
     private String author;
     private String owner;
     private String borrower;
     private String description;
     private String ISBN;
-    private String[] status;  //available, requested, accepted, , borrowed.
+    private String status;
+    private String bid;
 
-
-    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String[] status) {
+    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid){
         this.title = title;
         this.author = author;
         this.owner = owner;
         this.borrower = borrower;
         this.description = description;
         this.ISBN = ISBN;
-        this.status = status;
         this.status = "available";
         this.bid = bid;
-
     }
 
     public String getTitle() {
@@ -71,11 +71,19 @@ public class Book {
         this.ISBN = ISBN;
     }
 
-    public String[] getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(String[] status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getBid() {
+        return bid;
+    }
+
+    public void setBid(String bid) {
+        this.bid = bid;
     }
 }
