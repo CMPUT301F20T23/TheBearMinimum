@@ -76,6 +76,9 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
         });
     }
 
+    /**
+     * This initialized the array adapter with a linear layout manager and sets the view adapter
+     */
     private void initRecycler() {
         bookRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new NavigationListAdapter(bookData, this);
@@ -84,6 +87,7 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
 
     @Override
     public void onBookClick(int position) {
+        //when a book is selected, show the individual requests for it
         Intent intent = new Intent(this, HandleIncomingReqsActivity.class);
         intent.putExtra("bookid", bookData.get(position).getBid());
         startActivity(intent);

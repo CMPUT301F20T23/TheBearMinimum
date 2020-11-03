@@ -41,6 +41,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+/**
+ * This class is the activity for viewing and editing the current users information
+ */
 public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragmentInteractionListener{
 
     private EditText username;
@@ -198,6 +201,9 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
         userRef.update("username", newUsername, "phonenumber", newPhonenumber);
     }
 
+    /**
+     * query firestore if the given username is taken by any other user
+     */
     private void checkNameAvailable() {
         newUsername = username.getText().toString();
         Query query = usersRef.whereNotEqualTo("uid", user.getUid()).whereEqualTo("username", newUsername);
@@ -242,10 +248,12 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
 
         //upload chosen image to firestore as profile image
         if (requestCode == PICK_IMAGE) {
+            //check that user actually selected an image
             if (data == null) {
                 Log.d("MyDebug", "no image selected");
                 return;
             }
+            //get uri and start upload
             Uri imageUri = data.getData();
             UploadTask uploadTask = storageRef.putFile(imageUri);
 
@@ -303,6 +311,10 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
         });
     }
 
+    /**
+     * sign the user out
+     * @param v is a view which authUI needs
+     */
     public void signOut(View v) {
         AuthUI.getInstance()
                 .signOut(v.getContext())
@@ -315,5 +327,4 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
                     }
                 });
     }
-
 }

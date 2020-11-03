@@ -39,6 +39,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class handles the input and authentication of login information
+ */
 public class LoginActivity extends AppCompatActivity {
 
     //ui elements
