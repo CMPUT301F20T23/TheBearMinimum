@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.ViewHolder>{
 
     //holds books to display
     private ArrayList<Book> booksDisplayed;
+
+    private FirebaseFirestore db;
+    private String username;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,7 +73,31 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
         holder.titleView.setText(currentBook.getTitle());
         holder.descrView.setText(currentBook.getDescription());
         holder.statusView.setText(currentBook.getStatus());
-        holder.ownerView.setText(currentBook.getOwner());
+
+        //get owner username
+        db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .whereEqualTo("uid", currentBook.getOwner())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "got user doc");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getString("uid") == currentBook.getOwner()) {
+                                    username = document.getString("username");
+                                }
+                            }
+
+
+                        } else {
+                            Log.d(TAG, "error getting user doc");
+                            Exception exception = task.getException();
+                        }
+                    }
+                });
+        holder.ownerView.setText(username);
     }
 
     @Override
