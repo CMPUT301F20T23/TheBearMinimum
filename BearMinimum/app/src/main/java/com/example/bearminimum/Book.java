@@ -10,7 +10,6 @@ public class Book implements Serializable {
     private String description;
     private String ISBN;
     private String status;
-
     private String bid;
 
     public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid){
