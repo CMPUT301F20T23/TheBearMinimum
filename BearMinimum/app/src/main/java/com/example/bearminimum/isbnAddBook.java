@@ -4,26 +4,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class isbnAddBook extends AppCompatActivity {
-    TextView textViewName;
-    TextView textViewAuthor;
-    TextView textViewDes;
-    TextView textViewISBN;
+    EditText textViewName;
+    EditText textViewAuthor;
+    EditText textViewDes;
+    EditText textViewISBN;
 
 
     @Override
     protected void onCreate(@Nullable Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         setContentView(R.layout.isbn_add_book);
-        String name = getIntent().getExtras().getString("name");
-        String des = getIntent().getExtras().getString("des");
-        String author = getIntent().getExtras().getString("author");
-        String isbn = getIntent().getExtras().getString("isbn");
+
+
+        //String name = getIntent().getExtras().getString("name");
+        //String des = getIntent().getExtras().getString("des");
+        //String author = getIntent().getExtras().getString("author");
+        //String isbn = getIntent().getExtras().getString("isbn");
+
 
 
         textViewName = findViewById(R.id.isbn_book_name);
@@ -31,10 +35,10 @@ public class isbnAddBook extends AppCompatActivity {
         textViewDes = findViewById(R.id.isbn_description);
         textViewISBN = findViewById(R.id.isbn_ISBN);
 
-        textViewName.setText(name);
-        textViewDes.setText(des);
-        textViewISBN.setText(isbn);
-        textViewAuthor.setText(author);
+        //textViewName.setText(name);
+        //textViewDes.setText(des);
+        //textViewISBN.setText(isbn);
+        //textViewAuthor.setText(author);
     }
 
 
