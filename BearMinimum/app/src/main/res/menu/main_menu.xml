@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_profile"
+        android:title="@string/nav_profile"
+        />
+
+    <item
+        android:id="@+id/nav_notifications"
+        android:title="@string/nav_notifications"
+        />
+
+    <item
+        android:id="@+id/nav_incoming_requests"
+        android:title="@string/nav_incoming_requests"
+        />
+
+    <item
+        android:id="@+id/nav_outgoing_requests"
+        android:title="@string/nav_outgoing_requests"
+        />
+
+    <item
+        android:id="@+id/nav_add_book"
+        android:title="@string/nav_add_book"
+        />
+
+    <item
+        android:id="@+id/nav_search"
+        android:title="@string/nav_search"
+        />
+
+    <item
+        android:id="@+id/nav_sign_out"
+        android:title="@string/nav_sign_out"
+        />
+
+
+</menu>

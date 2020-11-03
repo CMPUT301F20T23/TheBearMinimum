@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "595580750313",
+    "firebase_url": "https://thebearminimum-adecf.firebaseio.com",
+    "project_id": "thebearminimum-adecf",
+    "storage_bucket": "thebearminimum-adecf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595580750313:android:814d5790073e633d126378",
+        "android_client_info": {
+          "package_name": "com.example.bearminimum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595580750313-dlh2l6bfemb2itku9oqpjhdag6th4jip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBthqYupO6M5_wPHGiNgpWGZvAtcSBxDSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595580750313-dlh2l6bfemb2itku9oqpjhdag6th4jip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

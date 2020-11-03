@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "642758910156",
+    "firebase_url": "https://bearminimum-161a6.firebaseio.com",
+    "project_id": "bearminimum-161a6",
+    "storage_bucket": "bearminimum-161a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642758910156:android:8a970b92c8460deb176269",
+        "android_client_info": {
+          "package_name": "com.example.bearminimum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642758910156-cknbtcncdpu2mpadsce5l0o715ld06fd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0mypyirNu12eDHoVPPJSWvhPGYI7PPf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642758910156-cknbtcncdpu2mpadsce5l0o715ld06fd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

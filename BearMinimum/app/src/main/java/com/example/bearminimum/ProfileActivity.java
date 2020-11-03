@@ -97,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
         checkName = findViewById(R.id.checkName);
         profileImg = findViewById(R.id.profileImage);
 
-        //init elementsn
+        //init elements
         apply.setEnabled(false);
         email.setText(user.getEmail());
         //load profile image

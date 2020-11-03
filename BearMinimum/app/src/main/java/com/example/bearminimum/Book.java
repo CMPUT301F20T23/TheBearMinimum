@@ -1,7 +1,8 @@
 package com.example.bearminimum;
 
+import java.io.Serializable;
 
-public class Book  {
+public class Book implements Serializable {
     private String title;
     private String author;
     private String owner;
@@ -18,7 +19,7 @@ public class Book  {
         this.borrower = borrower;
         this.description = description;
         this.ISBN = ISBN;
-        this.status = "available";
+        this.status = status;
         this.bid = bid;
     }
 
