@@ -94,9 +94,9 @@ public class NavigationListAdapter extends
         TextView textView1 = holder.bookTextView;
         textView1.setText(book.getTitle());
         TextView textView2 = holder.userNameTextView;
-        textView2.setText(book.getOwner());
+        textView2.setText("owner: " + book.getOwner());
         TextView textView3 = holder.statusTextView;
-        textView3.setText(book.getStatus());
+        textView3.setText("status: " + book.getStatus());
     }
 
     //return total count of items in the list

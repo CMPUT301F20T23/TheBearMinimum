@@ -303,6 +303,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra("currentUser", true);
+            intent.putExtra("UID", FirebaseAuth.getInstance().getCurrentUser().getUid());
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_sign_out) {
             FirebaseAuth.getInstance().signOut();

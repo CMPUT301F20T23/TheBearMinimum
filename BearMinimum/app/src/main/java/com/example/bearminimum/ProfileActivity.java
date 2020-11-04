@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,6 +42,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 /**
  * This class is the activity for viewing and editing the current users information
  */
@@ -55,14 +58,16 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
     private Button checkName;
 
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseFirestore db;
     private CollectionReference usersRef;
     private DocumentReference userRef;
     StorageReference storageRef;
     AuthCredential credential;
 
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private String newUsername;
+    private String userid;
+    private Boolean isCurrentUser;
 
     private static final int PICK_IMAGE = 1188;
 
@@ -80,16 +85,73 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
 
-        user.reload();
-        Log.d("MyDebug", "user reloaded");
+        userid = (String) getIntent().getExtras().get("UID");
+        isCurrentUser = (Boolean) getIntent().getExtras().get("currentUser");
+
+        if (isCurrentUser)
+            showOwnedProfile();
+        else
+            showOtherProfile(userid);
+
+
+    }
+
+    /**
+     * sets up the activity to display non editable information about some user
+     * @param userid The id of the user to be displayed
+     */
+    private void showOtherProfile(String userid) {
+        setContentView(R.layout.activity_other_profile);
+
+        //get layout elements
+        TextView username = findViewById(R.id.view_username);
+        TextView email = findViewById(R.id.view_email);
+        TextView phonenumber = findViewById(R.id.view_phone);
+        profileImg = findViewById(R.id.profileImage);
 
         //init firebase
         db = FirebaseFirestore.getInstance();
         usersRef = db.collection("users");
-        userRef = usersRef.document(user.getUid());
-        storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid());
+        userRef = usersRef.document(userid);
+        storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + userid);
+
+        //load profile image
+        Glide.with(this.getBaseContext())
+                .load(storageRef)
+                .placeholder(R.drawable.logo_books)
+                .apply(new RequestOptions().override(profileImg.getHeight()))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(profileImg);
+        profileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeProfileImage();
+            }
+        });
+
+        //get user info from firestore
+        userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                if (snapshot != null && snapshot.exists()) {
+                    username.setText((String) snapshot.getData().get("username"));
+                    email.setText((String) snapshot.getData().get("email"));
+                    phonenumber.setText((String) snapshot.getData().get("phonenumber"));
+                    Log.d("MyDebug", "document event");
+                } else {
+                    Log.d("MyDebug", "doc snapshot null");
+                }
+            }
+        });
+    }
+
+    /**
+     * sets up the activity to display editable info about the current user
+     */
+    private void showOwnedProfile() {
+        setContentView(R.layout.activity_owned_profile);
 
         //get layout elements
         username = findViewById(R.id.edit_username);
@@ -99,6 +161,12 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
         signout = findViewById(R.id.signout);
         checkName = findViewById(R.id.checkName);
         profileImg = findViewById(R.id.profileImage);
+
+        //init firebase
+        db = FirebaseFirestore.getInstance();
+        usersRef = db.collection("users");
+        userRef = usersRef.document(user.getUid());
+        storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/user_profile_images/" + user.getUid());
 
         //init elements
         apply.setEnabled(false);
