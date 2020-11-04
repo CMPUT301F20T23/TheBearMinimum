@@ -18,7 +18,6 @@ public class BookEntry extends AppCompatDialogFragment {
     private EditText edit_descr;
     private EditText edit_author;
     private EditText edit_ISBN;
-    private EditText edit_Owner;
     private dialoglistner listner;
     private String title;
     private String descr;
