@@ -13,6 +13,11 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 //basic adapter extending RecyclerView.Adapter
 //custom ViewHolder to access our views
 public class NavigationListAdapter extends
@@ -94,9 +99,19 @@ public class NavigationListAdapter extends
         TextView textView1 = holder.bookTextView;
         textView1.setText(book.getTitle());
         TextView textView2 = holder.userNameTextView;
-        textView2.setText("owner: " + book.getOwner());
         TextView textView3 = holder.statusTextView;
         textView3.setText("status: " + book.getStatus());
+
+        FirebaseFirestore.getInstance().collection("users").document(book.getOwner()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful())
+                            textView2.setText("owner: " + task.getResult().getData().get("username"));
+                        else
+                            textView2.setText("owner: failed to fetch");
+                    }
+                });
     }
 
     //return total count of items in the list
