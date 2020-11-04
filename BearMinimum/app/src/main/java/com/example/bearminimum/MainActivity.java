@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,8 +28,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -52,6 +58,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /******************Collection/ filter status END*********************/
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
 
@@ -178,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 filterList(selectedFilter);
             }
         });
+
     }
 
 
@@ -235,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "couldn't delete photo");
             }
         });
+
     }
 
     /******************Collection/ filter status START*********************/
@@ -295,8 +309,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             finish();
         } else if (item.getItemId() == R.id.nav_add_book) {
-
+            Intent intent = new Intent(this, AddBookActivity.class);
+            startActivity(intent);
         } else if (item.getItemId() == R.id.nav_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
 
         } else if (item.getItemId() == R.id.nav_incoming_requests) {
             Intent intent = new Intent(this, IncomingReqs.class);

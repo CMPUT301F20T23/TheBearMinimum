@@ -30,7 +30,7 @@ public class BookEntry extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         LayoutInflater inflater=getActivity().getLayoutInflater();
-        View view=inflater.inflate(R.layout.add_book,null);
+        View view=inflater.inflate(R.layout.activity_add_book,null);
         edit_author=view.findViewById(R.id.editAuthor);
         edit_descr=view.findViewById(R.id.editDescr);
         edit_ISBN=view.findViewById(R.id.editISBN);
