@@ -20,12 +20,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class isbn_search_book extends AppCompatActivity {
@@ -114,25 +116,35 @@ public class isbn_search_book extends AppCompatActivity {
 
                 HashMap<String, Object> data = new HashMap<>();
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                data.put("title", name);
-                data.put("author", author);
-                data.put("isbn", isbn);
-                data.put("description", des);
-                db.collection("books").document(user.getUid())
-                        .set(data)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("DEBUG", "Data has been added successfully!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("DEBUG", "Data could not be added!" + e.toString());
-                            }
-                        });
-                finish();
+                if (name.length() > 0 && author.length() > 0 && isbn.length() > 0) {
+                    data.put("title", name);
+                    data.put("author", author);
+                    data.put("isbn", isbn);
+                    data.put("description", des);
+                    data.put("bookid", "");
+                    data.put("borrower", "~");
+                    data.put("status", "available");
+                    data.put("owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    data.put("requests", new ArrayList<String>());
+                    db.collection("books")
+                            .add(data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d("DEBUG", "Data has been added successfully!");
+                                    documentReference.update("bookid", documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d("DEBUG", "Data could not be added!" + e.toString());
+                                }
+                            });
+                    finish();
+
+
+                }
             }
         }
     }
