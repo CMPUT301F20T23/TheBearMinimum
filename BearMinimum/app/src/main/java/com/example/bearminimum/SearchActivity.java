@@ -44,7 +44,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SEARCH_ACTIVITY";
     //adapter
-    ArrayList<Book> bookList;
+    private ArrayList<Book> bookList;
     private BookSearchAdapter adapter;
 
     //firebase
