@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddBookActivity extends AppCompatActivity {
@@ -72,12 +73,18 @@ public class AddBookActivity extends AppCompatActivity {
                     data.put("author", bookAuthor);
                     data.put("isbn", bookISBN);
                     data.put("description", bookDescr);
-                    db.collection("books").document(user.getUid())
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    data.put("bookid", "");
+                    data.put("borrower", "~");
+                    data.put("status", "available");
+                    data.put("owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    data.put("requests", new ArrayList<String>());
+                    db.collection("books")
+                            .add(data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
+                                public void onSuccess(DocumentReference documentReference) {
                                     Log.d("DEBUG", "Data has been added successfully!");
+                                    documentReference.update("bookid", documentReference.getId());
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {

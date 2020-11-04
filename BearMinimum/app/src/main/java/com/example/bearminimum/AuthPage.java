@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * This class serves as the entry point for to the app for users who aren't logged in
+ */
 public class AuthPage extends AppCompatActivity {
     //activity result code
     private static final int RC_SIGN_IN = 123;

@@ -60,7 +60,6 @@ public class SearchActivity extends AppCompatActivity {
         getBooks();
         setUpAdapter();
 
-
         //using the editText as a search bar
         EditText searchTextBar = findViewById(R.id.search_editText);
         searchTextBar.addTextChangedListener(new TextWatcher() {
@@ -169,6 +168,7 @@ public class SearchActivity extends AppCompatActivity {
                             Log.d(TAG, "error getting book documents");
 
                         }
+                        filter("");
                     }
         });
 

@@ -39,6 +39,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class handles the input and authentication of login information
+ */
 public class LoginActivity extends AppCompatActivity {
 
     //ui elements
@@ -134,10 +137,14 @@ public class LoginActivity extends AppCompatActivity {
                                 throw task.getException();
                             } catch (FirebaseAuthInvalidUserException wrongEmail) {
                                 Log.d("MyDebug", "wrong email");
-                                Snackbar.make(findViewById(R.id.loginview), "Wrong username or password", Snackbar.LENGTH_SHORT);
+                                Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "wrong username or password", Snackbar.LENGTH_SHORT);
+                                sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                                sb.show();
                             } catch (FirebaseAuthInvalidCredentialsException wrongPass) {
                                 Log.d("MyDebug", "wrong pass");
-                                Snackbar.make(findViewById(R.id.loginview), "Wrong password", Snackbar.LENGTH_SHORT);
+                                Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "wrong password", Snackbar.LENGTH_SHORT);
+                                sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                                sb.show();
                             } catch (Exception e) {
                                 Log.d("MyDebug", e.getMessage());
                             }
@@ -168,10 +175,14 @@ public class LoginActivity extends AppCompatActivity {
                                 throw task.getException();
                             } catch (FirebaseAuthWeakPasswordException weakPasswordException) {
                                 Log.d("MyDebug", "weak pass");
-                                Snackbar.make(findViewById(R.id.loginview), "Password is too weak", Snackbar.LENGTH_SHORT);
+                                Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "password is too weak", Snackbar.LENGTH_SHORT);
+                                sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                                sb.show();
                             } catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
                                 Log.d("MyDebug", "malformed email");
-                                Snackbar.make(findViewById(R.id.loginview), "Malformed email", Snackbar.LENGTH_SHORT);
+                                Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "malformed email", Snackbar.LENGTH_SHORT);
+                                sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                                sb.show();
                             } catch (Exception e) {
                                 Log.d("MyDebug", e.getMessage());
                             }
@@ -228,7 +239,9 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void determineNewuser() {
         if (emailField.getText().toString().isEmpty()) {
-            Snackbar.make(findViewById(R.id.loginview), "Enter an email", Snackbar.LENGTH_SHORT).show();
+            Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "enter an email", Snackbar.LENGTH_SHORT);
+            sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+            sb.show();
             waiting.setVisibility(View.INVISIBLE);
             return;
         }
@@ -241,11 +254,15 @@ public class LoginActivity extends AppCompatActivity {
                         throw task.getException();
                     } catch (FirebaseAuthInvalidCredentialsException invalidCredentialsException) {
                         Log.d("MyDebug", invalidCredentialsException.getErrorCode());
-                        Snackbar.make(findViewById(R.id.loginview), "Malformed email", Snackbar.LENGTH_SHORT).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "malformed email", Snackbar.LENGTH_SHORT);
+                        sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                        sb.show();
                     }
                     catch (Exception e) {
                         Log.d("MyDebug", e.getClass().getName());
-                        Snackbar.make(findViewById(R.id.loginview), "Sign in error", Snackbar.LENGTH_SHORT).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "sign in error", Snackbar.LENGTH_SHORT);
+                        sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                        sb.show();
                     }
                 } else {
                     if (task.getResult().getSignInMethods().size() == 1) {
@@ -291,7 +308,9 @@ public class LoginActivity extends AppCompatActivity {
                             continueAuthBtn.setEnabled(true);
                         }
                     } else {
-                        Snackbar.make(findViewById(R.id.loginview), "Username Taken", Snackbar.LENGTH_LONG).show();
+                        Snackbar sb = Snackbar.make(findViewById(R.id.loginview), "username Taken", Snackbar.LENGTH_LONG);
+                        sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+                        sb.show();
                         continueAuthBtn.setEnabled(false);
                         Log.d("MyDebug", "username not free");
                     }

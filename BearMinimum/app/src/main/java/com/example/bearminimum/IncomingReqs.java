@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This activity displays all the of the current user's books that have requests on them
+ */
 public class IncomingReqs extends AppCompatActivity implements NavigationListAdapter.OnBookClickListener {
     private NavigationListAdapter adapter;
     private ArrayList<Book> bookData;
@@ -36,12 +39,14 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_reqs);
 
+        //setup recycler and its data
         bookData = new ArrayList<>();
         bookRecyclerView = findViewById(R.id.books_with_reqs);
         initRecycler();
 
         booksRef = FirebaseFirestore.getInstance().collection("books");
 
+        //listen for owned books that have the requested status
         Query query = booksRef.whereEqualTo("owner", user.getUid()).whereEqualTo("status", "requested");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -71,6 +76,9 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
         });
     }
 
+    /**
+     * This initialized the array adapter with a linear layout manager and sets the view adapter
+     */
     private void initRecycler() {
         bookRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new NavigationListAdapter(bookData, this);
@@ -79,6 +87,7 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
 
     @Override
     public void onBookClick(int position) {
+        //when a book is selected, show the individual requests for it
         Intent intent = new Intent(this, HandleIncomingReqsActivity.class);
         intent.putExtra("bookid", bookData.get(position).getBid());
         startActivity(intent);

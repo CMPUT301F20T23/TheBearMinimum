@@ -55,6 +55,7 @@ public class Reauth extends DialogFragment {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //pass the entered password back to calling activity
                         String pass = password.getText().toString();
                         listener.onOkPressed(pass);
                     }

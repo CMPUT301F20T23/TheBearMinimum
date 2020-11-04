@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * This class is a custom list adapter for showing current requests on a book
+ */
 public class IncomingRequestsAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<User> list;
     private Context context;
