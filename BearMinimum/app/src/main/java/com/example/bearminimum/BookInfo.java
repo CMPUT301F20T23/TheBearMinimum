@@ -31,7 +31,7 @@ public class BookInfo extends AppCompatActivity {
     private ImageView imageView;
     private Button insertImg, removeImg;
     private TextView t1,t2,t3,t4;
-    private String name, author, ISBN, descr;
+    private String name, author, ISBN, descr, bookid;
     private FirebaseStorage storage;
     private StorageReference storageReference;
 
@@ -54,6 +54,7 @@ public class BookInfo extends AppCompatActivity {
         author=getIntent().getStringExtra("AUTHOR");
         ISBN=getIntent().getStringExtra("ISBN");
         descr=getIntent().getStringExtra("DESCRIPTION");
+        bookid = getIntent().getStringExtra("BOOKID");
 
         t1.setText(name);
         t2.setText(author);
@@ -73,7 +74,7 @@ public class BookInfo extends AppCompatActivity {
         removeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                storageReference.delete()
+                storageReference.child("book_cover_images/" + bookid).delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -98,9 +99,8 @@ public class BookInfo extends AppCompatActivity {
         if(requestCode==GALLERY_REQUEST_CODE  && resultCode==RESULT_OK && data!=null){
             Uri imgData = data.getData();
             imageView.setImageURI(imgData);
-            final String key = UUID.randomUUID().toString();
 
-            StorageReference ref = storageReference.child("images/" + key);
+            StorageReference ref = storageReference.child("book_cover_images/" + bookid);
 
             ref.putFile(imgData)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
