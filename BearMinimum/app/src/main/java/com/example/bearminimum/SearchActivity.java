@@ -29,6 +29,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * SearchActivity
+ *
+ * Allows user to search through available books to borrow, using keywords
+ * Shows results in list
+ *
+ * Nov 2, 2020
+ */
+
 //referenced: https://codinginflow.com/tutorials/android/searchview-recyclerview
 
 public class SearchActivity extends AppCompatActivity {
@@ -71,11 +80,23 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Takes in a keyword and searches through book
+     * titles, author, ISBN, descriptions fields for
+     * any books that have a match with the keyword
+     *
+     * @param text
+     * The keyword to search for
+     */
+
     private void filter(String text) {
         ArrayList<Book> filteredList = new ArrayList<>();
 
         for (Book book : bookList) {
-            if (book.getDescription().toLowerCase().contains(text.toLowerCase())) {
+            if (book.getTitle().toLowerCase().contains(text.toLowerCase()) ||
+                    book.getAuthor().toLowerCase().contains(text.toLowerCase()) ||
+                    book.getISBN().contains(text) ||
+                    book.getDescription().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(book);
             }
         }
@@ -83,6 +104,10 @@ public class SearchActivity extends AppCompatActivity {
 
         adapter.filteredList(filteredList);
     }
+
+    /**
+     * Sets up an adapter for the RecyclerView
+     */
 
     private void setUpAdapter() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -93,6 +118,12 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
+
+    /**
+     * Queries for all books that don't belong to the user,
+     * and have status as 'available' or 'requested'
+     * Creates a list of Book objects of all books found
+     */
 
     private void getBooks() {
 
