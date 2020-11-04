@@ -12,10 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class isbnAddBook extends AppCompatActivity {
-    TextView textViewName;
-    TextView textViewAuthor;
-    TextView textViewDes;
-    TextView textViewISBN;
+    private TextView textViewName;
+    private TextView textViewAuthor;
+    private TextView textViewDes;
+    private TextView textViewISBN;
 
 
 
