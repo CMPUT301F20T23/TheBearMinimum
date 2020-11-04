@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class isbn_search_book extends AppCompatActivity {
+
     /******************ISBN add BOOK START ******************************/
     public EditText ISBNNum;
     public Button ISBNSearchButton;
@@ -39,14 +40,13 @@ public class isbn_search_book extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.isbn_search_book);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.isbn_search_book);
+
         /******************ISBN add BOOK START ******************************/
         ISBNSearchButton = findViewById(R.id.ISBNSearchButton);
         ISBNNum = findViewById(R.id.ISBNSearch);
-
-        /******************ISBN add BOOK END ******************************/
-        /******************ISBN add BOOK START ******************************/
+        Log.i("Riky","isbnSearch1");
 
         ISBNSearchButton.setOnClickListener(new View.OnClickListener() {
 
@@ -62,6 +62,7 @@ public class isbn_search_book extends AppCompatActivity {
                     String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbnValue;
                     //Do http request
                     Log.i("Riky",url);
+
 
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
                             url,null, // here
@@ -93,6 +94,9 @@ public class isbn_search_book extends AppCompatActivity {
                 }
             }
         });
+
+
+
 
         /******************ISBN add BOOK END ******************************/
     }

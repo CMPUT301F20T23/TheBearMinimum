@@ -29,6 +29,7 @@ public class AddBookActivity extends AppCompatActivity {
     private EditText editDescrEditText;
     private Button addbook_button;
 
+    private Button isbnAddBookButton;
     private FirebaseFirestore db;
 
     @Override
@@ -41,6 +42,18 @@ public class AddBookActivity extends AppCompatActivity {
         editISBNEditText = findViewById(R.id.editISBN);
         editDescrEditText = findViewById(R.id.editDescr);
         addbook_button = findViewById(R.id.addbook_button);
+        isbnAddBookButton = findViewById(R.id.isbn_add_book_button);
+
+
+        isbnAddBookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddBookActivity.this, isbn_search_book.class);
+                Log.i("ISBN","FAIL");
+                startActivity(intent);
+                finish();
+            }
+        });
 
         addbook_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,5 +94,9 @@ public class AddBookActivity extends AppCompatActivity {
             }
 
         });
+
+
+
+
     }
 }
