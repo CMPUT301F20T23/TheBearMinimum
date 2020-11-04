@@ -15,7 +15,7 @@
         <activity android:name=".AddBookActivity"></activity>
         <activity android:name=".isbn_search_book"></activity>
         <activity android:name=".isbnAddBook"></activity>
-        <activity android:name=".BookInfo"></activity>
+        <activity android:name=".ViewBookActivity"></activity>
         <activity android:name=".HandleIncomingReqsActivity" />
         <activity android:name=".IncomingReqs" />
         <activity android:name=".MainActivity" />
