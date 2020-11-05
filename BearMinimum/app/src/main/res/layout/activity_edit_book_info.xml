@@ -5,16 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookInfo"
-    android:background="@color/orange">
+    android:background="@color/orange"
+    tools:context=".ViewBookActivity">
 
     <ImageView
         android:id="@+id/imgBook"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="50dp"
         android:layout_marginRight="24dp"
+        android:maxHeight="250dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,10 +37,10 @@
         android:textSize="20sp"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/removeImage"
         app:layout_constraintTop_toBottomOf="@+id/imgBook" />
 
-    <TextView
+    <EditText
         android:id="@+id/bookName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,11 +52,10 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/removeImage" />
 
-    <TextView
+    <EditText
         android:id="@+id/bookAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookName" />
 
-    <TextView
+    <EditText
         android:id="@+id/bookISBN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookAuthor" />
 
-    <TextView
+    <EditText
         android:id="@+id/bookDescr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -117,5 +117,28 @@
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnInsert" />
+        app:layout_constraintStart_toEndOf="@+id/btnInsert"
+        app:layout_constraintTop_toBottomOf="@+id/imgBook" />
+
+    <Button
+        android:id="@+id/edit_book_apply_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="apply changes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bookDescr" />
+
+    <Button
+        android:id="@+id/delete_book_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="delete book"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_book_apply_btn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -195,34 +195,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    //delete book
-    //TODO
-    // call this under deletebutton.setOnClickListener
-    public void deleteBook(Book selectedBook) {
 
-        String bookID;
-
-        if (selectedBook != null) {
-
-            //get bookid
-            bookID = selectedBook.getBid();
-
-            db.collection("books").document(bookID)
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "book successfully deleted!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error deleting book", e);
-                        }
-                    });
-        }
-    }
 
     //delete book photo
     //TODO
@@ -355,6 +328,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBookClick(int position) {
-
+        Book book = stateFilter.get(position);
+        Intent intent = ViewBookActivity.createIntent(book, this, true);
+        startActivity(intent);
     }
 }
