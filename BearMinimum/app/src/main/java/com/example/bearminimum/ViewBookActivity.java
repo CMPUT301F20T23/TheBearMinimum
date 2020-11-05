@@ -95,7 +95,7 @@ public class ViewBookActivity extends AppCompatActivity {
                 .into(imageView);
 
         t1.setText(name);
-        t2.setText(author);
+        t2.setText("by " + author);
         t3.setText(ISBN);
         t4.setText(descr);
 
@@ -103,13 +103,13 @@ public class ViewBookActivity extends AppCompatActivity {
         db.collection("books").document(bookid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    String userid = (String) task.getResult().getData().get("uid");
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    String userid = (String) task.getResult().getData().get("owner");
                     db.collection("users").document(userid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
-                                t5.setText((String) task.getResult().getData().get("username"));
+                                t5.setText("owner: " + (String) task.getResult().getData().get("username"));
                             }
                         }
                     });
@@ -148,7 +148,7 @@ public class ViewBookActivity extends AppCompatActivity {
                 .into(imageView);
 
         t1.setText(name);
-        t2.setText(author);
+        t2.setText("by " + author);
         t3.setText(ISBN);
         t4.setText(descr);
 
