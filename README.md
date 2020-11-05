@@ -16,7 +16,7 @@ book lending and borrowing, book content searching, and status checking. <br /><
 
 UML diagram represents the relationships between entities and their attributes and functional implementations.
 
-![General UML diagram](https://user-images.githubusercontent.com/58434423/95936904-dcc23200-0d93-11eb-90b8-07b5766ec71a.png)
+![General UML diagram](https://user-images.githubusercontent.com/58434423/98071801-c43cb900-1e21-11eb-946f-3a2d8d95da5c.png)
 <br /><br /><br /><br /><br /><br />
 
 ## **StoryBoard**
@@ -24,15 +24,11 @@ UML diagram represents the relationships between entities and their attributes a
 
 
 StoryBoard shows the user interface as it is implemented.
-![StoryBoard](https://user-images.githubusercontent.com/59704757/96054295-9544b000-0e3e-11eb-84aa-00f848e0098e.png)
+![StoryBoard](https://user-images.githubusercontent.com/59704757/97122081-b7fd8100-16e8-11eb-8850-7dea423f50fa.png)
 <br /><br /><br /><br /><br /><br />
 
 
-## **Update on StoryBoard**
 
-Sign up interface is added in order to modify the status of the book. For example, when a user has borrowed a book, then when other users search for this book, its status is "borrowed".
-
-For reference, please visit TheBearMinimum/doc/storybook_update.png
 
 
 ## License
