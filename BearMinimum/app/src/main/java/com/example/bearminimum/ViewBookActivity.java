@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -97,6 +98,7 @@ public class ViewBookActivity extends AppCompatActivity {
         t1.setText(name);
         t2.setText("by " + author);
         t3.setText(ISBN);
+        t4.setMovementMethod(new ScrollingMovementMethod());
         t4.setText(descr);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
