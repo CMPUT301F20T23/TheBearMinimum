@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,7 +41,7 @@ import java.util.Arrays;
 
 //referenced: https://codinginflow.com/tutorials/android/searchview-recyclerview
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements BookSearchAdapter.OnResultClickListener {
 
     private static final String TAG = "SEARCH_ACTIVITY";
     //adapter
@@ -113,7 +114,7 @@ public class SearchActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        adapter = new BookSearchAdapter(bookList);
+        adapter = new BookSearchAdapter(bookList, this);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -174,4 +175,10 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResultClick(int position) {
+        Book book = bookList.get(position);
+        Intent intent = ViewBookActivity.createIntent(book, this, false);
+        startActivity(intent);
+    }
 }

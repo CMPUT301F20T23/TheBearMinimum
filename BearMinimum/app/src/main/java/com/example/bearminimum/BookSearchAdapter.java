@@ -32,15 +32,20 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
     private FirebaseFirestore db;
     private String username;
 
+    //item click listener
+    private OnResultClickListener mOnResultClickListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView titleView;
         private TextView descrView;
         private TextView statusView;
         private TextView ownerView;
 
-        public ViewHolder(@NonNull View itemView) {
+        //declare listener
+        OnResultClickListener onResultClickListener;
+
+        public ViewHolder(@NonNull View itemView, OnResultClickListener onResultClickListener) {
             super(itemView);
 
             //get textViews
@@ -48,20 +53,33 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
             descrView = itemView.findViewById(R.id.book_descr);
             statusView = itemView.findViewById(R.id.book_status);
             ownerView = itemView.findViewById(R.id.book_owner);
+            this.onResultClickListener = onResultClickListener;
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onResultClickListener.onResultClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnResultClickListener {
+        void onResultClick(int position);
     }
 
     //constructor
     //needs a list of books to display
-    public BookSearchAdapter(ArrayList<Book> bookList) {
+    public BookSearchAdapter(ArrayList<Book> bookList, OnResultClickListener onResultClickListener) {
         booksDisplayed = bookList;
+        this.mOnResultClickListener = onResultClickListener;
     }
 
     @NonNull
     @Override
     public BookSearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_book_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
+        ViewHolder viewHolder = new ViewHolder(v, mOnResultClickListener);
         return viewHolder;
 
     }
