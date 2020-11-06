@@ -25,7 +25,26 @@ import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
+/**
+ * UserSearchAdapter
+ *
+ * adapter to for the RecyclerView in SearchActivity to allower
+ * for custom views
+ * Used to display users in the search result
+ *
+ * Nov. 6, 2020
+ */
+
 public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.ViewHolder>{
+
+    /**
+     * Interface
+     * OnUserClickListener
+     */
+    public interface OnUserClickListener {
+        void onUserClick(int position);
+    }
+
 
     //holds books to display
     private ArrayList<User> usersDisplayed;
@@ -35,6 +54,14 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
 
     //item click listener
     private OnUserClickListener mOnUserClickListener;
+
+
+    //constructor
+    //needs a list of users to display
+    public UserSearchAdapter(ArrayList<User> userList, OnUserClickListener onUserClickListener) {
+        usersDisplayed = userList;
+        this.mOnUserClickListener = onUserClickListener;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -60,17 +87,6 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         public void onClick(View v) {
             onUserClickListener.onUserClick(getAdapterPosition());
         }
-    }
-
-    public interface OnUserClickListener {
-        void onUserClick(int position);
-    }
-
-    //constructor
-    //needs a list of users to display
-    public UserSearchAdapter(ArrayList<User> userList, OnUserClickListener onUserClickListener) {
-        usersDisplayed = userList;
-        this.mOnUserClickListener = onUserClickListener;
     }
 
     @NonNull
@@ -108,6 +124,15 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         }
     }
 
+
+    /**
+     * takes in a ArrayList of User objects filtered using
+     * the input at the search bar
+     * notifies adapter that data changed to update views
+     * accordingly
+     *
+     * @param filteredList  the list of filtered User objects to display
+     */
    public void filteredList(ArrayList<User> filteredList) {
         usersDisplayed = filteredList;
         notifyDataSetChanged();
