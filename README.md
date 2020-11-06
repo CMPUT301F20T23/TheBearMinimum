@@ -19,15 +19,21 @@ UML diagram represents the relationships between entities and their attributes a
 ![General UML diagram](https://user-images.githubusercontent.com/58434423/98071801-c43cb900-1e21-11eb-946f-3a2d8d95da5c.png)
 <br /><br /><br /><br /><br /><br />
 
+## **Prototype**
+
+
+
+Prototype shows the user interface as it is implemented.
+![Prototype](https://user-images.githubusercontent.com/59704757/98313751-c45bc680-1f91-11eb-9e43-efb40ab46192.png)
+<br /><br /><br /><br /><br /><br />
+
 ## **StoryBoard**
 
 
 
 StoryBoard shows the user interface as it is implemented.
-![StoryBoard](https://user-images.githubusercontent.com/59704757/97122081-b7fd8100-16e8-11eb-8850-7dea423f50fa.png)
+![StoryBoard](https://user-images.githubusercontent.com/59704757/98313784-d76e9680-1f91-11eb-99c9-9fea4e9b4faa.png)
 <br /><br /><br /><br /><br /><br />
-
-
 
 
 
