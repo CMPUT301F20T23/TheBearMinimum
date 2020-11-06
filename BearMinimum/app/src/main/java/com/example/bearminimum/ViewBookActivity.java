@@ -64,6 +64,7 @@ public class ViewBookActivity extends AppCompatActivity {
         intent.putExtra("DESCRIPTION", book.getDescription());
         intent.putExtra("BOOKID", book.getBid());
         intent.putExtra("ISOWNED", isOwned);
+        intent.putExtra("STATUS", book.getStatus());
         return intent;
     }
 
@@ -94,7 +95,7 @@ public class ViewBookActivity extends AppCompatActivity {
         TextView t5 = findViewById(R.id.view_book_owner);
 
         //for requesting books
-        ToggleButton requestBotton = findViewById(R.id.request_button);
+        ToggleButton requestButton = findViewById(R.id.request_button);
 
         name=getIntent().getStringExtra("NAME");
         author=getIntent().getStringExtra("AUTHOR");
@@ -148,12 +149,11 @@ public class ViewBookActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             //get all requests
-                            DocumentSnapshot doc = task.getResult();
-                            List<String> requests = (List<String>) doc.get("requests");
+                            List<String> requests = (List<String>) task.getResult().get("requests");
 
                             //check if user is in list
                             if (requests.contains(currentUser)) {
-                                requestBotton.setChecked(true);
+                                requestButton.setChecked(true);
                             } else {
                                 Log.d(TAG, "not yet requested");
                             }
@@ -165,7 +165,7 @@ public class ViewBookActivity extends AppCompatActivity {
 
 
         //pressing the request button
-        requestBotton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        requestButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 DocumentReference requestedBook = db.collection("books").document(bookid);
@@ -174,10 +174,28 @@ public class ViewBookActivity extends AppCompatActivity {
                     //add uid of current user into the requests array
                     requestedBook.update("requests", FieldValue.arrayUnion(currentUser));
 
+                    //update status accordingly
+                    String status = getIntent().getStringExtra("STATUS");
+                    if (status.equals("available")) {
+                        requestedBook.update("status", "requested");
+                    }
                 } else {
                     //button pressed, book request withdrawn
                     //remove uid of current user in the requests array
                     requestedBook.update("requests", FieldValue.arrayRemove(currentUser));
+
+                    //update status accordingly
+                    requestedBook.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                List<String> requests = (List<String>) task.getResult().get("requests");
+                                if (requests.size() <= 0) {
+                                    requestedBook.update("status", "available");
+                                }
+                            }
+                        }
+                    });
 
                 }
             }
@@ -323,4 +341,5 @@ public class ViewBookActivity extends AppCompatActivity {
                         }
                     });
     }
+
 }
