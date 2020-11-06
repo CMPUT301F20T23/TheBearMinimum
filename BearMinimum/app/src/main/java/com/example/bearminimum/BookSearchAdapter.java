@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,27 +96,15 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
         //get owner username
         db = FirebaseFirestore.getInstance();
         db.collection("users")
-                .whereEqualTo("uid", currentBook.getOwner())
+                .document(currentBook.getOwner())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "got user doc");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.getString("uid") == currentBook.getOwner()) {
-                                    username = document.getString("username");
-                                }
-                            }
-
-
-                        } else {
-                            Log.d(TAG, "error getting user doc");
-                            Exception exception = task.getException();
-                        }
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful())
+                            holder.ownerView.setText(task.getResult().getString("username"));
                     }
                 });
-        holder.ownerView.setText(username);
     }
 
     @Override

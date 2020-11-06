@@ -12,9 +12,11 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -24,11 +26,23 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firestore.v1.WriteResult;
+
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -50,6 +64,7 @@ public class ViewBookActivity extends AppCompatActivity {
         intent.putExtra("DESCRIPTION", book.getDescription());
         intent.putExtra("BOOKID", book.getBid());
         intent.putExtra("ISOWNED", isOwned);
+        intent.putExtra("STATUS", book.getStatus());
         return intent;
     }
 
@@ -78,6 +93,9 @@ public class ViewBookActivity extends AppCompatActivity {
         t3 = findViewById(R.id.view_book_isbn);
         t4 = findViewById(R.id.view_book_desc);
         TextView t5 = findViewById(R.id.view_book_owner);
+
+        //for requesting books
+        ToggleButton requestButton = findViewById(R.id.request_button);
 
         name=getIntent().getStringExtra("NAME");
         author=getIntent().getStringExtra("AUTHOR");
@@ -118,6 +136,71 @@ public class ViewBookActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //get current user
+        String currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        //set toggle button accordingly
+        //if user is in requested list, set it to "withdraw request" state
+        db.collection("books").document(bookid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //get all requests
+                            List<String> requests = (List<String>) task.getResult().get("requests");
+
+                            //check if user is in list
+                            if (requests.contains(currentUser)) {
+                                requestButton.setChecked(true);
+                            } else {
+                                Log.d(TAG, "not yet requested");
+                            }
+                        } else {
+                            Log.d(TAG, "couldn't get the doc");
+                        }
+                    }
+                });
+
+
+        //pressing the request button
+        requestButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                DocumentReference requestedBook = db.collection("books").document(bookid);
+                if (b) {
+                    //button pressed, book is requested
+                    //add uid of current user into the requests array
+                    requestedBook.update("requests", FieldValue.arrayUnion(currentUser));
+
+                    //update status accordingly
+                    String status = getIntent().getStringExtra("STATUS");
+                    if (status.equals("available")) {
+                        requestedBook.update("status", "requested");
+                    }
+                } else {
+                    //button pressed, book request withdrawn
+                    //remove uid of current user in the requests array
+                    requestedBook.update("requests", FieldValue.arrayRemove(currentUser));
+
+                    //update status accordingly
+                    requestedBook.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                List<String> requests = (List<String>) task.getResult().get("requests");
+                                if (requests.size() <= 0) {
+                                    requestedBook.update("status", "available");
+                                }
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+
     }
 
     private void showEditable() {
@@ -258,4 +341,5 @@ public class ViewBookActivity extends AppCompatActivity {
                         }
                     });
     }
+
 }
