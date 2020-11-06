@@ -91,6 +91,13 @@
         android:layout_marginTop="88dp"
         android:textOff="@string/request_book"
         android:textOn="@string/withdraw_request"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/josefina_light"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:padding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_book_desc" />
