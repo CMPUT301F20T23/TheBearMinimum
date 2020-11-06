@@ -11,6 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * isbnAddBook
+ *
+ * Connects to the isbn_search_book class by taking the information
+ * obtained from Google Books Api, and displaying it in the fields
+ *
+ * Nov. 6, 2020
+ */
+
 public class isbnAddBook extends AppCompatActivity {
     private TextView textViewName;
     private TextView textViewAuthor;
@@ -41,6 +50,13 @@ public class isbnAddBook extends AppCompatActivity {
     }
 
 
+    /**
+     * Packages all the information of the book and sends
+     * it to isbn_search_book class, so that it can be used
+     *
+     * @param view
+     */
+
     public void isbn_add_button(View view){
 
         String name = textViewName.getText().toString();
@@ -59,6 +75,13 @@ public class isbnAddBook extends AppCompatActivity {
         finish();
     }
 
+
+    /**
+     * Creates an intent for isbn_search_book class without
+     * sending the book information
+     *
+     * @param view
+     */
 
     public void isbn_cancel_button(View view){
         Intent intent1 = new Intent(isbnAddBook.this,isbn_search_book.class);
