@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -275,9 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("currentUser", true);
-            intent.putExtra("UID", FirebaseAuth.getInstance().getCurrentUser().getUid());
+            Intent intent = ProfileActivity.createIntent(currentUser.getUid(), getBaseContext(), true);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_sign_out) {
             FirebaseAuth.getInstance().signOut();

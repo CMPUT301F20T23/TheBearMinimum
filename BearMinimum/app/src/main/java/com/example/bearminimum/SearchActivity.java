@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +20,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,17 +38,22 @@ import java.util.Arrays;
 
 //referenced: https://codinginflow.com/tutorials/android/searchview-recyclerview
 
-public class SearchActivity extends AppCompatActivity implements BookSearchAdapter.OnResultClickListener {
+public class SearchActivity extends AppCompatActivity implements BookSearchAdapter.OnResultClickListener, UserSearchAdapter.OnUserClickListener {
 
     private static final String TAG = "SEARCH_ACTIVITY";
     //adapter
     private ArrayList<Book> bookList;
-    private BookSearchAdapter adapter;
+    private ArrayList<User> userList;
+    private BookSearchAdapter bookAdapter;
+    private UserSearchAdapter userAdapter;
 
     //firebase
     private FirebaseFirestore db;
     private CollectionReference booksRef;
+    private CollectionReference usersRef;
 
+    private boolean searchingBooks = true;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +61,11 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
         setContentView(R.layout.search_activity);
 
         getBooks();
-        setUpAdapter();
+        getUsers();
+        setUpBookAdapter();
+        setUpUserAdapter();
+
+        recyclerView.setAdapter(bookAdapter);
 
         //using the editText as a search bar
         EditText searchTextBar = findViewById(R.id.search_editText);
@@ -76,7 +82,27 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filter(editable.toString());
+                if (searchingBooks)
+                    filterBooks(editable.toString());
+                else
+                    filterUsers(editable.toString());
+            }
+        });
+
+        Button books = findViewById(R.id.search_books);
+        books.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchingBooks = true;
+                recyclerView.setAdapter(bookAdapter);
+            }
+        });
+        Button users = findViewById(R.id.search_users);
+        users.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchingBooks = false;
+                recyclerView.setAdapter(userAdapter);
             }
         });
     }
@@ -90,34 +116,62 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
      * The keyword to search for
      */
 
-    private void filter(String text) {
-        ArrayList<Book> filteredList = new ArrayList<>();
+    private void filterBooks(String text) {
+        ArrayList<Book> filteredBookList = new ArrayList<>();
 
         for (Book book : bookList) {
             if (book.getTitle().toLowerCase().contains(text.toLowerCase()) ||
                     book.getAuthor().toLowerCase().contains(text.toLowerCase()) ||
                     book.getISBN().contains(text) ||
                     book.getDescription().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(book);
+                filteredBookList.add(book);
             }
         }
 
 
-        adapter.filteredList(filteredList);
+        bookAdapter.filteredList(filteredBookList);
     }
 
     /**
-     * Sets up an adapter for the RecyclerView
+     * Takes in a keyword and searches for usernames that contain it
+     * @param text
+     * The keyword to search for
+     */
+    private void filterUsers(String text) {
+        ArrayList<User> filteredUserList = new ArrayList<>();
+
+        for (User user : userList) {
+            if (user.getUsername().toLowerCase().contains(text.toLowerCase())) {
+                filteredUserList.add(user);
+            }
+        }
+
+        userAdapter.filteredList(filteredUserList);
+    }
+
+    /**
+     * Sets up a book adapter for the RecyclerView
      */
 
-    private void setUpAdapter() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+    private void setUpBookAdapter() {
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        adapter = new BookSearchAdapter(bookList, this);
+        bookAdapter = new BookSearchAdapter(bookList, this);
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * Sets up a user adapter for the RecyclerView
+     */
+    private void setUpUserAdapter() {
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        userAdapter = new UserSearchAdapter(userList, this);
+
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     /**
@@ -169,16 +223,55 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
                             Log.d(TAG, "error getting book documents");
 
                         }
-                        filter("");
+                        filterBooks("");
                     }
         });
 
+    }
+
+    /**
+     * Queries for all users that are not the current user
+     */
+    private void getUsers() {
+        userList = new ArrayList<>();
+
+        db = FirebaseFirestore.getInstance();
+        usersRef = db.collection("users");
+
+        //get current user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = currentUser.getUid();
+
+        //query for users that are not the current user
+        usersRef.whereNotEqualTo("uid", userID)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String email = document.getString("email");
+                        String phonenumber = document.getString("phonenumber");
+                        String uid = document.getString("uid");
+                        String username = document.getString("username");
+                        userList.add(new User(email,phonenumber,uid,username));
+                    }
+                }
+                filterUsers("");
+            }
+        });
     }
 
     @Override
     public void onResultClick(int position) {
         Book book = bookList.get(position);
         Intent intent = ViewBookActivity.createIntent(book, this, false);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUserClick(int position) {
+        User user = userList.get(position);
+        Intent intent = ProfileActivity.createIntent(user.getUid(), getBaseContext(), false);
         startActivity(intent);
     }
 }

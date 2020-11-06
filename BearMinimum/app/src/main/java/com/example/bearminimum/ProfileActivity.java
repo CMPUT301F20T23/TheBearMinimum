@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -71,6 +72,13 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
 
     private static final int PICK_IMAGE = 1188;
 
+    public static Intent createIntent(String userid, Context context, boolean isCurrentUser) {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra("UID", userid);
+        intent.putExtra("isCurrentUser", isCurrentUser);
+        return intent;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -87,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
         super.onCreate(savedInstanceState);
 
         userid = (String) getIntent().getExtras().get("UID");
-        isCurrentUser = (Boolean) getIntent().getExtras().get("currentUser");
+        isCurrentUser = (Boolean) getIntent().getExtras().get("isCurrentUser");
 
         if (isCurrentUser)
             showOwnedProfile();

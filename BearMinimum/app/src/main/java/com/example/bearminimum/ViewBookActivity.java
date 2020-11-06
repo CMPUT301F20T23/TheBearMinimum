@@ -150,7 +150,7 @@ public class ViewBookActivity extends AppCompatActivity {
                 .into(imageView);
 
         t1.setText(name);
-        t2.setText("by " + author);
+        t2.setText(author);
         t3.setText(ISBN);
         t4.setText(descr);
 
