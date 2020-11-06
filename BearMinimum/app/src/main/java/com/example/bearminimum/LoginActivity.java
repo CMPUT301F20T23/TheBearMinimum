@@ -40,7 +40,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * LoginActivity
+ *
  * This class handles the input and authentication of login information
+ *
+ * Nov.6, 2020
  */
 public class LoginActivity extends AppCompatActivity {
 
