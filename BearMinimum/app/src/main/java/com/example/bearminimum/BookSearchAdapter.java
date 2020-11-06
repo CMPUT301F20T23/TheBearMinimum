@@ -25,6 +25,16 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
+/**
+ * BookSearchAdapter
+ *
+ * adapter for the RecyclerView in SearchActivity to allow for
+ * custom views
+ * Used to display books in the search result
+ *
+ * Nov. 6, 2020
+ */
+
 public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.ViewHolder>{
 
     //holds books to display
@@ -35,6 +45,13 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
 
     //item click listener
     private OnResultClickListener mOnResultClickListener;
+
+    //constructor
+    //needs a list of books to display
+    public BookSearchAdapter(ArrayList<Book> bookList, OnResultClickListener onResultClickListener) {
+        booksDisplayed = bookList;
+        this.mOnResultClickListener = onResultClickListener;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -69,12 +86,6 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
         void onResultClick(int position);
     }
 
-    //constructor
-    //needs a list of books to display
-    public BookSearchAdapter(ArrayList<Book> bookList, OnResultClickListener onResultClickListener) {
-        booksDisplayed = bookList;
-        this.mOnResultClickListener = onResultClickListener;
-    }
 
     @NonNull
     @Override
@@ -115,6 +126,16 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
             return 0;
         }
     }
+
+
+    /**
+     * takes in a ArrayList of Book objects filtered using
+     * the input at the search bar
+     * notifies adapter that data changed to update views
+     * accordingly
+     *
+     * @param filteredList  the list of filtered Book objects to display
+     */
 
    public void filteredList(ArrayList<Book> filteredList) {
         booksDisplayed = filteredList;
