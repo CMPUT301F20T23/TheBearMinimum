@@ -46,6 +46,8 @@ import com.google.firebase.storage.UploadTask;
 import org.w3c.dom.Text;
 
 /**
+ * ProfileActivity
+ *
  * This class is the activity for viewing and editing the current users information
  */
 public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragmentInteractionListener{
@@ -71,6 +73,16 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
     private Boolean isCurrentUser;
 
     private static final int PICK_IMAGE = 1188;
+
+    /**
+     * creates an intent and returns it to where it was
+     * called to start this activity
+     *
+     * @param userid            uid of the current user
+     * @param context           to get info from the previous activity
+     * @param isCurrentUser     a boolean
+     * @return                  an Intent object
+     */
 
     public static Intent createIntent(String userid, Context context, boolean isCurrentUser) {
         Intent intent = new Intent(context, ProfileActivity.class);
