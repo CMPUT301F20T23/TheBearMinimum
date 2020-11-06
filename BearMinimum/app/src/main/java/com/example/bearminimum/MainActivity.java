@@ -78,23 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
-
-        if (currentUser == null) {
-            //allow tests to run for now
-            FirebaseAuth.getInstance().signInWithEmailAndPassword("test@bearmin.com","test123").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful())
-                        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                }
-            });
-            currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            /*
-            startActivity(AuthPage.createIntent(this));
-            finish();
-            return;
-             */
-        }
+ 
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
