@@ -46,6 +46,16 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
+
+/**
+ * ViewBookActivity
+ *
+ * Activity that allows user to view book details, and/or edit
+ * those details depending on where this activity is being
+ * called from
+ *
+ * Nov. 6, 2020
+ */
 public class ViewBookActivity extends AppCompatActivity {
     private static final int GALLERY_REQUEST_CODE = 1;
     private ImageView imageView;
@@ -83,6 +93,14 @@ public class ViewBookActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * This is the view that only allows users to view book info
+     * and not edit them.
+     * Also allows user to make or withdraw a request on a book
+     *
+     * called from the SearchActivity
+     */
 
     private void showViewable() {
         setContentView(R.layout.activity_view_book_info);
@@ -203,6 +221,11 @@ public class ViewBookActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This is the view that allows users to edit book information.
+     *
+     * called from MainActivity for books that are owned by the user
+     */
     private void showEditable() {
         setContentView(R.layout.activity_edit_book_info);
 
@@ -322,7 +345,12 @@ public class ViewBookActivity extends AppCompatActivity {
         }
     }
 
-    //delete book
+    /**
+     * Allows user to delete a book from the database
+     * Only on books owned by the user
+     *
+     * @param bookID    id of the book being deleted
+     */
     public void deleteBook(String bookID) {
             FirebaseFirestore.getInstance().collection("books")
                     .document(bookID)
