@@ -18,8 +18,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-//basic adapter extending RecyclerView.Adapter
-//custom ViewHolder to access our views
+
+
+/**
+ * NavigationListAdapter
+ *
+ * basic adapter extending RecyclerView.Adapter
+ * custom ViewHolder to access our views
+ * Used to display books in the MainActivity RecyclerView
+ *
+ */
+
 public class NavigationListAdapter extends
         RecyclerView.Adapter<NavigationListAdapter.ViewHolder> {
 

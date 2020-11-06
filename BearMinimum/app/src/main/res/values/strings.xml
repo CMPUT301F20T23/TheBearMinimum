@@ -53,4 +53,6 @@
     <string name="isbn">ISBN</string>
     <string name="descrpition">descrpition</string>
     <string name="books_with_requests">books with requests</string>
+    <string name="request_book">request book</string>
+    <string name="withdraw_request">withdraw request</string>
 </resources>

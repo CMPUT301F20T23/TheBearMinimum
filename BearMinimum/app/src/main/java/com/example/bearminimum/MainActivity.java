@@ -196,36 +196,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-
-    //delete book photo
-    //TODO
-    // call this under edit book
-    public void deleteBookPhoto(Book selectedBook) {
-
-        //get bookid
-        String bookID = selectedBook.getBid();
-
-        //get storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        // Create a reference to the file to delete
-        StorageReference ref = storage.getReference().child("book_cover_images/" + bookID);
-
-        // Delete the file
-        ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "deleted photo corresponding to" + bookID);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "couldn't delete photo");
-            }
-        });
-
-    }
-
     /******************Collection/ filter status START*********************/
     // here we get all information from database and create a bookList for current user
 
