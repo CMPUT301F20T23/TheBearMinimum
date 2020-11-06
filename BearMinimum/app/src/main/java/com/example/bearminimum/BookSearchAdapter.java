@@ -37,6 +37,15 @@ import static android.content.ContentValues.TAG;
 
 public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.ViewHolder>{
 
+    /**
+     * Interface
+     * OnResultClickListener
+     */
+    public interface OnResultClickListener {
+        void onResultClick(int position);
+    }
+
+
     //holds books to display
     private ArrayList<Book> booksDisplayed;
 
@@ -80,10 +89,6 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Vi
         public void onClick(View v) {
             onResultClickListener.onResultClick(getAdapterPosition());
         }
-    }
-
-    public interface OnResultClickListener {
-        void onResultClick(int position);
     }
 
 
