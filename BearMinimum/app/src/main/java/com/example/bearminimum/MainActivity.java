@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -100,9 +101,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.navigation_main);
 
         if (currentUser == null) {
+            //allow tests to run for now
+            FirebaseAuth.getInstance().signInWithEmailAndPassword("test@bearmin.com","test123").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful())
+                        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                }
+            });
+            currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            /*
             startActivity(AuthPage.createIntent(this));
             finish();
             return;
+             */
         }
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -133,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
-        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in" + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
         sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
         sb.show();
 

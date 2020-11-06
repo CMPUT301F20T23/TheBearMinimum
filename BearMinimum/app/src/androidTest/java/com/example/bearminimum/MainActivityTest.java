@@ -11,8 +11,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,10 +29,8 @@ public class MainActivityTest {
     private Solo solo;
 
     @Rule
-
     public ActivityTestRule<MainActivity> rule =
             new ActivityTestRule<>(MainActivity.class, true, true);
-
 
     @Before
     public void setUp(){
@@ -67,6 +68,32 @@ public class MainActivityTest {
         assertTrue(solo.searchText("Year Book"));
 
 
+    }
+
+    /**
+     * verify info on current user
+     */
+    @Test
+    public void checkCurrentUserProfile() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("profile");
+
+        assertTrue(solo.waitForActivity(ProfileActivity.class,2000));
+        assertTrue(solo.waitForText(user.getEmail(),1,2000));
+        assertTrue(solo.waitForText(user.getDisplayName(),1,2000));
+    }
+
+    /**
+     * logout and finish
+     */
+    @After
+    public void tearDown() {
+        solo.finishOpenedActivities();
     }
 
 
