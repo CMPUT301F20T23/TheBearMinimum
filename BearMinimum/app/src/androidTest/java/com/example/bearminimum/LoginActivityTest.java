@@ -59,6 +59,19 @@ public class LoginActivityTest {
         assertTrue(solo.waitForActivity(AuthPage.class, 2000));
     }
 
+    @Test
+    public void checkSignup() {
+        // Asserts that the current activity is the login activity
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
+
+        solo.enterText((EditText) solo.getView(R.id.email_box), "DNE@bearmin.com");
+        solo.clickOnButton("continue");
+
+        assertTrue(solo.waitForText("username",1,2000));
+        assertTrue(solo.waitForText("password",1,2000));
+        assertTrue(solo.waitForText("check",1,2000));
+    }
+
     @After
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
