@@ -36,17 +36,19 @@ public class MainActivityTest {
         solo = new Solo(getInstrumentation(),rule.getActivity());
     }
 
-//    @Test
-//    public void AddBookByISBN (){
-//        solo.assertCurrentActivity("Wrong activity",MainActivity.class);
-//        solo.clickOnImageButton(0); // open menu
-//        solo.clickOnText("add book");
-//        solo.clickOnButton("add by ISBN");
-//        solo.enterText((EditText) solo.getView(R.id.ISBNSearch),"9781443411080");
-//        solo.clickOnButton("search");
-//        solo.clickOnButton("add");
-//
-//    }
+    @Test
+    public void AddBookByISBN (){
+        solo.assertCurrentActivity("Wrong activity",MainActivity.class);
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("add book");
+        solo.clickOnButton("add by ISBN");
+        solo.enterText((EditText) solo.getView(R.id.ISBNSearch),"9781443411080");
+        solo.clickOnButton("search");
+        solo.waitForText("Year Book",1,2000);
+        solo.clickOnButton("add");
+        assertTrue(solo.searchText("The Great Gatsby"));
+
+    }
 
     @Test
     public void AddBookTest (){
