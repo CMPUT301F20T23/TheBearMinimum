@@ -16,6 +16,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * HandleIncomingReqsActivity
+ *
+ * Used to show requests from other users for a certain book
+ * owned by the current user
+ *
+ * Nov. 6, 2020
+ */
+
 public class HandleIncomingReqsActivity extends AppCompatActivity {
 
     private ListView requestView;

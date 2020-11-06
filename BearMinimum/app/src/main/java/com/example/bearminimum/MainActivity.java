@@ -1,44 +1,23 @@
 package com.example.bearminimum;
 
-import android.app.Notification;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-
-import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.util.ExtraConstants;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,28 +31,28 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
+
+/**
+ * MainActivity
+ *
+ * Main page of the app once user has signed in.
+ *
+ * Nov. 3, 2020
+ */
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener, NavigationListAdapter.OnBookClickListener {
     //firebase
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference bookCollection = db.collection("books");
-    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final CollectionReference bookCollection = db.collection("books");
+    private final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     //custom adapter
     private NavigationListAdapter adapter;
@@ -139,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //connect to RecyclerView
         //UI
-        RecyclerView rvBooks = (RecyclerView) findViewById(R.id.list_of_books);
+        RecyclerView rvBooks = findViewById(R.id.list_of_books);
         //initialize books
 
         //create adapter passing in user data
@@ -199,6 +178,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     /******************Collection/ filter status START*********************/
     // here we get all information from database and create a bookList for current user
 
+    /**
+     * Filters a list of Book objects based on the selected filter
+     * to display in the RecyclerView list.
+     *
+     * @param Clicked  The current String type filter selected from the spinner.
+     *                 Obtained from function OnItemSelected.
+     */
+
     private void filterList(String Clicked){
         selectedFilter = Clicked;
         stateFilter.clear();
@@ -243,6 +230,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
+    /**
+     * The side drawer menu that contains different menu items.
+     * Clicking on a menu item will navigate the user to the
+     * perspective activity for that task.
+     *
+     * @param   item  the menu item selected from the drawer
+     * @return        a boolean that indicates the drawer has closed
+     */
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile) {
@@ -269,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.close();
         return true;
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

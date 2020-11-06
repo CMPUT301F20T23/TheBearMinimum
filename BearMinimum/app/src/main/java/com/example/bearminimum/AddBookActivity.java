@@ -22,6 +22,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * AddBookActivity
+ *
+ * Activity allows user to create a new book.
+ *
+ * Nov. 6, 2020
+ */
+
 public class AddBookActivity extends AppCompatActivity {
 
     private EditText editTitleEditText;

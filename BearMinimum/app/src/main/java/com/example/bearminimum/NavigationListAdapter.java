@@ -32,8 +32,28 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class NavigationListAdapter extends
         RecyclerView.Adapter<NavigationListAdapter.ViewHolder> {
 
+    /**
+     * Interface
+     * OnBookClickListener
+     *
+     */
+    public interface OnBookClickListener {
+        void onBookClick(int position);
+    }
+
+
     //item click listener
     private OnBookClickListener mOnBookClickListener;
+
+    //member variable for book objects
+    private List<Book> mBooks;
+
+
+    //pass in the book array to the constructor
+    public NavigationListAdapter(List<Book> books, OnBookClickListener onBookClickListener) {
+        mBooks = books;
+        this.mOnBookClickListener = onBookClickListener;
+    }
 
     //direct reference to each view within a data item
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -65,18 +85,7 @@ public class NavigationListAdapter extends
         }
     }
 
-    public interface OnBookClickListener {
-        void onBookClick(int position);
-    }
 
-    //member variable for book objects
-    private List<Book> mBooks;
-
-    //pass in the book array to the constructor
-    public NavigationListAdapter(List<Book> books, OnBookClickListener onBookClickListener) {
-        mBooks = books;
-        this.mOnBookClickListener = onBookClickListener;
-    }
 
     //adapter requires three primary methods
     //onCreateViewHolder to inflate and create the holder
@@ -130,71 +139,4 @@ public class NavigationListAdapter extends
         return mBooks.size();
     }
 
-
-
-
-
-
 }
-
-
-
-
-
-/* comment out for now
-/ changed to recycler view
-
-//assumes Book class exists
-public class NavigationListAdapter extends ArrayAdapter<Book> {
-
-    //attributes
-    private Context mContext;
-    private int mResource;
-
-    //constructor
-    //context is MainActivity
-    //resource is navigation_list.xml
-    //object is list of books
-    public NavigationListAdapter(Context context, int resource, ArrayList<Book> objects){
-        //explicit call to super
-        super(context, resource, objects);
-
-        //initialize context and resouce
-        mContext = context;
-        mResource = resource;
-    }
-
-    //get the view and convert to listview
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-        //get the book information
-        //assume book name, username, status for V1
-        //getters may have different names
-        String book = getItem(position).getTitle();
-        String username = getItem(position).getOwner();
-        String status = getItem(position).getStatus();
-
-        //instantiate contents of layout xml into
-        //corresponding view objects
-        //takes inflater from MainActivity
-        //inflates to proper xml
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView = inflater.inflate(mResource, parent, false);
-
-        //get corresponding TextViews by id
-        TextView textViewBook = (TextView) convertView.findViewById(R.id.book_name);
-        TextView textViewUsername = (TextView) convertView.findViewById(R.id.username);
-        TextView textViewStatus = (TextView) convertView.findViewById(R.id.book_status);
-
-        //set the TextViews
-        textViewBook.setText(book);
-        textViewUsername.setText(username);
-        textViewStatus.setText(status);
-
-        //return the view
-        return convertView;
-
-    }
-}
-*/

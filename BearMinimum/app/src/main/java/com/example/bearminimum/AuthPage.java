@@ -15,7 +15,11 @@ import android.view.View;
 import android.widget.Button;
 
 /**
+ * AuthPage
+ *
  * This class serves as the entry point for to the app for users who aren't logged in
+ *
+ * Nov.6, 2020
  */
 public class AuthPage extends AppCompatActivity {
     //activity result code
@@ -26,6 +30,15 @@ public class AuthPage extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseFirestore db;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
+
+
+    /**
+     * creates an intent and returns it to where it was
+     * called to start this activity
+     *
+     * @param context
+     * @return          an Intent object
+     */
 
     public static Intent createIntent(@NonNull Context context) {
         return new Intent(context, AuthPage.class);

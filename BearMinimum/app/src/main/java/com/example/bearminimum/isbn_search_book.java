@@ -30,6 +30,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * isbn_search_book
+ *
+ * Connects to Google Books Api to obtain book descriptions using
+ * the ISBN when adding a new book
+ *
+ * Nov. 6, 2020
+ */
+
 public class isbn_search_book extends AppCompatActivity {
 
     /******************ISBN add BOOK START ******************************/
