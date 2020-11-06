@@ -25,7 +25,7 @@
         android:id="@+id/btnInsert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginRight="24dp"
         android:text="insert photo"
@@ -37,7 +37,9 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgBook" />
+        app:layout_constraintTop_toBottomOf="@+id/imgBook"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp" />
 
     <EditText
         android:id="@+id/bookName"
@@ -114,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginRight="48dp"
+        android:layout_marginRight="24dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/blue"
         android:fontFamily="@font/josefina_light"
@@ -130,7 +132,7 @@
         android:id="@+id/edit_book_apply_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginRight="24dp"
         android:text="apply changes"
@@ -150,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginRight="48dp"
+        android:layout_marginRight="24dp"
         android:text="delete book"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/blue"
