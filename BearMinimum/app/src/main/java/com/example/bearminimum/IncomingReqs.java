@@ -24,7 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * IncomingReqs
+ *
  * This activity displays all the of the current user's books that have requests on them
+ *
+ * Nov. 6, 2020
  */
 public class IncomingReqs extends AppCompatActivity implements NavigationListAdapter.OnBookClickListener {
     private NavigationListAdapter adapter;
