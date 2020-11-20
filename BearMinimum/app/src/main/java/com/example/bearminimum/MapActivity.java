@@ -38,6 +38,7 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //get the location of the marker
                 Double latitude = marker.getPosition().latitude;
                 Double longitude = marker.getPosition().longitude;
                 location = new LatLng(latitude, longitude);
