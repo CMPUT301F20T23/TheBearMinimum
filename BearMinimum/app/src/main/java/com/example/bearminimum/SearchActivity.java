@@ -44,6 +44,8 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
     //adapter
     private ArrayList<Book> bookList;
     private ArrayList<User> userList;
+    private ArrayList<User> filteredUserList;
+    private ArrayList<Book> filteredBookList;
     private BookSearchAdapter bookAdapter;
     private UserSearchAdapter userAdapter;
 
@@ -95,6 +97,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
             public void onClick(View v) {
                 searchingBooks = true;
                 recyclerView.setAdapter(bookAdapter);
+                searchTextBar.setText("");
             }
         });
         Button users = findViewById(R.id.search_users);
@@ -103,6 +106,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
             public void onClick(View v) {
                 searchingBooks = false;
                 recyclerView.setAdapter(userAdapter);
+                searchTextBar.setText("");
             }
         });
     }
@@ -117,7 +121,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
      */
 
     private void filterBooks(String text) {
-        ArrayList<Book> filteredBookList = new ArrayList<>();
+        filteredBookList.clear();
 
         for (Book book : bookList) {
             if (book.getTitle().toLowerCase().contains(text.toLowerCase()) ||
@@ -138,7 +142,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
      * The keyword to search for
      */
     private void filterUsers(String text) {
-        ArrayList<User> filteredUserList = new ArrayList<>();
+        filteredUserList.clear();
 
         for (User user : userList) {
             if (user.getUsername().toLowerCase().contains(text.toLowerCase())) {
@@ -157,7 +161,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        bookAdapter = new BookSearchAdapter(bookList, this);
+        bookAdapter = new BookSearchAdapter(filteredBookList, this);
 
         recyclerView.setLayoutManager(layoutManager);
     }
@@ -169,7 +173,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        userAdapter = new UserSearchAdapter(userList, this);
+        userAdapter = new UserSearchAdapter(filteredUserList, this);
 
         recyclerView.setLayoutManager(layoutManager);
     }
@@ -226,7 +230,7 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
                         filterBooks("");
                     }
         });
-
+        filteredBookList = (ArrayList<Book>) bookList.clone();
     }
 
     /**
@@ -259,18 +263,19 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
                 filterUsers("");
             }
         });
+        filteredUserList = (ArrayList<User>) userList.clone();
     }
 
     @Override
     public void onResultClick(int position) {
-        Book book = bookList.get(position);
+        Book book = filteredBookList.get(position);
         Intent intent = ViewBookActivity.createIntent(book, this, false);
         startActivity(intent);
     }
 
     @Override
     public void onUserClick(int position) {
-        User user = userList.get(position);
+        User user = filteredUserList.get(position);
         Intent intent = ProfileActivity.createIntent(user.getUid(), getBaseContext(), false);
         startActivity(intent);
     }

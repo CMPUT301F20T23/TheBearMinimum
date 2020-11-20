@@ -80,7 +80,7 @@ public class OutgoingReqsActivity extends AppCompatActivity implements Navigatio
     }
 
     @Override
-    public void onBookClick(int position) {
+    public void onBookClick(int position, String owner) {
         Intent intent = ViewBookActivity.createIntent(bookData.get(position), this, false);
         startActivity(intent);
     }

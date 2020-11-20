@@ -90,7 +90,7 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
     }
 
     @Override
-    public void onBookClick(int position) {
+    public void onBookClick(int position, String owner) {
         //when a book is selected, show the individual requests for it
         Intent intent = new Intent(this, HandleIncomingReqsActivity.class);
         intent.putExtra("bookid", bookData.get(position).getBid());

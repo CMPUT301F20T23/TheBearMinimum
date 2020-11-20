@@ -38,7 +38,7 @@ public class NavigationListAdapter extends
      *
      */
     public interface OnBookClickListener {
-        void onBookClick(int position);
+        void onBookClick(int position, String owner);
     }
 
 
@@ -81,7 +81,7 @@ public class NavigationListAdapter extends
 
         @Override
         public void onClick(View v) {
-            onBookClickListener.onBookClick(getAdapterPosition());
+            onBookClickListener.onBookClick(getAdapterPosition(), mBooks.get(getAdapterPosition()).getOwner());
         }
     }
 
