@@ -1,6 +1,7 @@
 package com.example.bearminimum;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -92,18 +93,41 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
         });
 
         Button books = findViewById(R.id.search_books);
+        Button users = findViewById(R.id.search_users);
+        GradientDrawable booksBtnBG = (GradientDrawable) books.getBackground().mutate();
+        GradientDrawable usersBtnBG = (GradientDrawable) users.getBackground().mutate();
+        booksBtnBG.setColor(getResources().getColor(R.color.white));
+        books.setTextColor(getResources().getColor(R.color.blue));
+
         books.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //toggle selection
+                if (!searchingBooks) {
+                    booksBtnBG.setColor(getResources().getColor(R.color.white));
+                    books.setTextColor(getResources().getColor(R.color.blue));
+                    //deselect borrowed button
+                    usersBtnBG.setColor(getResources().getColor(R.color.blue));
+                    users.setTextColor(getResources().getColor(R.color.white));
+                }
                 searchingBooks = true;
                 recyclerView.setAdapter(bookAdapter);
                 searchTextBar.setText("");
+
             }
         });
-        Button users = findViewById(R.id.search_users);
+
         users.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //toggle selection
+                if (searchingBooks) {
+                    usersBtnBG.setColor(getResources().getColor(R.color.white));
+                    users.setTextColor(getResources().getColor(R.color.blue));
+                    //deselect borrowed button
+                    booksBtnBG.setColor(getResources().getColor(R.color.blue));
+                    books.setTextColor(getResources().getColor(R.color.white));
+                }
                 searchingBooks = false;
                 recyclerView.setAdapter(userAdapter);
                 searchTextBar.setText("");

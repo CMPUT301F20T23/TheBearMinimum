@@ -119,14 +119,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
-        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_SHORT);
         sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
         sb.show();
 
         collectionBtn = findViewById(R.id.collection);
         borrowedBtn = findViewById(R.id.borrowed);
 
-        //collectionBtn.setBackgroundColor(getResources().getColor(R.color.white));
         GradientDrawable collectionBtnBG = (GradientDrawable) collectionBtn.getBackground().mutate();
         GradientDrawable borrowedBtnBG = (GradientDrawable) borrowedBtn.getBackground().mutate();
         collectionBtnBG.setColor(getResources().getColor(R.color.white));
