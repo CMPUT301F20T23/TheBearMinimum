@@ -1,9 +1,12 @@
 package com.example.bearminimum;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,12 +16,31 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapActivity extends MainActivity implements OnMapReadyCallback{
 
     private Button confirmButton;
-    public LatLng location;
     private Marker marker;
+    private String latitude;
+    private String longitude;
+    private String bid;
+    private Book book;
+    private FirebaseFirestore db;
+    private String borrower;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +56,32 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         //button UI element
         confirmButton = findViewById(R.id.location_selected);
 
+        //db and user
+        db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //the book id for the selected book
+        bid = getIntent().getExtras().getString("bookid");
+
+        //get borrower
+        borrower = getIntent().getExtras().getString("borrower");
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //get the location of the marker
-                Double latitude = marker.getPosition().latitude;
-                Double longitude = marker.getPosition().longitude;
-                location = new LatLng(latitude, longitude);
+                //get the location of the marker and convert to string
+                latitude = String.valueOf(marker.getPosition().latitude);
+                longitude = String.valueOf(marker.getPosition().longitude);
+
+                //update the selected book
+                Map<String, Object> data = new HashMap<>();
+                data.put("latitude", latitude);
+                data.put("longitude", longitude);
+                data.put("borrower", borrower);
+                db.collection("books").document(bid).set(data, SetOptions.merge());
+
+                finish();
+
             }
         });
 
