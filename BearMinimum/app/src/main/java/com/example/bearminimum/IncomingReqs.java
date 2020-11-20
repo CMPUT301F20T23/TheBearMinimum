@@ -57,23 +57,23 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 Log.d("MyDebug", "requested books data changed");
                 bookData.clear();
-                if (value.isEmpty())
-                    return;
-                for (QueryDocumentSnapshot doc : value) {
-                    List<String> requesters = (List<String>) doc.getData().get("requests");
-                    Map data = doc.getData();
-                    if (requesters.size() > 0) {
-                        Log.d("MyDebug", "requests exist");
-                        String title = (String) data.get("title");
-                        String author = (String) data.get("author");
-                        String bid = (String) data.get("bookid");
-                        String desc = (String) data.get("description");
-                        String isbn = (String) data.get("isbn");
-                        String status = (String) data.get("status");
-                        String borrower = (String) data.get("borrower");
-                        bookData.add(new Book(title,author,user.getUid(),borrower,desc,isbn,status,bid));
-                    } else
-                        booksRef.document((String) data.get("bookid")).update("status", "available");
+                if (!value.isEmpty()) {
+                    for (QueryDocumentSnapshot doc : value) {
+                        List<String> requesters = (List<String>) doc.getData().get("requests");
+                        Map data = doc.getData();
+                        if (requesters.size() > 0) {
+                            Log.d("MyDebug", "requests exist");
+                            String title = (String) data.get("title");
+                            String author = (String) data.get("author");
+                            String bid = (String) data.get("bookid");
+                            String desc = (String) data.get("description");
+                            String isbn = (String) data.get("isbn");
+                            String status = (String) data.get("status");
+                            String borrower = (String) data.get("borrower");
+                            bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid));
+                        } else
+                            booksRef.document((String) data.get("bookid")).update("status", "available");
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
