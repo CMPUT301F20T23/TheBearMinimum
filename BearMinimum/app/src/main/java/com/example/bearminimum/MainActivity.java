@@ -319,13 +319,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.nav_search) {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
-
         } else if (item.getItemId() == R.id.nav_incoming_requests) {
             Intent intent = new Intent(this, IncomingReqs.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_outgoing_requests) {
             Intent intent = new Intent(this, OutgoingReqsActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.nav_accepted_incoming_requests) {
+            
         }
         drawerLayout.close();
         return true;

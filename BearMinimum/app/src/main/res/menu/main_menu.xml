@@ -22,6 +22,11 @@
         />
 
     <item
+        android:id="@+id/nav_accepted_incoming_requests"
+        android:title="accepted incoming requests"
+        />
+
+    <item
         android:id="@+id/nav_add_book"
         android:title="@string/nav_add_book"
         />
@@ -35,6 +40,5 @@
         android:id="@+id/nav_sign_out"
         android:title="@string/nav_sign_out"
         />
-
 
 </menu>
