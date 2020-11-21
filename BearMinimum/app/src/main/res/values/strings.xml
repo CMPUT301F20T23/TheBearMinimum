@@ -55,4 +55,5 @@
     <string name="books_with_requests">books with requests</string>
     <string name="request_book">request book</string>
     <string name="withdraw_request">withdraw request</string>
+    <string name="google_maps_key" />
 </resources>
