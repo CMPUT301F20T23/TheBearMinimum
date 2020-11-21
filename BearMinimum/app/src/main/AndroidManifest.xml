@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OutgoingReqsActivity"></activity>
+        <activity android:name=".ManageBook"></activity>
+        <activity android:name=".OutgoingReqsActivity" />
         <activity android:name=".AddBookActivity" />
         <activity android:name=".isbn_search_book" />
         <activity android:name=".isbnAddBook" />
