@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
-        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in" + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
         sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
         sb.show();
 
@@ -257,7 +257,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, IncomingReqs.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_outgoing_requests) {
-
+            Intent intent = new Intent(this, OutgoingReqsActivity.class);
+            startActivity(intent);
         }
         drawerLayout.close();
         return true;
