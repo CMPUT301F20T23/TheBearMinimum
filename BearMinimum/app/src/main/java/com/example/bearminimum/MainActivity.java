@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //firebase
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference bookCollection = db.collection("books");
-    private final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     //custom adapter
     private NavigationListAdapter collectionAdapter;
