@@ -40,7 +40,7 @@ before_install:
   - yes | sdkmanager "platforms;android-$ANDROID_API_LEVEL"
 
 before_script:
-  - chmod +x gradlew
+  - chmod +x ./TheBearMinimum/gradlew
   #Emulator instance
   - echo no | android create avd --force -n test -t android-$ANDROID_EMU_API_LEVEL --abi google_apis/$ANDROID_ABI
   - emulator -avd test -no-window &
@@ -48,5 +48,5 @@ before_script:
   - adb shell input keyevent 82 &
 
 #script:
-#  - ./gradlew clean build
-#  - ./gradlew test
+#  - ./TheBearMinimum/gradlew clean build
+#  - ./TheBearMinimum/gradlew test
