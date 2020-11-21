@@ -19,6 +19,8 @@ public class Book implements Serializable {
     private String ISBN;
     private String status;
     private String bid;
+    private String latitude;
+    private String longitude;
 
     public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid){
         this.title = title;
@@ -29,6 +31,9 @@ public class Book implements Serializable {
         this.ISBN = ISBN;
         this.status = status;
         this.bid = bid;
+        this.latitude = "";
+        this.longitude = "";
+
     }
 
 
@@ -214,4 +219,50 @@ public class Book implements Serializable {
     public void setBid(String bid) {
         this.bid = bid;
     }
+
+    /**
+     * Return the book's coordinate
+     *
+     * @return latiude  String type of book's lat
+     */
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+
+    /**
+     * Overwrites the current book lat coordinate
+     * provided book latidude
+     *
+     * @param latitude  String type of the book's book lat
+     */
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * Return the book's coordinate
+     *
+     * @return longitude  String type of book's lat
+     */
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+
+    /**
+     * Overwrites the current book long coordinate
+     * provided book longitude
+     *
+     * @param longitude  String type of the book's book long
+     */
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+
 }
