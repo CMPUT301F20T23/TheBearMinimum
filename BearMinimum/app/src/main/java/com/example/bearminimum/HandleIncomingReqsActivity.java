@@ -68,8 +68,10 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
                     String isbn = (String) data.get("isbn");
                     String status = (String) data.get("status");
                     String borrower = (String) data.get("borrower");
+                    String lat = (String) data.get("latitude");
+                    String longitude = (String) data.get("longitude");
                     uids = (ArrayList<String>) data.get("requests");
-                    book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,bid);
+                    book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,bid, lat, longitude);
                     //custom adapter for displaying lists
                     adapter = new IncomingRequestsAdapter(users, getBaseContext(), book.getBid());
                     requestView.setAdapter(adapter);

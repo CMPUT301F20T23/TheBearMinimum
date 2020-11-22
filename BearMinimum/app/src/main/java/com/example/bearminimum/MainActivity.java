@@ -200,8 +200,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
                         String Description = (String) doc.getData().get("description");
-
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId);
+                        String lat = (String) doc.getData().get("latitude");
+                        String longitude = (String) doc.getData().get("longitude");
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude);
                         Log.i("Test",status);
 
                         bookDataList.add(book); // Adding the cities and provinces from FireStore
@@ -215,8 +216,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
                         String Description = (String) doc.getData().get("description");
-
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId);
+                        String lat = (String) doc.getData().get("latitude");
+                        String longitude = (String) doc.getData().get("longitude");
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude);
 
                         borrowedBookData.add(book); // Adding the cities and provinces from FireStore
                     }
@@ -326,7 +328,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, OutgoingReqsActivity.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_accepted_incoming_requests) {
-            
+            Intent intent = new Intent(this, AcceptedIncomingReqs.class);
+            startActivity(intent);
         }
         drawerLayout.close();
         return true;

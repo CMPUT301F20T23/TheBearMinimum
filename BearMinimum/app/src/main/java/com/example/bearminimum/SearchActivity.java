@@ -242,8 +242,9 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
                                 String isbn = document.getString("isbn");
                                 String status = document.getString("status");
                                 String bid = document.getString("bookid");
-
-                                bookList.add(new Book(title, author, owner, borrower, description, isbn, status, bid));
+                                String lat = (String) document.getString("latitude");
+                                String longitude = (String) document.getString("longitude");
+                                bookList.add(new Book(title, author, owner, borrower, description, isbn, status, bid, lat, longitude));
 
                                 Log.d(TAG, document.getId() + " :a book");
                             }

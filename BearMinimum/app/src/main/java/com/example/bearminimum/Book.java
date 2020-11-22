@@ -22,7 +22,7 @@ public class Book implements Serializable {
     private String latitude;
     private String longitude;
 
-    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid){
+    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid, String lat, String longitude){
         this.title = title;
         this.author = author;
         this.owner = owner;
@@ -31,9 +31,8 @@ public class Book implements Serializable {
         this.ISBN = ISBN;
         this.status = status;
         this.bid = bid;
-        this.latitude = "";
-        this.longitude = "";
-
+        this.latitude = lat;
+        this.longitude = longitude;
     }
 
 
