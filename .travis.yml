@@ -9,12 +9,15 @@ env:
     - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
     - QEMU_AUDIO_DRV=none
+    # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8
 
 android:
   components:
     #Android SDK Tools
     - tools
     - platform-tools
+    - tools
 
     #BuildTools version
     - build-tools-$ANDROID_BUILD_TOOLS_VERSION
