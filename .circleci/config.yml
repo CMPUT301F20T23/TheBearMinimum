@@ -1,0 +1,15 @@
+version: 2.1
+
+orbs:
+  android: circleci/android@0.2.1
+
+jobs:
+  build:
+    working_directory: ~/BearMinimum
+    executor: android/android
+
+    steps:
+      - checkout
+      - run:
+          command: ./gradlew build
+            ./gradlew test
