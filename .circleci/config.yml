@@ -5,12 +5,12 @@ orbs:
 
 jobs:
   build:
-    working_directory: ~/BearMinimum
+    working_directory: ~/TheBearMinimum/BearMinimum
     executor: android/android
 
     steps:
       - checkout:
-          path: ~/BearMinimum
+          path: ~/TheBearMinimum
       - run:
           command: ./gradlew build
             ./gradlew test
