@@ -9,7 +9,8 @@ jobs:
     executor: android/android
 
     steps:
-      - checkout
+      - checkout:
+          path: ~/BearMinimum
       - run:
           command: ./gradlew build
             ./gradlew test
