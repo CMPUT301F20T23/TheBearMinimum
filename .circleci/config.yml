@@ -13,5 +13,7 @@ jobs:
           path: ~/TheBearMinimum
       - run:
           command: chmod +x ./gradlew
-            ./gradlew build
-            ./gradlew test
+      - run:
+          command: ./gradlew build
+      - run:
+          command: ./gradlew test
