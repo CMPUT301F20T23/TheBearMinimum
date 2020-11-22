@@ -12,5 +12,6 @@ jobs:
       - checkout:
           path: ~/TheBearMinimum
       - run:
-          command: ./gradlew build
+          command: chmod +x ./gradlew
+            ./gradlew build
             ./gradlew test
