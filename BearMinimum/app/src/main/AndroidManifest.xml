@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AcceptedIncomingReqs"></activity>
-
+        <activity android:name=".SpecficBookRequest"></activity>
+        <activity android:name=".ManageBook" />
+        <activity android:name=".OutgoingReqsActivity" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -21,7 +23,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".OutgoingReqsActivity" />
         <activity android:name=".AddBookActivity" />
         <activity android:name=".isbn_search_book" />
         <activity android:name=".isbnAddBook" />

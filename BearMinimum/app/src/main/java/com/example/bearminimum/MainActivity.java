@@ -318,6 +318,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.nav_add_book) {
             Intent intent = new Intent(this, AddBookActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.nav_managebook) {
+            Intent intent = new Intent(this, ManageBook.class);
+            startActivity(intent);
         } else if (item.getItemId() == R.id.nav_search) {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
@@ -329,6 +332,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_accepted_incoming_requests) {
             Intent intent = new Intent(this, AcceptedIncomingReqs.class);
+        } else if (item.getItemId() == R.id.nav_notifications) {
+            Intent intent = new Intent(this, SpecficBookRequest.class);
             startActivity(intent);
         }
         drawerLayout.close();
