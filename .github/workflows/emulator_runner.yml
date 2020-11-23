@@ -30,5 +30,6 @@ jobs:
       with:
         api-level: 29
         script: ./gradlew connectedCheck -x lint --stacktrace
-        emulator-options: -no-window -gpu swiftshader_indirect
+        emulator-options: -gpu swiftshader_indirect
+        disable-animations: false
         working-directory: BearMinimum 
