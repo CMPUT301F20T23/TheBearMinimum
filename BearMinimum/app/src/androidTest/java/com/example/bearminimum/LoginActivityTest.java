@@ -63,16 +63,16 @@ public class LoginActivityTest {
         solo.enterText((EditText) solo.getView(R.id.email_box), "test@bearmin.com");
         solo.clickOnButton("continue");
 
-        assertTrue(solo.waitForText("password",1,10000));
+        assertTrue(solo.waitForText("password",1,2000));
         solo.enterText((EditText) solo.getView(R.id.password_box), "test123");
         solo.clickOnButton("continue");
 
-        assertTrue(solo.waitForActivity(MainActivity.class, 10000));
+        assertTrue(solo.waitForActivity(MainActivity.class, 2000));
 
         solo.clickOnImageButton(0);
         solo.clickOnText("sign out");
 
-        assertTrue(solo.waitForActivity(AuthPage.class, 10000));
+        assertTrue(solo.waitForActivity(AuthPage.class, 2000));
     }
 
     @Test
