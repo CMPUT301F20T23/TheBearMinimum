@@ -40,6 +40,7 @@ jobs:
           java-version: 1.8
       - name: Assemble app debug APK
         run: bash ./gradlew assembleDebug --stacktrace
+        working-directory: BearMinimum
         env:
           ZTM_API_KEY: ${{ secrets.API_KEY }}    
       - name: Upload app APK
@@ -47,8 +48,10 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+          working-directory: BearMinimum
       - name: Assemble Android Instrumentation Tests
         run: bash ./gradlew assembleDebugAndroidTest
+        working-directory: BearMinimum
         env:
           ZTM_API_KEY: ${{ secrets.ZTM_API_KEY }}
       - name: Upload Android Test APK
@@ -56,6 +59,7 @@ jobs:
         with:
           name: app-debug-androidTest
           path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+          working-directory: BearMinimum
     
   firebase:
     name: Run UI tests with Firebase Test Lab
