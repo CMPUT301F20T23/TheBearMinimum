@@ -29,8 +29,8 @@ jobs:
         run: bash ./gradlew test --stacktrace
         working-directory: BearMinimum
     
-    apk:
-      name: Generate APK
+  apk:
+    name: Generate APK
       runs-on: ubuntu-latest  
       steps:
         - uses: actions/checkout@v1
@@ -50,7 +50,8 @@ jobs:
         - name: Assemble Android Instrumentation Tests
           run: bash ./gradlew assembleDebugAndroidTest
           env:
-            ZTM_API_KEY: ${{ secrets.ZTM_API_KEY }}    - name: Upload Android Test APK
+            ZTM_API_KEY: ${{ secrets.ZTM_API_KEY }}
+        - name: Upload Android Test APK
           uses: actions/upload-artifact@v1
           with:
             name: app-debug-androidTest
