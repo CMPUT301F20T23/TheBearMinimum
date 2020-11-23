@@ -27,4 +27,4 @@ jobs:
       with:
         api-level: 29
         script: ./gradlew connectedCheck -x lint
-        working_directory: BearMinimum 
+        working-directory: BearMinimum 
