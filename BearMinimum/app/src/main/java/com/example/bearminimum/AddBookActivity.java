@@ -86,6 +86,8 @@ public class AddBookActivity extends AppCompatActivity {
                     data.put("status", "available");
                     data.put("owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
                     data.put("requests", new ArrayList<String>());
+                    data.put("latitude", "");
+                    data.put("longitude", "");
                     db.collection("books")
                             .add(data)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
