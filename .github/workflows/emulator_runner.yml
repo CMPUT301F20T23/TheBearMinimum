@@ -21,6 +21,10 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v2
+      
+    - name: enable perms
+      run: chmod +x gradlew
+      working-directory: BearMinimum
 
     - name: run tests
       uses: reactivecircus/android-emulator-runner@v2
