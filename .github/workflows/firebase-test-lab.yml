@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: BearMinimum/app/build/outputs/apk/debug/app-debug.apk
       - name: Assemble Android Instrumentation Tests
         run: bash ./gradlew assembleDebugAndroidTest
         working-directory: BearMinimum
@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: app-debug-androidTest
-          path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+          path: BearMinimum/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
           
     
   firebase:
