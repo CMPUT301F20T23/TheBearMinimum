@@ -263,7 +263,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, OutgoingReqsActivity.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_notifications) {
-
+            Intent intent = new Intent(this, SpecficBookRequest.class);
+            startActivity(intent);
         }
         drawerLayout.close();
         return true;
