@@ -5,6 +5,15 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
+    testOptions {
+        unitTests.all {
+            testLogging {
+                events "failed"
+                exceptionFormat "full"
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.bearminimum"
         minSdkVersion 16
