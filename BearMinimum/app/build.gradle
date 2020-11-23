@@ -92,5 +92,8 @@ dependencies {
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
 
+    //pushy Notification
+    implementation 'me.pushy:sdk:1.0.65'
+
 
 }
