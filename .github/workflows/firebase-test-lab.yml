@@ -48,7 +48,6 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
-          working-directory: BearMinimum
       - name: Assemble Android Instrumentation Tests
         run: bash ./gradlew assembleDebugAndroidTest
         working-directory: BearMinimum
@@ -59,7 +58,7 @@ jobs:
         with:
           name: app-debug-androidTest
           path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-          working-directory: BearMinimum
+          
     
   firebase:
     name: Run UI tests with Firebase Test Lab
