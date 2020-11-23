@@ -55,16 +55,15 @@
 
         <Spinner
             android:id="@+id/filter_spinner"
-            android:layout_width="367dp"
+            android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_marginTop="20dp"
-            android:spinnerMode="dialog"
             android:background="@drawable/rounded_button"
             android:backgroundTint="@color/blue"
-            app:layout_constraintTop_toTopOf="parent"
+            android:spinnerMode="dialog"
             app:layout_constraintEnd_toEndOf="@+id/list_of_books"
             app:layout_constraintStart_toStartOf="@+id/list_of_books"
-           />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -96,7 +95,6 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/blue"
                 android:fontFamily="@font/josefina_light"
                 android:gravity="center"
                 android:padding="15dp"
@@ -115,7 +113,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/blue"
                 android:gravity="center"
                 android:padding="15dp"
                 android:text="@string/borrowed"

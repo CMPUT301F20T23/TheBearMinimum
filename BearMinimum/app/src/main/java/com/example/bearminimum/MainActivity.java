@@ -1,11 +1,12 @@
 package com.example.bearminimum;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
@@ -53,10 +55,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //firebase
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final CollectionReference bookCollection = db.collection("books");
-    private final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     //custom adapter
-    private NavigationListAdapter adapter;
+    private NavigationListAdapter collectionAdapter;
+    private NavigationListAdapter borrowedAdapter;
 
     //design components
     private DrawerLayout drawerLayout;
@@ -64,9 +67,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ImageButton menuButton;
 
+    //buttons
+    private Button borrowedBtn;
+    private Button collectionBtn;
+    private boolean isCollectionBtn = true;
+
     /******************Collection/ filter status START*********************/
     private String selectedFilter = "all";
     private ArrayList<Book> bookDataList;
+    private ArrayList<Book> borrowedBookData;
     private ArrayList<Book> stateFilter;
     private Spinner filterSpinner;
 
@@ -75,10 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_main);
- 
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
@@ -95,7 +102,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         stateFilter = new ArrayList<Book>();
         bookDataList = new ArrayList<>();
+        borrowedBookData = new ArrayList<Book>();
         filterSpinner = findViewById(R.id.filter_spinner);
+        //connect to RecyclerView
+        //UI
+        RecyclerView rvBooks = findViewById(R.id.list_of_books);
 
         filterSpinner.setOnItemSelectedListener(this);
         List<String> filters = new ArrayList<>();
@@ -108,25 +119,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
-        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_SHORT);
         sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
         sb.show();
 
-        //connect to RecyclerView
-        //UI
-        RecyclerView rvBooks = findViewById(R.id.list_of_books);
+        collectionBtn = findViewById(R.id.collection);
+        borrowedBtn = findViewById(R.id.borrowed);
+
+        GradientDrawable collectionBtnBG = (GradientDrawable) collectionBtn.getBackground().mutate();
+        GradientDrawable borrowedBtnBG = (GradientDrawable) borrowedBtn.getBackground().mutate();
+        collectionBtnBG.setColor(getResources().getColor(R.color.white));
+        collectionBtn.setTextColor(getResources().getColor(R.color.blue));
+        collectionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //select button
+                if (!isCollectionBtn) {
+                    collectionBtnBG.setColor(getResources().getColor(R.color.white));
+                    collectionBtn.setTextColor(getResources().getColor(R.color.blue));
+                    isCollectionBtn = true;
+                    rvBooks.setAdapter(collectionAdapter);
+                    //deselect borrowed button
+                    borrowedBtnBG.setColor(getResources().getColor(R.color.blue));
+                    borrowedBtn.setTextColor(getResources().getColor(R.color.white));
+                }
+            }
+        });
+        borrowedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //select button
+                if (isCollectionBtn) {
+                    borrowedBtnBG.setColor(getResources().getColor(R.color.white));
+                    borrowedBtn.setTextColor(getResources().getColor(R.color.blue));
+                    isCollectionBtn = false;
+                    rvBooks.setAdapter(borrowedAdapter);
+                    //deslect collection button
+                    collectionBtnBG.setColor(getResources().getColor(R.color.blue));
+                    collectionBtn.setTextColor(getResources().getColor(R.color.white));
+                }
+            }
+        });
+
         //initialize books
 
         //create adapter passing in user data
-        adapter = new NavigationListAdapter(stateFilter, this);
-        //set layout manager to position the items
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rvBooks.setLayoutManager(linearLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvBooks.getContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(getBaseContext().getResources().getDrawable(R.drawable.item_divider));
-        rvBooks.addItemDecoration(dividerItemDecoration);
+        collectionAdapter = new NavigationListAdapter(stateFilter, this);
+        borrowedAdapter = new NavigationListAdapter(borrowedBookData, this);
+        initRecycler(rvBooks);
         //attach adapter to recyclerview to populate
-        rvBooks.setAdapter(adapter);
+        rvBooks.setAdapter(collectionAdapter);
 
         //to add to existing list
         //make change to data source directly and notify adapter of changes
@@ -146,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
                 bookDataList.clear();
+                borrowedBookData.clear();
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     String owner = (String) doc.getData().get("owner");
@@ -157,17 +200,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
                         String Description = (String) doc.getData().get("description");
-
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId);
+                        String lat = (String) doc.getData().get("latitude");
+                        String longitude = (String) doc.getData().get("longitude");
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude);
                         Log.i("Test",status);
 
                         bookDataList.add(book); // Adding the cities and provinces from FireStore
                     }
+                    String borrower = (String) doc.getData().get("borrower");
+                    if (borrower.equals(currentUser.getUid())) {
+                        String BookId = doc.getId();
+                        String BookName = (String) doc.getData().get("title");
+                        String author = (String) doc.getData().get("author");
+                        String isbn = (String) doc.getData().get("isbn");
+                        String Borrower = (String) doc.getData().get("borrower");
+                        String status = (String) doc.getData().get("status");
+                        String Description = (String) doc.getData().get("description");
+                        String lat = (String) doc.getData().get("latitude");
+                        String longitude = (String) doc.getData().get("longitude");
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude);
+
+                        borrowedBookData.add(book); // Adding the cities and provinces from FireStore
+                    }
                 }
                 filterList(selectedFilter);
+                borrowedAdapter.notifyDataSetChanged();
             }
         });
 
+    }
+
+    private void initRecycler(RecyclerView books) {
+        //set layout manager to position the items
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        books.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(books.getContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getBaseContext().getResources().getDrawable(R.drawable.item_divider));
+        books.addItemDecoration(dividerItemDecoration);
     }
 
 
@@ -209,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         }
-        adapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
+        collectionAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched
     }
 
 
@@ -255,12 +324,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.nav_search) {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
-
         } else if (item.getItemId() == R.id.nav_incoming_requests) {
             Intent intent = new Intent(this, IncomingReqs.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_outgoing_requests) {
             Intent intent = new Intent(this, OutgoingReqsActivity.class);
+            startActivity(intent);
+        } else if (item.getItemId() == R.id.nav_accepted_incoming_requests) {
+            Intent intent = new Intent(this, AcceptedIncomingReqs.class);
+        } else if (item.getItemId() == R.id.nav_notifications) {
+            Intent intent = new Intent(this, SpecficBookRequest.class);
             startActivity(intent);
         }
         drawerLayout.close();
@@ -294,9 +367,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onBookClick(int position) {
-        Book book = stateFilter.get(position);
-        Intent intent = ViewBookActivity.createIntent(book, this, true);
+    public void onBookClick(int position, String owner) {
+        Intent intent;
+        Book book;
+        if (owner.equals(currentUser.getUid())) {
+            book = stateFilter.get(position);
+            intent = ViewBookActivity.createIntent(book, this, true);
+        } else {
+            book = borrowedBookData.get(position);
+            intent = ViewBookActivity.createIntent(book,this, false);
+        }
         startActivity(intent);
     }
 }

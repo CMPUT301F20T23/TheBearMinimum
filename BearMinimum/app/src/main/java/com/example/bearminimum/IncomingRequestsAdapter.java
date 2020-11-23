@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 /**
@@ -21,10 +25,12 @@ import java.util.ArrayList;
 public class IncomingRequestsAdapter extends BaseAdapter implements ListAdapter {
     private ArrayList<User> list;
     private Context context;
+    private String bookid;
 
-    public IncomingRequestsAdapter(ArrayList<User> list, Context context) {
+    public IncomingRequestsAdapter(ArrayList<User> list, Context context, String bookid) {
         this.list = list;
         this.context = context;
+        this.bookid = bookid;
     }
 
     @Override
@@ -59,17 +65,33 @@ public class IncomingRequestsAdapter extends BaseAdapter implements ListAdapter 
         declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //decline the request, if no more requesters set status
+                declineReq(list.get(position).getUid(), position);
                 notifyDataSetChanged();
             }
         });
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //accept the request, decline all others, set status
+                acceptReq(list.get(position).getUid(), position);
                 notifyDataSetChanged();
             }
         });
         return view;
+    }
+
+    private void acceptReq(String userid, int position) {
+        //accept the request, decline all others, set status
+        ArrayList<String> temp = new ArrayList<>();
+        temp.add(userid);
+        FirebaseFirestore.getInstance().collection("books").document(bookid).update("requests", temp, "status", "accepted");
+        User tempUser = list.get(position);
+        list.clear();
+        list.add(tempUser);
+    }
+
+    private void declineReq(String userid, int position) {
+        //decline the request, if no more requesters set status
+        FirebaseFirestore.getInstance().collection("books").document(bookid).update("requests", FieldValue.arrayRemove(userid));
+        list.remove(position);
     }
 }

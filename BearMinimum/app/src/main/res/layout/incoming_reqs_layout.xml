@@ -27,30 +27,28 @@
         <Button
             android:id="@+id/decline_req_button"
             style="?android:attr/borderlessButtonStyle"
-            android:fontFamily="@font/josefina_light"
-            android:textColor="@color/orange"
-            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="#FFFFFF"
-            android:text="button"
+            android:fontFamily="@font/josefina_light"
+            android:text="decline"
             android:textAllCaps="false"
-           />
+            android:textColor="@color/orange"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/accept_req_button"
-            android:fontFamily="@font/josefina_light"
-            android:textColor="@color/orange"
-            android:textSize="20sp"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_weight="1"
             android:background="#FFFFFF"
-            android:text="button"
+            android:fontFamily="@font/josefina_light"
+            android:text="accept"
             android:textAllCaps="false"
-            />
+            android:textColor="@color/orange"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
