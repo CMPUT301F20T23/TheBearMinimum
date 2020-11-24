@@ -36,7 +36,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -234,6 +240,27 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("MyDebug", "Error writing new user document", e);
+                    }
+                });
+
+        //create notification doc for user
+        Date d = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        Map<String, Object> newNotifDoc = new HashMap<>();
+        newNotifDoc.put("requests", Arrays.asList());
+        newNotifDoc.put("date", df.format(d));
+        db.collection("notifications").document(user.getUid())
+                .set(newNotifDoc)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("NotifDoc", "notif doc created");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("NotifDoc", "failed to create new notif doc");
                     }
                 });
     }
