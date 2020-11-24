@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -26,7 +27,7 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
     private ArrayList<Notif> notifList;
     private ViewNotificationsAdapter notifAdapter;
     private RecyclerView recyclerView;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore db;
     private NotificationManagerCompat notificationManagerCompat;
 
 
@@ -35,11 +36,10 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_notifications);
 
-        notifList = new ArrayList<Notif>();
-        Notif aNotif = new Notif(4, "RSmeBy2N5kPmCoCkT2IIdwUyIvz1");
-        notifList.add(aNotif);
+//        Notif aNotif = new Notif(4, "RSmeBy2N5kPmCoCkT2IIdwUyIvz1");
+//        notifList.add(aNotif);
         notificationManagerCompat = NotificationManagerCompat.from(this);
-        aNotif.sendNotif(getApplicationContext(), notificationManagerCompat);
+//        aNotif.sendNotif(getApplicationContext(), notificationManagerCompat);
 
 
         //TODO:
@@ -70,46 +70,44 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
      */
 
     private void getNotifs() {
+        notifList = new ArrayList<>();
+        db = FirebaseFirestore.getInstance();
+
         //current user
         String userId = FirebaseAuth.getInstance().getUid();
 
         //get all requests for user's book
         db.collection("notifications")
-                .whereEqualTo("uid", userId)
+                .document(userId)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "got document");
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                            ArrayList<String> requests = (ArrayList<String>) task.getResult().get("requests");
 
-                                ArrayList<String> requests = (ArrayList<String>) doc.get("requests");
-
-                                //TODO:
-                                // WHY ARE THINGS NOT SAVING
-                                //process into notif instances
-                                int notif_id = 1;
-                                for (String requestID : requests) {
-                                    Notif new_notif = new Notif(notif_id, requestID);
-                                    notifList.add(new_notif);
-                                    notif_id += 1;
-                                    Log.d(TAG, "processing: " + new_notif.getRequesterUid());
-                                }
-                                Log.d(TAG, "done all request notifications " + notifList );
+                            //process into notif instances
+                            int notif_id = 1;
+                            for (String requestID : requests) {
+                                notifList.add(new Notif(notif_id, requestID));
+                                notif_id += 1;
+                                Log.d(TAG, "processing: " + requestID);
                             }
+                            Log.d(TAG, "done all request notifications " + notifList.size() );
                         } else {
                             Log.d(TAG, "couldn't get document");
                         }
                     }
                 });
 
+
         Log.d(TAG, "does list still exist " + notifList);
 
 
 
-            //TODO:
-            // get notifications for book requested by user (accepted or declined)
+        //TODO:
+        // get notifications for book requested by user (accepted or declined)
 
 
     }
