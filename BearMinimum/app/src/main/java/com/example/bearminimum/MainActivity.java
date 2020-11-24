@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
-        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in" + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
+        Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in " + currentUser.getDisplayName(),Snackbar.LENGTH_LONG);
         sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
         sb.show();
 
