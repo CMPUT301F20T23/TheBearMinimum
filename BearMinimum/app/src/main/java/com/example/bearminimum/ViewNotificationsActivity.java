@@ -46,7 +46,7 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         getNotifs();
         setUpViewNotificationAdapter();
         recyclerView.setAdapter(notifAdapter);
-        
+
         for (Notif notif : notifList) {
             notif.sendNotif(getApplicationContext(), notificationManagerCompat);
         }

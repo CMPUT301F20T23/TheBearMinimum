@@ -30,25 +30,6 @@ public class Notif {
         this.notif_id = notif_id;
         this.requesterUid = requesterUid;
         this.title = "book request";
-
-        //get username of requester
-        db.collection("users")
-                .document(requesterUid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            //TODO
-                            // requesterUsername becomes null outside
-                            requesterUsername = task.getResult().getString("username");
-                            Log.d(TAG, "username: " + requesterUsername);
-                        } else {
-                            Log.d(TAG, "failed to get doc for username");
-                        }
-                    }
-                });
         this.message = " has requested one of your books!";
     }
 
