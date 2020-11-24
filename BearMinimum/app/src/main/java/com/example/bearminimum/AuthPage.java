@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +28,10 @@ public class AuthPage extends AppCompatActivity {
 
     //ui elements
     private Button signinBtn;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
+
+    //for notifications
+    private NotificationManagerCompat notificationManager;
 
 
     /**
@@ -49,6 +51,10 @@ public class AuthPage extends AppCompatActivity {
         super.onStart();
         //if user signed in previously and hasn't signed out, skip signin
         if (auth.getCurrentUser() != null) {
+//            //send notifications
+//            CreateNotification createNotification = new CreateNotification(notificationManager, getApplicationContext(), auth.getCurrentUser().getUid());
+//            createNotification.getNotifications();
+
             Intent intent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(intent);
             finish();
@@ -59,6 +65,9 @@ public class AuthPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authpage);
+
+        //for notifications
+        notificationManager = NotificationManagerCompat.from(this);
 
         //start login activity
         signinBtn = findViewById(R.id.button_signin);
