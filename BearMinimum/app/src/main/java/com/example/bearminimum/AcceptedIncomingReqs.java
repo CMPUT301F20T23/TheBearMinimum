@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -76,10 +77,17 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
     public void onBookClick(int position, String owner) {
         //open either location selector or previously selected location
         Book book = bookData.get(position);
-        if (!book.getLatitude().equals("")) {
+        if (book.getLatitude().equals("")) {
             //launch location selector
+            Intent intent = new Intent(this, MapActivity.class);
+            intent.putExtra("bookid", book.getBid());
+            intent.putExtra("borrower", book.getBorrower());
+            startActivity(intent);
         } else {
             //launch location viewer
+            Intent intent = new Intent(this, LocationActivity.class);
+            intent.putExtra("bookid", book.getBid());
+            startActivity(intent);
         }
     }
 }

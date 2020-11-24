@@ -123,9 +123,9 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
         TextView textView3 = holder.statusTextView;
         String lStatus = "";
         if (book.getLatitude().equals(""))
-            lStatus = "unselected";
+            lStatus = "select a location";
         else
-            lStatus = "longitude " + book.getLongitude() + ", latitude " + book.getLatitude();
+            lStatus = "location selected";
         textView3.setText("location status: " + lStatus);
 
         FirebaseFirestore.getInstance().collection("books").document(book.getBid()).get()
