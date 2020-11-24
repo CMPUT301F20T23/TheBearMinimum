@@ -25,3 +25,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew clean build -x lint
       working-directory: BearMinimum
+    - name: Run gradle unit tests
+      run: ./gradlew test
+      working-directory: BearMinimum
