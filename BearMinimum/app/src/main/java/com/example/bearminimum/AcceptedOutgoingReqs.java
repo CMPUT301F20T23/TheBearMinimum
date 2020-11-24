@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,10 +22,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedOutgoingAdapter.OnBookClickListener{
+public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedOutgoingAdapter.OnBookClickListener {
 
-    private RecyclerView recyclerView;
     private AcceptedOutgoingAdapter adapter;
+    private RecyclerView recycler;
     private ArrayList<Book> bookData;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private CollectionReference booksRef;
@@ -32,13 +33,13 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accepted_incoming_reqs);
+        setContentView(R.layout.activity_accepted_outgoing_reqs);
 
         bookData = new ArrayList<>();
         initAdapter();
 
         booksRef = FirebaseFirestore.getInstance().collection("books");
-        Query query = booksRef.whereEqualTo("owner", user.getUid()).whereEqualTo("status", "accepted");
+        Query query = booksRef.whereArrayContains("requests", user.getUid()).whereEqualTo("status", "accepted");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -47,6 +48,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
                     for (QueryDocumentSnapshot doc : value) {
                         Map data = doc.getData();
                         Log.d("MyDebug", "requests exist");
+                        String owner = (String) data.get("owner");
                         String title = (String) data.get("title");
                         String author = (String) data.get("author");
                         String bid = (String) data.get("bookid");
@@ -57,7 +59,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
                         String lat = (String) data.get("latitude");
                         Log.d("MyDebug", "lat is: " + lat);
                         String longitude = (String) data.get("longitude");
-                        bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid, lat, longitude));
+                        bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude));
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -66,10 +68,10 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
     }
 
     private void initAdapter() {
-        recyclerView = findViewById(R.id.accepted_incoming_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recycler = findViewById(R.id.accepted_outgoing_recycler);
+        recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new AcceptedOutgoingAdapter(bookData, this);
-        recyclerView.setAdapter(adapter);
+        recycler.setAdapter(adapter);
     }
 
     @Override
@@ -77,7 +79,10 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
         //open either location selector or previously selected location
         Book book = bookData.get(position);
         if (!book.getLatitude().equals("")) {
-            //launch location selector
+            //borrowers cant select location
+            Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "the owner hasn't set this yet...",Snackbar.LENGTH_SHORT);
+            sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
+            sb.show();
         } else {
             //launch location viewer
         }
