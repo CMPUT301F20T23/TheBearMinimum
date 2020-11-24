@@ -49,8 +49,7 @@ public class Notif {
                         }
                     }
                 });
-
-        this.message = requesterUsername + " has requested one of your books!";
+        this.message = " has requested one of your books!";
     }
 
     /**

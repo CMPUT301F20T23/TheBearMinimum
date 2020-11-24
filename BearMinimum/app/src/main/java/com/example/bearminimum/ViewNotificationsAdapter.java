@@ -9,6 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 
 public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificationsAdapter.ViewHolder> {
@@ -74,7 +81,21 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
         Notif currentNotif = notifsList.get(position);
 
         holder.titleView.setText(currentNotif.getTitle());
-        holder.messageView.setText(currentNotif.getMessage());
+
+        FirebaseFirestore.getInstance().collection("users")
+                .document(currentNotif.getRequesterUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            holder.messageView.setText(task.getResult().getString("username") + currentNotif.getMessage());
+                        } else {
+                            holder.messageView.setText("could not fetch requester username");
+                        }
+                    }
+                });
+
 
     }
 

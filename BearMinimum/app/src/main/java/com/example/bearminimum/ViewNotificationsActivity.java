@@ -36,10 +36,8 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_notifications);
 
-//        Notif aNotif = new Notif(4, "RSmeBy2N5kPmCoCkT2IIdwUyIvz1");
-//        notifList.add(aNotif);
         notificationManagerCompat = NotificationManagerCompat.from(this);
-//        aNotif.sendNotif(getApplicationContext(), notificationManagerCompat);
+
 
 
         //TODO:
@@ -48,6 +46,10 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         getNotifs();
         setUpViewNotificationAdapter();
         recyclerView.setAdapter(notifAdapter);
+        
+        for (Notif notif : notifList) {
+            notif.sendNotif(getApplicationContext(), notificationManagerCompat);
+        }
     }
 
 
@@ -98,6 +100,9 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
                         } else {
                             Log.d(TAG, "couldn't get document");
                         }
+
+                        //notify adapter list changed
+                        notifAdapter.notifyDataSetChanged();
                     }
                 });
 
