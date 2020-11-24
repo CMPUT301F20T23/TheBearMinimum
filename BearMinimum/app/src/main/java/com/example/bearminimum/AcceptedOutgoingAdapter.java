@@ -5,11 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -17,13 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
 
 /**
- * AcceptedIncomingAdapter
+ * AcceptedOutgoingAdapter
  *
  * basic adapter extending RecyclerView.Adapter
  * custom ViewHolder to access our views
@@ -31,7 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
  *
  */
 
-public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomingAdapter.ViewHolder> {
+public class AcceptedOutgoingAdapter extends RecyclerView.Adapter<AcceptedOutgoingAdapter.ViewHolder> {
     /**
      * Interface
      * OnBookClickListener
@@ -50,7 +49,7 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
 
 
     //pass in the book array to the constructor
-    public AcceptedIncomingAdapter(List<Book> books, OnBookClickListener onBookClickListener) {
+    public AcceptedOutgoingAdapter(List<Book> books, OnBookClickListener onBookClickListener) {
         mBooks = books;
         this.mOnBookClickListener = onBookClickListener;
     }
@@ -72,10 +71,10 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
         public ViewHolder(View itemView, OnBookClickListener onBookClickListener) {
             super(itemView);
 
-            bookTextView = (TextView) itemView.findViewById(R.id.air_book_name);
-            userNameTextView = (TextView) itemView.findViewById(R.id.air_requester);
-            statusTextView = (TextView) itemView.findViewById(R.id.air_location_status);
-            scanButton = (Button) itemView.findViewById(R.id.air_scan_button);
+            bookTextView = (TextView) itemView.findViewById(R.id.aor_book_name);
+            userNameTextView = (TextView) itemView.findViewById(R.id.aor_owner);
+            statusTextView = (TextView) itemView.findViewById(R.id.aor_location_status);
+            scanButton = (Button) itemView.findViewById(R.id.aor_scan_button);
             this.onBookClickListener = onBookClickListener;
 
             itemView.setOnClickListener(this);
@@ -95,13 +94,13 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
     //getItemCount to determine number of items
 
     @Override
-    public AcceptedIncomingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AcceptedOutgoingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         //inflate the custom layout
-        View contactView = inflater.inflate(R.layout.accepted_incoming_list, parent, false);
+        View contactView = inflater.inflate(R.layout.accepted_outgoing_list, parent, false);
 
         //return a new holder instance
         ViewHolder viewHolder = new ViewHolder(contactView, mOnBookClickListener);
@@ -110,11 +109,10 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
 
     //populate data into the item through holder
     @Override
-    public void onBindViewHolder(AcceptedIncomingAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(AcceptedOutgoingAdapter.ViewHolder holder, int position) {
 
         //get data based on position
         Book book = mBooks.get(position);
-        Log.d("MyDebug", book.getLatitude());
 
         //set item views based on views and data
         TextView textView1 = holder.bookTextView;
@@ -128,20 +126,14 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             lStatus = "longitude " + book.getLongitude() + ", latitude " + book.getLatitude();
         textView3.setText("location status: " + lStatus);
 
-        FirebaseFirestore.getInstance().collection("books").document(book.getBid()).get()
+        FirebaseFirestore.getInstance().collection("users").document(book.getOwner()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            String requester = ((List<String>) task.getResult().getData().get("requests")).get(0);
-                            FirebaseFirestore.getInstance().collection("users").document(requester).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    textView2.setText("requested by: " + task.getResult().getData().get("username"));
-                                }
-                            });
+                            textView2.setText("owned by: " + (String) task.getResult().getData().get("username"));
                         } else
-                            textView2.setText("requested by: failed to fetch");
+                            textView2.setText("owned by: failed to fetch");
                     }
                 });
 
