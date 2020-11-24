@@ -37,46 +37,58 @@ public class ManageBook extends AppCompatActivity {
         // Owner scan ISBN to denote book as borrowed
         owner_button.setOnClickListener(new View.OnClickListener(){
             @Override
-                public void onClick(View V){
+                public void onClick(View V) {
                 //Firestore
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 db = FirebaseFirestore.getInstance();
 
-                String userID = user.getUid();
-                String bookISBN=ownerdenote.getText().toString();
 
-                db.collection("books")
-                        .whereEqualTo("isbn",bookISBN)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                String bookISBN = ownerdenote.getText().toString();
 
-                                        Log.d("QIXIN", document.getId() + " => " + document.getData());
-                                        String docID=document.getId();
-                                        String bookstatus=document.getString("status");
-                                        if (!bookstatus .equals( "borrowed")){
-                                            db.collection("book").document(docID).update("status","borrowed");
+                try {
+                    db.collection("books")
+                            .whereEqualTo("isbn", bookISBN)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                            String now=document.getString("status");
-                                            Toast.makeText(ManageBook.this, "Success!", Toast.LENGTH_SHORT).show();
+                                            Log.d("QIXIN", document.getId() + " => " + document.getData());
+                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                            String docID = document.getId();
+                                            String userID = user.getUid();
+                                            String bookstatus = document.getString("status");
+                                            String bookowner = document.getString("owner");
+
+                                            if ((!bookstatus.equals("borrowed")) && (bookowner != userID)) {
+                                                db.collection("book").document(docID).update("status", "borrowed");
+
+                                                String now = document.getString("status");
+                                                Toast.makeText(ManageBook.this, "Success!", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
-                                } else {
 
-                                    Log.d("QIXIN", "Error getting documents: ", task.getException());
+                                    else {
+
+                                        Log.d("QIXIN", "Error getting documents: ", task.getException());
+                                    }
                                 }
-                            }
 
 
-                });
+                            });
+
+                } catch (NullPointerException e){
+                    System.out.print("NullPointerException Caught");
+                    Log.d("QIXIN","exception");
+                    Toast.makeText(ManageBook.this,"ISBN search not exist",Toast.LENGTH_SHORT).show();
+
+                }
+
 
             }
-
-
-
 
         });
 
