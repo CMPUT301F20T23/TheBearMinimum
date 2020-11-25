@@ -123,7 +123,7 @@ public class AcceptedOutgoingAdapter extends RecyclerView.Adapter<AcceptedOutgoi
         if (book.getLatitude().equals(""))
             lStatus = "unselected";
         else
-            lStatus = "longitude " + book.getLongitude() + ", latitude " + book.getLatitude();
+            lStatus = "location selected";
         textView3.setText("location status: " + lStatus);
 
         FirebaseFirestore.getInstance().collection("users").document(book.getOwner()).get()
