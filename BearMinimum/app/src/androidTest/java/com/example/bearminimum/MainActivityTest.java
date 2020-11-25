@@ -1,16 +1,21 @@
 package com.example.bearminimum;
 
 import android.graphics.Point;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.robotium.solo.Solo;
@@ -30,7 +35,24 @@ public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> rule =
-            new ActivityTestRule<>(MainActivity.class, true, true);
+            new ActivityTestRule<MainActivity>(MainActivity.class, true, true){
+                @Override
+                protected void beforeActivityLaunched() {
+                    Log.d("TestDebug", "before main activity");
+                    if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                        FirebaseAuth.getInstance().signInWithEmailAndPassword("test@bearmin.com", "test123").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful())
+                                    Log.d("TestDebug", "logged in");
+                                else
+                                    Log.d("TestDebug", task.getException().getMessage());
+                            }
+                        });
+                        SystemClock.sleep(3000);
+                    }
+                }
+            };
 
     @Before
     public void setUp(){
@@ -93,6 +115,7 @@ public class MainActivityTest {
      */
     @After
     public void tearDown() {
+        FirebaseAuth.getInstance().signOut();
         solo.finishOpenedActivities();
     }
 

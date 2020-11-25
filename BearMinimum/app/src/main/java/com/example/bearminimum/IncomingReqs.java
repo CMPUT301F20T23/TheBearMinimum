@@ -57,26 +57,27 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 Log.d("MyDebug", "requested books data changed");
                 bookData.clear();
-                if (value.isEmpty())
-                    return;
-                for (QueryDocumentSnapshot doc : value) {
-                    List<String> requesters = (List<String>) doc.getData().get("requests");
-                    Map data = doc.getData();
-                    if (requesters.size() > 0) {
-                        Log.d("MyDebug", "requests exist");
-                        String title = (String) data.get("title");
-                        String author = (String) data.get("author");
-                        String bid = (String) data.get("bookid");
-                        String desc = (String) data.get("description");
-                        String isbn = (String) data.get("isbn");
-                        String status = (String) data.get("status");
-                        String borrower = (String) data.get("borrower");
-                        String owner_scan=(String) data.get("owner_scan") ;
-                        String borrower_scan=(String) data.get("borrower_scan") ;
-
-                        bookData.add(new Book(title,author,user.getUid(),borrower,desc,isbn,status,owner_scan,borrower_scan,bid));
-                    } else
-                        booksRef.document((String) data.get("bookid")).update("status", "available");
+                if (!value.isEmpty()) {
+                    for (QueryDocumentSnapshot doc : value) {
+                        List<String> requesters = (List<String>) doc.getData().get("requests");
+                        Map data = doc.getData();
+                        if (requesters.size() > 0) {
+                            Log.d("MyDebug", "requests exist");
+                            String title = (String) data.get("title");
+                            String author = (String) data.get("author");
+                            String bid = (String) data.get("bookid");
+                            String desc = (String) data.get("description");
+                            String isbn = (String) data.get("isbn");
+                            String status = (String) data.get("status");
+                            String borrower = (String) data.get("borrower");
+                            String lat = (String) data.get("latitude");
+                            String longitude = (String) data.get("longitude");
+                            String owner_scan=(String) data.get("owner_scan") ;
+                            String borrower_scan=(String) data.get("borrower_scan") ;
+                            bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
+                        } else
+                            booksRef.document((String) data.get("bookid")).update("status", "available");
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -93,7 +94,7 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
     }
 
     @Override
-    public void onBookClick(int position) {
+    public void onBookClick(int position, String owner) {
         //when a book is selected, show the individual requests for it
         Intent intent = new Intent(this, HandleIncomingReqsActivity.class);
         intent.putExtra("bookid", bookData.get(position).getBid());

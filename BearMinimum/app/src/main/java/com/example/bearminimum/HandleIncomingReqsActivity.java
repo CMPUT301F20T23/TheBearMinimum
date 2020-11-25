@@ -1,6 +1,7 @@
 package com.example.bearminimum;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -11,9 +12,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,10 +52,6 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
         //an array of usernames associated with the uids requesting the book
         users = new ArrayList<>();
 
-        //custom adapter for displaying lists
-        adapter = new IncomingRequestsAdapter(users, this);
-        requestView.setAdapter(adapter);
-
         //the book id for the selected book
         bid = getIntent().getExtras().getString("bookid");
 
@@ -69,11 +70,30 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
                     String borrower = (String) data.get("borrower");
                     String owner_scan=(String) data.get("owner_scan") ;
                     String borrower_scan=(String) data.get("borrower_scan") ;
+                    String lat = (String) data.get("latitude");
+                    String longitude = (String) data.get("longitude");
                     uids = (ArrayList<String>) data.get("requests");
-                    book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,owner_scan,borrower_scan,bid);
+                    book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,bid, lat, longitude, owner_scan, borrower_scan);
+                    //custom adapter for displaying lists
+                    adapter = new IncomingRequestsAdapter(users, getBaseContext(), book.getBid());
+                    requestView.setAdapter(adapter);
 
                     //fill users array from uid gotten from firestore
                     getUsers();
+                }
+            }
+        });
+
+        FirebaseFirestore.getInstance().collection("books").document(bid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value != null) {
+                    if (value.exists()) {
+                        Map data = value.getData();
+                        if (!data.get("status").equals("requested")) {
+                            finish();
+                        }
+                    }
                 }
             }
         });
@@ -102,5 +122,9 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    public String getBookid() {
+        return book.getBid();
     }
 }

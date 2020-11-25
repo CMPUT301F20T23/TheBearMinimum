@@ -24,7 +24,7 @@ public class Book implements Serializable {
     private String owner_scan;
     private String borrower_scan;
 
-    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid,String owner_scan,String borrower_scan){
+    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid, String lat, String longitude, String owner_scan, String borrower_scan){
         this.title = title;
         this.author = author;
         this.owner = owner;

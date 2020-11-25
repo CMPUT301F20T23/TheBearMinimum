@@ -59,7 +59,9 @@ public class OutgoingReqsActivity extends AppCompatActivity implements Navigatio
                                     String owner = (String) data.get("owner");
                                     String owner_scan=(String) data.get("owner_scan") ;
                                     String borrower_scan=(String) data.get("borrower_scan") ;
-                                    bookData.add(new Book(title, author, owner, borrower, desc, isbn, status,owner_scan,borrower_scan, bid));
+                                    String lat = (String) data.get("latitude");
+                                    String longitude = (String) data.get("longitude");
+                                    bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
                                 }
                             }
                             adapter.notifyDataSetChanged();
@@ -82,7 +84,7 @@ public class OutgoingReqsActivity extends AppCompatActivity implements Navigatio
     }
 
     @Override
-    public void onBookClick(int position) {
+    public void onBookClick(int position, String owner) {
         Intent intent = ViewBookActivity.createIntent(bookData.get(position), this, false);
         startActivity(intent);
     }
