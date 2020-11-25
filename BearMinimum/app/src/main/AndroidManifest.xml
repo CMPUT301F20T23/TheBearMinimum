@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -12,18 +14,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ScanBook"></activity>
         <activity android:name=".AcceptedOutgoingReqs"></activity>
         <activity android:name=".AcceptedIncomingReqs" />
         <activity android:name=".SpecficBookRequest" />
-        <activity android:name=".ManageBook" />
         <activity android:name=".OutgoingReqsActivity" />
+        <activity android:name=".BarCodeHelper" />
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
+        <!-- To use multiple models: android:value="barcode,model2,model3" -->
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/maps_api_key" />
 
         <activity android:name=".AddBookActivity" />
         <activity android:name=".isbn_search_book" />
@@ -35,6 +43,7 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MapActivity" />
+        <activity android:name=".LocationActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"

@@ -352,6 +352,7 @@ public class ViewBookActivity extends AppCompatActivity {
      * @param bookID    id of the book being deleted
      */
     public void deleteBook(String bookID) {
+            storageReference.child("book_cover_images/" + bookid).delete();
             FirebaseFirestore.getInstance().collection("books")
                     .document(bookID)
                     .delete()

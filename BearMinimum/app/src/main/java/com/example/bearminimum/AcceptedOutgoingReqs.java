@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -57,9 +58,11 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
                         String status = (String) data.get("status");
                         String borrower = (String) data.get("borrower");
                         String lat = (String) data.get("latitude");
+                        String owner_scan=(String)doc.getData().get("owner_scan") ;
+                        String borrower_scan=(String)doc.getData().get("borrower_scan") ;
                         Log.d("MyDebug", "lat is: " + lat);
                         String longitude = (String) data.get("longitude");
-                        bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude));
+                        bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -78,13 +81,16 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
     public void onBookClick(int position, String owner) {
         //open either location selector or previously selected location
         Book book = bookData.get(position);
-        if (!book.getLatitude().equals("")) {
+        if (book.getLatitude().equals("")) {
             //borrowers cant select location
-            Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "the owner hasn't set this yet...",Snackbar.LENGTH_SHORT);
+            Snackbar sb = Snackbar.make(findViewById(R.id.accepted_outgoing), "the owner hasn't set this yet...",Snackbar.LENGTH_SHORT);
             sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
             sb.show();
         } else {
             //launch location viewer
+            Intent intent = new Intent(this, LocationActivity.class);
+            intent.putExtra("bookid", book.getBid());
+            startActivity(intent);
         }
     }
 }

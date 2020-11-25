@@ -44,6 +44,9 @@ public class LocationActivity extends MainActivity implements OnMapReadyCallback
     private String bid;
     private FirebaseFirestore db;
 
+    private static final int DEFAULT_ZOOM = 15;
+    private GoogleMap map;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,29 +75,32 @@ public class LocationActivity extends MainActivity implements OnMapReadyCallback
                     Map data = task.getResult().getData();
                     latitude = (String) data.get("latitude");
                     longitude = (String) data.get("longitude");
+                    //convert to number format
+                    lati = Double.parseDouble(latitude);
+                    longi = Double.parseDouble(longitude);
+                    setLocation();
                 }
             }
         });
-
-        //convert to number format
-        lati = Double.parseDouble(latitude);
-        longi = Double.parseDouble(longitude);
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        this.map = googleMap;
+    }
+
+    private void setLocation() {
         // Add a misc marker at Edmonton location
         // and move the map's camera to the same location.
+
         LatLng bookLocation = new LatLng( lati, longi);
-        marker = googleMap.addMarker(new MarkerOptions()
+        marker = map.addMarker(new MarkerOptions()
                 .position(bookLocation)
                 .title("generic")
                 .draggable(false));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(bookLocation));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(bookLocation, DEFAULT_ZOOM));
     }
-
 
 }
