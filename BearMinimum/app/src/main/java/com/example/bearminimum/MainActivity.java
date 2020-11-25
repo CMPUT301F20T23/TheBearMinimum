@@ -199,10 +199,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String isbn = (String) doc.getData().get("isbn");
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
+                        String owner_scan=(String)doc.getData().get("owner_scan") ;
+                        String borrower_scan=(String)doc.getData().get("borrower_scan") ;
                         String Description = (String) doc.getData().get("description");
                         String lat = (String) doc.getData().get("latitude");
                         String longitude = (String) doc.getData().get("longitude");
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude);
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude, owner_scan, borrower_scan);
                         Log.i("Test",status);
 
                         bookDataList.add(book); // Adding the cities and provinces from FireStore
@@ -218,7 +220,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String Description = (String) doc.getData().get("description");
                         String lat = (String) doc.getData().get("latitude");
                         String longitude = (String) doc.getData().get("longitude");
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude);
+                        String owner_scan=(String)doc.getData().get("owner_scan") ;
+                        String borrower_scan=(String)doc.getData().get("borrower_scan") ;
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude, owner_scan, borrower_scan);
 
                         borrowedBookData.add(book); // Adding the cities and provinces from FireStore
                     }
@@ -319,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, AddBookActivity.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_managebook) {
-            Intent intent = new Intent(this, ManageBook.class);
+            Intent intent = new Intent(this, ScanBook.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_search) {
             Intent intent = new Intent(this, SearchActivity.class);

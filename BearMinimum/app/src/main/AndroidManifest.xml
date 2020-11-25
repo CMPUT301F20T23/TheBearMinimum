@@ -14,10 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ScanBook"></activity>
         <activity android:name=".AcceptedOutgoingReqs"></activity>
         <activity android:name=".AcceptedIncomingReqs" />
         <activity android:name=".SpecficBookRequest" />
-        <activity android:name=".ManageBook" />
         <activity android:name=".OutgoingReqsActivity" />
         <activity android:name=".BarCodeHelper" />
 

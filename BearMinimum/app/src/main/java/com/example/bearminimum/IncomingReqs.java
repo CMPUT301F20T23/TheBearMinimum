@@ -72,7 +72,9 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
                             String borrower = (String) data.get("borrower");
                             String lat = (String) data.get("latitude");
                             String longitude = (String) data.get("longitude");
-                            bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid, lat, longitude));
+                            String owner_scan=(String) data.get("owner_scan") ;
+                            String borrower_scan=(String) data.get("borrower_scan") ;
+                            bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
                         } else
                             booksRef.document((String) data.get("bookid")).update("status", "available");
                     }

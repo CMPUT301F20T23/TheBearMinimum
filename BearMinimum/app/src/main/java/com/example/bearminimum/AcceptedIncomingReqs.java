@@ -56,9 +56,11 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
                         String status = (String) data.get("status");
                         String borrower = (String) data.get("borrower");
                         String lat = (String) data.get("latitude");
+                        String owner_scan=(String)doc.getData().get("owner_scan") ;
+                        String borrower_scan=(String)doc.getData().get("borrower_scan") ;
                         Log.d("MyDebug", "lat is: " + lat);
                         String longitude = (String) data.get("longitude");
-                        bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid, lat, longitude));
+                        bookData.add(new Book(title, author, user.getUid(), borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
                     }
                 }
                 adapter.notifyDataSetChanged();

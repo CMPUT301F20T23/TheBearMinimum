@@ -57,9 +57,11 @@ public class OutgoingReqsActivity extends AppCompatActivity implements Navigatio
                                     String status = (String) data.get("status");
                                     String borrower = (String) data.get("borrower");
                                     String owner = (String) data.get("owner");
+                                    String owner_scan=(String) data.get("owner_scan") ;
+                                    String borrower_scan=(String) data.get("borrower_scan") ;
                                     String lat = (String) data.get("latitude");
                                     String longitude = (String) data.get("longitude");
-                                    bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude));
+                                    bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
                                 }
                             }
                             adapter.notifyDataSetChanged();
