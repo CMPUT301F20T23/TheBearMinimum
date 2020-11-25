@@ -84,6 +84,8 @@ public class AddBookActivity extends AppCompatActivity {
                     data.put("bookid", "");
                     data.put("borrower", "~");
                     data.put("status", "available");
+                    data.put("owner_scan","False");
+                    data.put("borrower_scan","False");
                     data.put("owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
                     data.put("requests", new ArrayList<String>());
                     db.collection("books")

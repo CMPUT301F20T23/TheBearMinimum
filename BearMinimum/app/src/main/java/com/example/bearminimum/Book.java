@@ -21,8 +21,10 @@ public class Book implements Serializable {
     private String bid;
     private String latitude;
     private String longitude;
+    private String owner_scan;
+    private String borrower_scan;
 
-    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid){
+    public Book(String title, String author, String owner, String borrower, String description, String ISBN, String status, String bid,String owner_scan,String borrower_scan){
         this.title = title;
         this.author = author;
         this.owner = owner;
@@ -33,9 +35,27 @@ public class Book implements Serializable {
         this.bid = bid;
         this.latitude = "";
         this.longitude = "";
+        this.owner_scan=owner_scan;
+        this.borrower_scan=borrower_scan;
 
     }
 
+
+    public String getOwner_scan() {
+        return owner_scan;
+    }
+
+    public void setOwner_scan(String owner_scan) {
+        this.owner_scan = owner_scan;
+    }
+
+    public String getBorrower_scan() {
+        return borrower_scan;
+    }
+
+    public void setBorrower_scan(String borrower_scan) {
+        this.borrower_scan = borrower_scan;
+    }
 
     /**
      * Return the book's title

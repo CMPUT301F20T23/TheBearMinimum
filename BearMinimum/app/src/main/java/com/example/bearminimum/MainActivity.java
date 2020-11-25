@@ -156,9 +156,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String isbn = (String) doc.getData().get("isbn");
                         String Borrower = (String) doc.getData().get("borrower");
                         String status = (String) doc.getData().get("status");
+                        String owner_scan=(String)doc.getData().get("owner_scan") ;
+                        String borrower_scan=(String)doc.getData().get("borrower_scan") ;
                         String Description = (String) doc.getData().get("description");
 
-                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId);
+                        Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status,owner_scan,borrower_scan, BookId);
                         Log.i("Test",status);
 
                         bookDataList.add(book); // Adding the cities and provinces from FireStore

@@ -67,8 +67,10 @@ public class HandleIncomingReqsActivity extends AppCompatActivity {
                     String isbn = (String) data.get("isbn");
                     String status = (String) data.get("status");
                     String borrower = (String) data.get("borrower");
+                    String owner_scan=(String) data.get("owner_scan") ;
+                    String borrower_scan=(String) data.get("borrower_scan") ;
                     uids = (ArrayList<String>) data.get("requests");
-                    book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,bid);
+                    book = new Book(title,author, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),borrower,desc,isbn,status,owner_scan,borrower_scan,bid);
 
                     //fill users array from uid gotten from firestore
                     getUsers();
