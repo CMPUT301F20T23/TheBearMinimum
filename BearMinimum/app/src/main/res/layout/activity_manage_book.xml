@@ -13,33 +13,9 @@
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="370dp"
-        android:text="Owner"
+        android:text="Scan by ISBN"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/Borrower_TextView"
-        android:layout_width="137dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="60dp"
-        android:text="Borrower"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editText_borrower_confirm"
-        android:layout_width="308dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="25dp"
-        android:ems="10"
-        android:hint="Confirm by ISBN"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Borrower_TextView" />
 
     <EditText
         android:id="@+id/editText_owner_denote"
@@ -50,7 +26,6 @@
         android:layout_marginTop="25dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Denote Borrow by ISBN"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/owner_TextView" />
 

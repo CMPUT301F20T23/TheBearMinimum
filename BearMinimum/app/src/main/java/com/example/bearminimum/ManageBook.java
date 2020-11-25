@@ -21,7 +21,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class ManageBook extends AppCompatActivity {
 
     private EditText ownerdenote;
-    private  EditText borrowerscan;
     private Button owner_button;
     private FirebaseFirestore db;
 
@@ -61,12 +60,41 @@ public class ManageBook extends AppCompatActivity {
                                             String userID = user.getUid();
                                             String bookstatus = document.getString("status");
                                             String bookowner = document.getString("owner");
+                                            String bookborrower=document.getString("borrower;");
+                                            String owner_scan=document.getString("owner_scan");
+                                            String borrower_scan=document.getString("borrower_scan");
 
-                                            if ((!bookstatus.equals("borrowed")) && (bookowner != userID)) {
-                                                db.collection("book").document(docID).update("status", "borrowed");
+                                            if (!bookstatus.equals("accepted") ) {
+                                                Toast.makeText(ManageBook.this, "Request for this book is not accepted", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else {
+                                                //owner first time scan the book
+                                                if(userID==bookowner && owner_scan =="False"){
+                                                    db.collection("books").document(docID).update("owner_scan", "True");
+                                                    Toast.makeText(ManageBook.this, "You are now denoting the book as borrowed ", Toast.LENGTH_SHORT).show();
+                                                }
+                                                //owner has already scanned the book
+                                                else if(userID==bookowner && owner_scan =="True"){
+                                                    Toast.makeText(ManageBook.this, "Book is already denoted as borrowed ", Toast.LENGTH_SHORT).show();
 
-                                                String now = document.getString("status");
-                                                Toast.makeText(ManageBook.this, "Success!", Toast.LENGTH_SHORT).show();
+                                                }
+                                                //borrower first time scan the book
+                                                else if(userID==bookborrower && borrower_scan =="False"){
+                                                    db.collection("books").document(docID).update("borrower_scan", "True");
+                                                    Toast.makeText(ManageBook.this, "You are now confirming the book as borrowed ", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                                //borrower has already scanned the book
+                                                else if(userID==bookborrower && borrower_scan =="True"){
+                                                    Toast.makeText(ManageBook.this, "Book is already confirmed as borrowed ", Toast.LENGTH_SHORT).show();
+
+                                                }
+
+                                            }
+
+                                            //update book status when both owner and borrower scan the book
+                                            if (bookstatus=="accepted" && owner_scan=="True" && borrower_scan=="True"){
+                                                db.collection("books").document(docID).update("status", "borrowed");
                                             }
                                         }
                                     }
@@ -79,9 +107,9 @@ public class ManageBook extends AppCompatActivity {
 
 
                             });
-
+                //catch exception when isbn for the book doesn't exist
                 } catch (NullPointerException e){
-                    System.out.print("NullPointerException Caught");
+
                     Log.d("QIXIN","exception");
                     Toast.makeText(ManageBook.this,"ISBN search not exist",Toast.LENGTH_SHORT).show();
 
