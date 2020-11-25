@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,12 +17,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.rpc.Code;
+import com.google.zxing.Result;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,11 +47,15 @@ import java.util.HashMap;
 
 public class isbn_search_book extends AppCompatActivity {
 
+
     /******************ISBN add BOOK START ******************************/
     public EditText ISBNNum;
     public Button ISBNSearchButton;
+    public Button ISBNScannerButton;
     public String isbnValue;
     private FirebaseFirestore db;
+
+
 
     /******************ISBN add BOOK END ******************************/
 
@@ -56,6 +66,8 @@ public class isbn_search_book extends AppCompatActivity {
 
         /******************ISBN add BOOK START ******************************/
         ISBNSearchButton = findViewById(R.id.ISBNSearchButton);
+        ISBNScannerButton = findViewById(R.id.ISBN_scanner);
+
         ISBNNum = findViewById(R.id.ISBNSearch);
         Log.i("Riky","isbnSearch1");
 
@@ -110,6 +122,24 @@ public class isbn_search_book extends AppCompatActivity {
 
 
         /******************ISBN add BOOK END ******************************/
+        ISBNScannerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("Riky","yes");
+                Intent intent = new Intent(isbn_search_book.this,BarCodeHelper.class);
+                startActivity(intent);
+                finish();
+                Bundle bundle= getIntent().getExtras();
+                if (bundle!= null) {// to avoid the NullPointerException
+                    //String isbnNum = getIntent().getExtras().getString("isbnNum");
+
+                    //ISBNNum.setText(isbnNum);
+
+                    }
+                }
+
+        });
+
     }
 
     @Override

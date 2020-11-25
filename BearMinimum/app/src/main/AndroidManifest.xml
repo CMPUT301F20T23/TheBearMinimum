@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -17,6 +18,12 @@
         <activity android:name=".SpecficBookRequest" />
         <activity android:name=".ManageBook" />
         <activity android:name=".OutgoingReqsActivity" />
+        <activity android:name=".BarCodeHelper" />
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
+        <!-- To use multiple models: android:value="barcode,model2,model3" -->
 
         <meta-data
             android:name="com.google.android.gms.version"
