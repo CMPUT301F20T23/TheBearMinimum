@@ -27,7 +27,7 @@
         />
     <item
         android:id="@+id/nav_managebook"
-        android:title="manage book" />
+        android:title="scan book" />
     <item
         android:id="@+id/nav_search"
         android:title="@string/nav_search"

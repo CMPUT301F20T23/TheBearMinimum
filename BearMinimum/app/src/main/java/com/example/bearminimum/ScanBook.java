@@ -18,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class ManageBook extends AppCompatActivity {
+public class ScanBook extends AppCompatActivity {
 
     private EditText ownerdenote;
     private Button owner_button;
@@ -27,7 +27,7 @@ public class ManageBook extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_book);
+        setContentView(R.layout.activity_scan_book);
 
         ownerdenote =findViewById(R.id.editText_owner_denote);
         owner_button=findViewById(R.id.owner_button);
@@ -65,28 +65,28 @@ public class ManageBook extends AppCompatActivity {
                                             String borrower_scan=document.getString("borrower_scan");
 
                                             if (!bookstatus.equals("accepted") ) {
-                                                Toast.makeText(ManageBook.this, "Request for this book is not accepted", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ScanBook.this, "Request for this book is not accepted", Toast.LENGTH_SHORT).show();
                                             }
                                             else {
                                                 //owner first time scan the book
                                                 if(userID==bookowner && owner_scan =="False"){
                                                     db.collection("books").document(docID).update("owner_scan", "True");
-                                                    Toast.makeText(ManageBook.this, "You are now denoting the book as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "You are now denoting the book as borrowed ", Toast.LENGTH_SHORT).show();
                                                 }
                                                 //owner has already scanned the book
                                                 else if(userID==bookowner && owner_scan =="True"){
-                                                    Toast.makeText(ManageBook.this, "Book is already denoted as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "Book is already denoted as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower first time scan the book
                                                 else if(userID==bookborrower && borrower_scan =="False"){
                                                     db.collection("books").document(docID).update("borrower_scan", "True");
-                                                    Toast.makeText(ManageBook.this, "You are now confirming the book as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "You are now confirming the book as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower has already scanned the book
                                                 else if(userID==bookborrower && borrower_scan =="True"){
-                                                    Toast.makeText(ManageBook.this, "Book is already confirmed as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "Book is already confirmed as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
 
@@ -111,7 +111,7 @@ public class ManageBook extends AppCompatActivity {
                 } catch (NullPointerException e){
 
                     Log.d("QIXIN","exception");
-                    Toast.makeText(ManageBook.this,"ISBN search not exist",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScanBook.this,"ISBN search not exist",Toast.LENGTH_SHORT).show();
 
                 }
 
