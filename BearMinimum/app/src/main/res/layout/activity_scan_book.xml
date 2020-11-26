@@ -9,18 +9,10 @@
 
     <TextView
         android:id="@+id/owner_TextView"
-<<<<<<< Updated upstream
-        android:layout_width="137dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="370dp"
-=======
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:fontFamily="@font/josefina_light"
->>>>>>> Stashed changes
         android:text="Scan by ISBN"
         android:fontFamily="@font/josefina_light"
         android:textColor="@color/white"
@@ -37,13 +29,8 @@
         android:fontFamily="@font/josefina_light"
         android:textColor="@color/white"
         android:textSize="24sp"
-<<<<<<< Updated upstream
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-=======
         app:layout_constraintEnd_toStartOf="@+id/scan_button"
         app:layout_constraintHorizontal_bias="0.5"
->>>>>>> Stashed changes
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,8 +84,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_owner_denote" />
 
-<<<<<<< Updated upstream
-=======
     <Button
         android:id="@+id/scan_button"
         android:layout_width="wrap_content"
@@ -109,5 +94,4 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/owner_TextView" />
 
->>>>>>> Stashed changes
 </androidx.constraintlayout.widget.ConstraintLayout>
