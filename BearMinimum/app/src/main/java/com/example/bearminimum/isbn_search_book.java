@@ -77,7 +77,7 @@ public class isbn_search_book extends AppCompatActivity {
             public void onClick(View v) {
                 isbnValue = ISBNNum.getText().toString(); // get the isbn on click
                 Log.i("Riky",isbnValue);
-                if (isbnValue.length() < 10) {
+                if (isbnValue.length() != 10 && isbnValue.length() != 13) {
                     Toast.makeText(isbn_search_book.this, "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
                 } else {
 
