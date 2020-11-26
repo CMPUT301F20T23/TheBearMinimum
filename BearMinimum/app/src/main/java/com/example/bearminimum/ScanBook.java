@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +34,8 @@ public class ScanBook extends AppCompatActivity {
     private Button scan;
     private FirebaseFirestore db;
 
+    private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,7 @@ public class ScanBook extends AppCompatActivity {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ScanBarcode();
+                getCameraPermission();
             }
         });
 
@@ -138,7 +143,7 @@ public class ScanBook extends AppCompatActivity {
 
     }
 
-    public void ScanBarcode(){
+    public void scanBarcode(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(FetchCode.class);
         integrator.setOrientationLocked(false);
@@ -158,7 +163,7 @@ public class ScanBook extends AppCompatActivity {
                 builder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ScanBarcode();
+                        scanBarcode();
                     }
                 }).setNegativeButton("Done", new DialogInterface.OnClickListener() {
                     @Override
@@ -174,6 +179,35 @@ public class ScanBook extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void getCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            scanBarcode();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.CAMERA},
+                    PERMISSIONS_REQUEST_ACCESS_CAMERA);
+        }
+    }
+
+    /**
+     * Handles the result of the request for camera permissions.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    scanBarcode();
+                }
+            }
+        }
+
     }
 
 
