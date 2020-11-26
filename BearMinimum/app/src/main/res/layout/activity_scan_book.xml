@@ -11,22 +11,10 @@
         android:id="@+id/owner_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/josefina_light"
         android:text="Scan by ISBN"
-        android:fontFamily="@font/josefina_light"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText_borrower_confirm" />
-
-    <TextView
-        android:id="@+id/Borrower_TextView"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="60dp"
-        android:text="borrower"
-        android:fontFamily="@font/josefina_light"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/scan_button"
@@ -35,27 +23,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText_borrower_confirm"
-        android:layout_width="300dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:hint="borrower name"
-        android:fontFamily="@font/josefina_light"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:textColorHint="@color/white"
-        android:backgroundTint="@color/white"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Borrower_TextView" />
-
-    <EditText
         android:id="@+id/editText_owner_denote"
         android:layout_width="300dp"
         android:layout_height="56dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="@color/white"
         android:fontFamily="@font/josefina_light"
         android:gravity="center"
@@ -88,6 +59,7 @@
         android:id="@+id/scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:text="scan"
         app:layout_constraintBaseline_toBaselineOf="@+id/owner_TextView"
         app:layout_constraintEnd_toEndOf="parent"
