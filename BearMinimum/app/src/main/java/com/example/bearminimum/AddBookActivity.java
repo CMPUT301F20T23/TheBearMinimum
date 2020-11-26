@@ -88,9 +88,10 @@ public class AddBookActivity extends AppCompatActivity {
                 final String bookDescr = editDescrEditText.getText().toString();
 
                 if (bookTitle.length() > 0 && bookAuthor.length() > 0 && bookISBN.length() > 0) {
-                    if (!validISBN(bookISBN))
+                    if (bookISBN.length() != 10 && bookISBN.length() != 13) {
+                        Toast.makeText(getBaseContext(), "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
                         return;
-                    else
+                    } else
                         valid = false;
                     data.put("title", bookTitle);
                     data.put("author", bookAuthor);
@@ -126,65 +127,5 @@ public class AddBookActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private boolean validISBN(String bookISBN) {
-        if (bookISBN.length() != 10 && bookISBN.length() != 13) {
-            Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
-        } else {
-            String requestUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + bookISBN;
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                    requestUrl,null, // here
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-
-                            String[] result = jsonParser(response);
-                            if (result[0] != null) {
-                                //results
-                                valid = true;
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            AppController.getInstance(findViewById(R.id.add_book_activity).getContext()).addToRequestQueue(request);
-        }
-        return valid;
-    }
-
-    public String[] jsonParser(JSONObject response) {
-        String[] result = new String[5]; // volume information holder
-        try {
-            String totalItems = response.optString("totalItems");
-            if (totalItems.equalsIgnoreCase("0")) {
-                Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid isbn", Toast.LENGTH_LONG).show();
-            } else {
-                JSONArray jsonArray = response.getJSONArray("items");
-                for (int i = 0; i < jsonArray.length(); ++i) {
-                    JSONObject items = jsonArray.getJSONObject(i);
-
-                    // get title info
-                    String title = items.getJSONObject("volumeInfo").optString("title");
-                    String subtitle = items.getJSONObject("volumeInfo").optString("subtitle");
-                    result[0] = title + " : " + subtitle;
-
-                    // get author info
-                    result[1] = items.getJSONObject("volumeInfo").optString("description");
-
-                    // get category and page count info
-                    result[2] = items.getJSONObject("volumeInfo").optString("authors");
-                    result[3] = items.getJSONObject("volumeInfo").optString("identifier");
-
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }
