@@ -1,8 +1,12 @@
 package com.example.bearminimum;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,11 +21,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class ScanBook extends AppCompatActivity {
 
     private EditText ownerdenote;
     private Button owner_button;
+    private Button scan;
     private FirebaseFirestore db;
 
     @Override
@@ -31,7 +38,14 @@ public class ScanBook extends AppCompatActivity {
 
         ownerdenote =findViewById(R.id.editText_owner_denote);
         owner_button=findViewById(R.id.owner_button);
+        scan = findViewById(R.id.scan_button);
 
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScanBarcode();
+            }
+        });
 
         // Owner scan ISBN to denote book as borrowed
         owner_button.setOnClickListener(new View.OnClickListener(){
@@ -122,11 +136,44 @@ public class ScanBook extends AppCompatActivity {
 
 
 
-
-
-
     }
 
+    public void ScanBarcode(){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(FetchCode.class);
+        integrator.setOrientationLocked(false);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("scan code");
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(result.getContents());
+                builder.setTitle("scan result");
+                builder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ScanBarcode();
+                    }
+                }).setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ownerdenote.setText(result.getContents());
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                Toast.makeText(this, "No Result", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
 
 
 }

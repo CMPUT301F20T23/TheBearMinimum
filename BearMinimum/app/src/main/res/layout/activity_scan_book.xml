@@ -54,4 +54,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_owner_denote" />
 
+    <Button
+        android:id="@+id/scan_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="scan"
+        tools:layout_editor_absoluteX="256dp"
+        tools:layout_editor_absoluteY="496dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
