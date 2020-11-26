@@ -2,6 +2,7 @@ package com.example.bearminimum;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -71,6 +72,9 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
     private void initAdapter() {
         recyclerView = findViewById(R.id.accepted_incoming_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getBaseContext().getResources().getDrawable(R.drawable.item_divider));
+        recyclerView.addItemDecoration(dividerItemDecoration);
         adapter = new AcceptedOutgoingAdapter(bookData, this);
         recyclerView.setAdapter(adapter);
     }

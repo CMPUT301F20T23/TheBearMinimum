@@ -125,7 +125,7 @@ public class ViewBookActivity extends AppCompatActivity {
         //load profile image
         Glide.with(this.getBaseContext())
                 .load(storageRef)
-                .placeholder(R.drawable.logo_books)
+                .placeholder(R.drawable.book_logo_white)
                 .apply(new RequestOptions().override(imageView.getHeight()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -249,7 +249,7 @@ public class ViewBookActivity extends AppCompatActivity {
         //load profile image
         Glide.with(this.getBaseContext())
                 .load(storageRef)
-                .placeholder(R.drawable.logo_books)
+                .placeholder(R.drawable.book_logo_white)
                 .apply(new RequestOptions().override(imageView.getHeight()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
