@@ -19,7 +19,7 @@
         <activity android:name=".AcceptedIncomingReqs" />
         <activity android:name=".SpecficBookRequest" />
         <activity android:name=".OutgoingReqsActivity" />
-        <activity android:name=".BarCodeHelper" />
+        <activity android:name=".BarCodeScanner" />
 
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"

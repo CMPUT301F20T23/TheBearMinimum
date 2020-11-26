@@ -9,7 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +23,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +49,8 @@ public class AddBookActivity extends AppCompatActivity {
 
     private Button isbnAddBookButton;
     private FirebaseFirestore db;
+
+    private boolean valid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +88,10 @@ public class AddBookActivity extends AppCompatActivity {
                 final String bookDescr = editDescrEditText.getText().toString();
 
                 if (bookTitle.length() > 0 && bookAuthor.length() > 0 && bookISBN.length() > 0) {
+                    if (!validISBN(bookISBN))
+                        return;
+                    else
+                        valid = false;
                     data.put("title", bookTitle);
                     data.put("author", bookAuthor);
                     data.put("isbn", bookISBN);
@@ -106,16 +121,70 @@ public class AddBookActivity extends AppCompatActivity {
                                 }
                             });
                     finish();
+                } else {
+                    Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid fields provided", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
+    private boolean validISBN(String bookISBN) {
+        if (bookISBN.length() != 10 && bookISBN.length() != 13) {
+            Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
+        } else {
+            String requestUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + bookISBN;
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                    requestUrl,null, // here
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+
+                            String[] result = jsonParser(response);
+                            if (result[0] != null) {
+                                //results
+                                valid = true;
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+            AppController.getInstance(findViewById(R.id.add_book_activity).getContext()).addToRequestQueue(request);
+        }
+        return valid;
+    }
+
+    public String[] jsonParser(JSONObject response) {
+        String[] result = new String[5]; // volume information holder
+        try {
+            String totalItems = response.optString("totalItems");
+            if (totalItems.equalsIgnoreCase("0")) {
+                Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid isbn", Toast.LENGTH_LONG).show();
+            } else {
+                JSONArray jsonArray = response.getJSONArray("items");
+                for (int i = 0; i < jsonArray.length(); ++i) {
+                    JSONObject items = jsonArray.getJSONObject(i);
+
+                    // get title info
+                    String title = items.getJSONObject("volumeInfo").optString("title");
+                    String subtitle = items.getJSONObject("volumeInfo").optString("subtitle");
+                    result[0] = title + " : " + subtitle;
+
+                    // get author info
+                    result[1] = items.getJSONObject("volumeInfo").optString("description");
+
+                    // get category and page count info
+                    result[2] = items.getJSONObject("volumeInfo").optString("authors");
+                    result[3] = items.getJSONObject("volumeInfo").optString("identifier");
 
                 }
-                ;
             }
-
-        });
-
-
-
-
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

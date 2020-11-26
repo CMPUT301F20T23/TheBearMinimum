@@ -3,34 +3,54 @@ package com.example.bearminimum;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
+import com.budiyev.android.codescanner.AutoFocusMode;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
-public class BarCodeScanner extends Fragment {
+public class BarCodeScanner extends AppCompatActivity {
     private CodeScanner mCodeScanner;
+    private Intent activityResult;
+    private Activity scannerActivity;
+    private static final int SCANNER_OK = 1177;
+    private static final int SCANNER_FAIL = 997;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        final Activity activity = getActivity();
-        View root = inflater.inflate(R.layout.scanner_camera, container, false);
-        CodeScannerView scannerView = root.findViewById(R.id.scanner_view);
-        mCodeScanner = new CodeScanner(activity, scannerView);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.scanner_camera);
+        scannerActivity = this;
+
+        startScanner();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
+    }
+
+
+    private void startScanner() {
+        final Activity activity = this;
+        CodeScannerView scannerView = findViewById(R.id.scanner_view);
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setAutoFocusEnabled(true);
+        mCodeScanner.setAutoFocusMode(AutoFocusMode.SAFE);
+        mCodeScanner.setCamera(CodeScanner.CAMERA_BACK);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -38,6 +58,10 @@ public class BarCodeScanner extends Fragment {
                     @Override
                     public void run() {
                         Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
+                        activityResult = new Intent();
+                        activityResult.putExtra("isbn", result.getText());
+                        scannerActivity.setResult(SCANNER_OK, activityResult);
+                        scannerActivity.finish();
                     }
                 });
             }
@@ -48,18 +72,11 @@ public class BarCodeScanner extends Fragment {
                 mCodeScanner.startPreview();
             }
         });
-        return root;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mCodeScanner.startPreview();
-    }
-
-    @Override
-    public void onPause() {
-        mCodeScanner.releaseResources();
-        super.onPause();
+    public void onBackPressed() {
+        setResult(SCANNER_FAIL);
+        finish();
     }
 }
