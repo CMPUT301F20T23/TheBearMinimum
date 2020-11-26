@@ -1,7 +1,7 @@
 package com.example.bearminimum;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,22 +12,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.budiyev.android.codescanner.CodeScanner;
-import com.budiyev.android.codescanner.CodeScannerView;
-import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.rpc.Code;
-import com.google.zxing.Result;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +52,8 @@ public class isbn_search_book extends AppCompatActivity {
     public String isbnValue;
     private FirebaseFirestore db;
 
-
+    private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 1;
+    private static final int SCANNER_OK = 1177;
 
     /******************ISBN add BOOK END ******************************/
 
@@ -125,21 +123,9 @@ public class isbn_search_book extends AppCompatActivity {
         ISBNScannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("Riky","yes");
-                Intent intent = new Intent(isbn_search_book.this,BarCodeHelper.class);
-                startActivity(intent);
-                finish();
-                Bundle bundle= getIntent().getExtras();
-                if (bundle!= null) {// to avoid the NullPointerException
-                    //String isbnNum = getIntent().getExtras().getString("isbnNum");
-
-                    //ISBNNum.setText(isbnNum);
-
-                    }
-                }
-
+                getCameraPermission();
+            }
         });
-
     }
 
     @Override
@@ -187,6 +173,8 @@ public class isbn_search_book extends AppCompatActivity {
 
                 }
             }
+        } else if (resultCode == SCANNER_OK) {
+            ISBNNum.setText(D.getExtras().getString("isbn"));
         }
     }
     /******************ISBN add BOOK START ******************************/
@@ -224,4 +212,39 @@ public class isbn_search_book extends AppCompatActivity {
 
 
     /******************ISBN add BOOK END ******************************/
+
+    private void getCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            startScanActivity();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.CAMERA},
+                    PERMISSIONS_REQUEST_ACCESS_CAMERA);
+        }
+    }
+
+    /**
+     * Handles the result of the request for camera permissions.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startScanActivity();
+                }
+            }
+        }
+
+    }
+
+    private void startScanActivity() {
+        Log.i("Riky","yes");
+        Intent intent = new Intent(isbn_search_book.this, BarCodeScanner.class);
+        startActivityForResult(intent, SCANNER_OK);
+    }
 }
