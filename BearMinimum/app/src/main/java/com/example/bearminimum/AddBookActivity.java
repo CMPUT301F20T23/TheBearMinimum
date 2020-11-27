@@ -1,6 +1,7 @@
 package com.example.bearminimum;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -52,6 +53,10 @@ public class AddBookActivity extends AppCompatActivity {
 
     private boolean valid = false;
 
+    private final static int SEARCH_REQUEST = 876;
+    private final static int SEARCH_OK = 1;
+    private final static int SEARCH_INVALID = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +69,18 @@ public class AddBookActivity extends AppCompatActivity {
         addbook_button = findViewById(R.id.addbook_button);
         isbnAddBookButton = findViewById(R.id.isbn_add_book_button);
 
+        editTitleEditText.setVisibility(View.INVISIBLE);
+        editAuthorEditText.setVisibility(View.INVISIBLE);
+        editDescrEditText.setVisibility(View.INVISIBLE);
+        addbook_button.setVisibility(View.INVISIBLE);
+        editISBNEditText.setVisibility(View.INVISIBLE);
 
         isbnAddBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddBookActivity.this, isbn_search_book.class);
+                Intent intent = new Intent(getBaseContext(), isbn_search_book.class);
                 Log.i("ISBN","FAIL");
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent, SEARCH_REQUEST);
             }
         });
 
@@ -127,5 +136,21 @@ public class AddBookActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_INVALID) {
+            Log.d("addbook", "got invalid search result");
+            editTitleEditText.setVisibility(View.VISIBLE);
+            editAuthorEditText.setVisibility(View.VISIBLE);
+            editDescrEditText.setVisibility(View.VISIBLE);
+            editISBNEditText.setVisibility(View.VISIBLE);
+            addbook_button.setVisibility(View.VISIBLE);
+            Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid isbn, try manual entry", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_OK) {
+            finish();
+        }
     }
 }

@@ -54,6 +54,9 @@ public class isbn_search_book extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 1;
     private static final int SCANNER_OK = 1177;
+    private final static int SEARCH_INVALID = 0;
+    private final static int SEARCH_OK = 1;
+    private final static int SEARCH_CANCEL = 45;
 
     /******************ISBN add BOOK END ******************************/
 
@@ -90,19 +93,15 @@ public class isbn_search_book extends AppCompatActivity {
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
-
-
+                                    Log.d("addbook", "api response");
                                     String[] result = jsonParser(response);
                                     if (result[0] != null) {
-
                                         Intent intent = new Intent(isbn_search_book.this,isbnAddBook.class);
-
                                         intent.putExtra("name",result[0]);
                                         intent.putExtra("des",result[1]);
                                         intent.putExtra("author",result[2]);
                                         intent.putExtra("isbn",isbnValue);
                                         startActivityForResult(intent,0);
-
                                     }
                                 }
                             }, new Response.ErrorListener() {
@@ -168,6 +167,7 @@ public class isbn_search_book extends AppCompatActivity {
                                     Log.d("DEBUG", "Data could not be added!" + e.toString());
                                 }
                             });
+                    setResult(SEARCH_OK);
                     finish();
 
 
@@ -183,8 +183,10 @@ public class isbn_search_book extends AppCompatActivity {
         try {
             String totalItems = response.optString("totalItems");
             if (totalItems.equalsIgnoreCase("0")) {
-
-                Toast.makeText(isbn_search_book.this, "Invalid ISBN", Toast.LENGTH_LONG).show();
+                //Toast.makeText(isbn_search_book.this, "Invalid ISBN", Toast.LENGTH_LONG).show();
+                Log.d("addbook", "parser got no result");
+                this.setResult(SEARCH_INVALID);
+                this.finish();
             } else {
                 JSONArray jsonArray = response.getJSONArray("items");
                 for (int i = 0; i < jsonArray.length(); ++i) {
@@ -246,5 +248,11 @@ public class isbn_search_book extends AppCompatActivity {
         Log.i("Riky","yes");
         Intent intent = new Intent(isbn_search_book.this, BarCodeScanner.class);
         startActivityForResult(intent, SCANNER_OK);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(SEARCH_CANCEL);
+        finish();
     }
 }
