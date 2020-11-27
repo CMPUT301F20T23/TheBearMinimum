@@ -122,7 +122,7 @@ public class isbn_search_book extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent4 = new Intent(isbn_search_book.this,BarCodeHelper.class);
                 startActivityForResult(intent4,0);
-                
+
             }
         });
     }

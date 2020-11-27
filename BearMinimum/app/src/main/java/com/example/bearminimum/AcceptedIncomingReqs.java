@@ -66,6 +66,10 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
                 adapter.notifyDataSetChanged();
             }
         });
+
+
+
+
     }
 
     private void initAdapter() {

@@ -1,6 +1,7 @@
 package com.example.bearminimum;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +11,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,6 +44,8 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
      * OnBookClickListener
      *
      */
+    public Context context;
+
     public interface OnBookClickListener {
         void onBookClick(int position, String owner);
     }
@@ -97,7 +106,7 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
     @Override
     public AcceptedIncomingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         //inflate the custom layout
@@ -148,17 +157,19 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
         Button scanBtn = holder.scanButton;
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 //launch scan activity
+                Intent intent2 = new Intent(view.getContext(),BarCodeHelper.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                view.getContext().startActivity(intent2);
+
                 Log.d("MyDebug", "book scan requested");
             }
         });
     }
-
     //return total count of items in the list
     @Override
     public int getItemCount() {
-
         return mBooks.size();
     }
 
