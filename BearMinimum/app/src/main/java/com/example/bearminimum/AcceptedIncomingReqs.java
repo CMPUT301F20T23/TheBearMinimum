@@ -89,21 +89,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
             db = FirebaseFirestore.getInstance();
             Log.i("Riky","Tester6666");
             String isbn_num = D.getStringExtra("isbn_number");
-            db.collection("books").whereEqualTo("isbn", isbn_num).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()){
-                        for(QueryDocumentSnapshot document: task.getResult()){
-                            String owner = document.getString("owner");
-                            Log.i("Riky",FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            if (FirebaseAuth.getInstance().getCurrentUser().getUid() == owner) {
-                            }
-
-                        }
-
-                    }
-                }
-            });
+            
         }
     }
 
