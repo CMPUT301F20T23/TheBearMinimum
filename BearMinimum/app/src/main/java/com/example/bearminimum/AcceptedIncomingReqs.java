@@ -34,10 +34,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedOutgoingAdapter.OnBookClickListener{
+public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedIncomingAdapter.OnBookClickListener{
 
     private RecyclerView recyclerView;
-    private AcceptedOutgoingAdapter adapter;
+    private AcceptedIncomingAdapter adapter;
     private ArrayList<Book> bookData;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private CollectionReference booksRef;
@@ -101,7 +101,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(getBaseContext().getResources().getDrawable(R.drawable.item_divider));
         recyclerView.addItemDecoration(dividerItemDecoration);
-        adapter = new AcceptedOutgoingAdapter(bookData, this);
+        adapter = new AcceptedIncomingAdapter(bookData, this);
         recyclerView.setAdapter(adapter);
     }
 
