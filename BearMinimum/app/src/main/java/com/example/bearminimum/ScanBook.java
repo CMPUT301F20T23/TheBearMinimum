@@ -88,23 +88,23 @@ public class ScanBook extends AppCompatActivity {
                                             }
                                             else {
                                                 //owner first time scan the book
-                                                if(userID==bookowner && owner_scan =="False"){
+                                                if(userID.equals(bookowner) && owner_scan.equals("False")){
                                                     db.collection("books").document(docID).update("owner_scan", "True");
                                                     Toast.makeText(ScanBook.this, "You are now denoting the book as borrowed ", Toast.LENGTH_SHORT).show();
                                                 }
                                                 //owner has already scanned the book
-                                                else if(userID==bookowner && owner_scan =="True"){
+                                                else if(userID.equals(bookowner) && owner_scan.equals("True")){
                                                     Toast.makeText(ScanBook.this, "Book is already denoted as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower first time scan the book
-                                                else if(userID==bookborrower && borrower_scan =="False"){
+                                                else if(userID.equals(bookborrower) && borrower_scan.equals("False")){
                                                     db.collection("books").document(docID).update("borrower_scan", "True");
                                                     Toast.makeText(ScanBook.this, "You are now confirming the book as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower has already scanned the book
-                                                else if(userID==bookborrower && borrower_scan =="True"){
+                                                else if(userID.equals(bookborrower) && borrower_scan.equals("True")){
                                                     Toast.makeText(ScanBook.this, "Book is already confirmed as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
@@ -112,7 +112,7 @@ public class ScanBook extends AppCompatActivity {
                                             }
 
                                             //update book status when both owner and borrower scan the book
-                                            if (bookstatus=="accepted" && owner_scan=="True" && borrower_scan=="True"){
+                                            if (bookstatus.equals("accepted") && owner_scan.equals("True") && borrower_scan.equals("True")){
                                                 db.collection("books").document(docID).update("status", "borrowed");
                                             }
                                         }
