@@ -159,7 +159,7 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             @Override
             public void onClick(View view) {
                 //launch scan activity
-                Intent intent2 = new Intent(view.getContext(),BarCodeHelper.class);
+                Intent intent2 = new Intent(view.getContext(),BarCodeScanner.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 view.getContext().startActivity(intent2);
 
