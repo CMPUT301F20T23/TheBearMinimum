@@ -155,25 +155,33 @@ public class ScanBook extends AppCompatActivity {
         integrator.initiateScan();
     }
 
+    /**
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     * Handle the result of the scan activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        // Handle the result of the scan activity
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() != null) {
+                // Verify the scanned result
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(result.getContents());
                 builder.setTitle("Scan Result");
                 builder.setPositiveButton("Another Scan", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //click this button to scan the barcode again, or scan another barcode
                         scanBarcode();
-                    } //click this button to scan the barcode again, or scan another barcode
+                    }
                 }).setNegativeButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //click this button to put the extracted ISBN into the textbox
                         ownerdenote.setText(result.getContents());
-                    } //click this button to put the extracted ISBN into the textbox
+                    }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
