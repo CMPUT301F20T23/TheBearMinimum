@@ -119,9 +119,7 @@ public class isbn_search_book extends AppCompatActivity {
         ISBNScannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent4 = new Intent(isbn_search_book.this,BarCodeHelper.class);
-                startActivityForResult(intent4,0);
-                
+                getCameraPermission();
             }
         });
     }
@@ -172,11 +170,7 @@ public class isbn_search_book extends AppCompatActivity {
 
                 }
             }
-        } else if (resultCode == SCANNER_OK) {
-            ISBNNum.setText(D.getExtras().getString("isbn"));
-        }
-
-        if (resultCode == 4){
+        } else if (resultCode == 4){
             Log.i("Riky","Tester1");
             String isbn_num = D.getStringExtra("isbn_number");
             Log.i("Riky",isbn_num);
@@ -254,8 +248,8 @@ public class isbn_search_book extends AppCompatActivity {
 
     private void startScanActivity() {
         Log.i("Riky","yes");
-        Intent intent = new Intent(isbn_search_book.this, BarCodeScanner.class);
-        startActivityForResult(intent, SCANNER_OK);
+        Intent intent4 = new Intent(isbn_search_book.this, BarCodeScanner.class);
+        startActivityForResult(intent4,0);
     }
 
     @Override
