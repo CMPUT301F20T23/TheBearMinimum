@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,10 +9,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -20,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedOutgoingAdapter.OnBookClickListener{
@@ -29,6 +40,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
     private ArrayList<Book> bookData;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private CollectionReference booksRef;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +79,34 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
             }
         });
 
-
-
-
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent D) {
+        super.onActivityResult(requestCode, resultCode, D);
+
+        if (resultCode == 4){
+            db = FirebaseFirestore.getInstance();
+            Log.i("Riky","Tester6666");
+            String isbn_num = D.getStringExtra("isbn_number");
+            db.collection("books").whereEqualTo("isbn", isbn_num).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        for(QueryDocumentSnapshot document: task.getResult()){
+                            String owner = document.getString("owner");
+                            Log.i("Riky",FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            if (FirebaseAuth.getInstance().getCurrentUser().getUid() == owner) {
+                            }
+
+                        }
+
+                    }
+                }
+            });
+        }
+    }
+
 
     private void initAdapter() {
         recyclerView = findViewById(R.id.accepted_incoming_recycler);
@@ -96,4 +132,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedO
             startActivity(intent);
         }
     }
+
+
+
 }

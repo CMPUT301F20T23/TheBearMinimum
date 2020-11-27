@@ -93,4 +93,5 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
             startActivity(intent);
         }
     }
+
 }
