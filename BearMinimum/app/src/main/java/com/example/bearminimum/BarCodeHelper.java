@@ -14,7 +14,7 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
-public class BarCodeScanner extends AppCompatActivity {
+public class BarCodeHelper extends AppCompatActivity {
     private CodeScanner mCodeScanner;
 
     @Override
@@ -31,7 +31,7 @@ public class BarCodeScanner extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
-                        Intent intent4 = new Intent(BarCodeScanner.this,isbn_search_book.class);
+                        Intent intent4 = new Intent(BarCodeHelper.this,isbn_search_book.class);
                         //Log.i("Riky",result.getText());
                         intent4.putExtra("isbn_number",result.getText());
                         setResult(4,intent4);

@@ -248,7 +248,7 @@ public class isbn_search_book extends AppCompatActivity {
 
     private void startScanActivity() {
         Log.i("Riky","yes");
-        Intent intent4 = new Intent(isbn_search_book.this, BarCodeScanner.class);
+        Intent intent4 = new Intent(isbn_search_book.this, BarCodeHelper.class);
         startActivityForResult(intent4,0);
     }
 

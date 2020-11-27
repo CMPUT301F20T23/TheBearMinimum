@@ -45,7 +45,7 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".LocationActivity" />
-        <activity android:name=".BarCodeScanner" />
+        <activity android:name=".BarCodeHelper" />
 
         <uses-library
             android:name="org.apache.http.legacy"
