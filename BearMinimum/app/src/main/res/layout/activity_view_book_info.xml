@@ -107,7 +107,7 @@
             android:layout_width="280dp"
             android:layout_height="280dp"
             android:layout_marginTop="32dp"
-            android:maxHeight="280dp"
+            android:maxHeight="240dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

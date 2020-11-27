@@ -2,6 +2,7 @@ package com.example.bearminimum;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -89,6 +90,9 @@ public class IncomingReqs extends AppCompatActivity implements NavigationListAda
      */
     private void initRecycler() {
         bookRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(bookRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getBaseContext().getResources().getDrawable(R.drawable.item_divider));
+        bookRecyclerView.addItemDecoration(dividerItemDecoration);
         adapter = new NavigationListAdapter(bookData, this);
         bookRecyclerView.setAdapter(adapter);
     }
