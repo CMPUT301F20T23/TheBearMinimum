@@ -44,5 +44,6 @@
         android:text="scan"
         android:textAllCaps="false"
         android:textColor="@color/blue"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:onClick="MyClickHandler"/>
 </LinearLayout>

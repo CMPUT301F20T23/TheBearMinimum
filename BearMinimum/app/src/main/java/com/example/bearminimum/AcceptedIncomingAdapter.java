@@ -7,8 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -154,8 +158,8 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
                 Intent intent2 = new Intent(view.getContext(), BarCodeHelper.class);
                 intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 view.getContext().startActivity(intent2);
+                Log.d("MyDebug", "Scann book");
 
-                Log.d("MyDebug", "book scan requested");
             }
         });
     }
@@ -164,5 +168,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
     public int getItemCount() {
         return mBooks.size();
     }
+
 
 }
