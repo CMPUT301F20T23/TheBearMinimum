@@ -108,8 +108,8 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Vi
         //load profile image
         Glide.with(holder.profileImg.getContext())
                 .load(storageRef)
-                .placeholder(R.drawable.logo_books)
-                .apply(new RequestOptions().override(holder.profileImg.getHeight()))
+                .placeholder(R.drawable.book_logo_white)
+                .apply(new RequestOptions().override(holder.profileImg.getMaxWidth()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(holder.profileImg);

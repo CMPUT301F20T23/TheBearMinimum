@@ -1,6 +1,7 @@
 package com.example.bearminimum;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -52,6 +53,10 @@ public class AddBookActivity extends AppCompatActivity {
 
     private boolean valid = false;
 
+    private final static int SEARCH_REQUEST = 876;
+    private final static int SEARCH_OK = 1;
+    private final static int SEARCH_INVALID = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +69,18 @@ public class AddBookActivity extends AppCompatActivity {
         addbook_button = findViewById(R.id.addbook_button);
         isbnAddBookButton = findViewById(R.id.isbn_add_book_button);
 
+        editTitleEditText.setVisibility(View.INVISIBLE);
+        editAuthorEditText.setVisibility(View.INVISIBLE);
+        editDescrEditText.setVisibility(View.INVISIBLE);
+        addbook_button.setVisibility(View.INVISIBLE);
+        editISBNEditText.setVisibility(View.INVISIBLE);
 
         isbnAddBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddBookActivity.this, isbn_search_book.class);
+                Intent intent = new Intent(getBaseContext(), isbn_search_book.class);
                 Log.i("ISBN","FAIL");
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent, SEARCH_REQUEST);
             }
         });
 
@@ -88,9 +97,10 @@ public class AddBookActivity extends AppCompatActivity {
                 final String bookDescr = editDescrEditText.getText().toString();
 
                 if (bookTitle.length() > 0 && bookAuthor.length() > 0 && bookISBN.length() > 0) {
-                    if (!validISBN(bookISBN))
+                    if (bookISBN.length() != 10 && bookISBN.length() != 13) {
+                        Toast.makeText(getBaseContext(), "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
                         return;
-                    else
+                    } else
                         valid = false;
                     data.put("title", bookTitle);
                     data.put("author", bookAuthor);
@@ -128,63 +138,19 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validISBN(String bookISBN) {
-        if (bookISBN.length() != 10 && bookISBN.length() != 13) {
-            Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
-        } else {
-            String requestUrl = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + bookISBN;
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                    requestUrl,null, // here
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-
-                            String[] result = jsonParser(response);
-                            if (result[0] != null) {
-                                //results
-                                valid = true;
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-            AppController.getInstance(findViewById(R.id.add_book_activity).getContext()).addToRequestQueue(request);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_INVALID) {
+            Log.d("addbook", "got invalid search result");
+            editTitleEditText.setVisibility(View.VISIBLE);
+            editAuthorEditText.setVisibility(View.VISIBLE);
+            editDescrEditText.setVisibility(View.VISIBLE);
+            editISBNEditText.setVisibility(View.VISIBLE);
+            addbook_button.setVisibility(View.VISIBLE);
+            Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid isbn, try manual entry", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_OK) {
+            finish();
         }
-        return valid;
-    }
-
-    public String[] jsonParser(JSONObject response) {
-        String[] result = new String[5]; // volume information holder
-        try {
-            String totalItems = response.optString("totalItems");
-            if (totalItems.equalsIgnoreCase("0")) {
-                Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid isbn", Toast.LENGTH_LONG).show();
-            } else {
-                JSONArray jsonArray = response.getJSONArray("items");
-                for (int i = 0; i < jsonArray.length(); ++i) {
-                    JSONObject items = jsonArray.getJSONObject(i);
-
-                    // get title info
-                    String title = items.getJSONObject("volumeInfo").optString("title");
-                    String subtitle = items.getJSONObject("volumeInfo").optString("subtitle");
-                    result[0] = title + " : " + subtitle;
-
-                    // get author info
-                    result[1] = items.getJSONObject("volumeInfo").optString("description");
-
-                    // get category and page count info
-                    result[2] = items.getJSONObject("volumeInfo").optString("authors");
-                    result[3] = items.getJSONObject("volumeInfo").optString("identifier");
-
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 }
