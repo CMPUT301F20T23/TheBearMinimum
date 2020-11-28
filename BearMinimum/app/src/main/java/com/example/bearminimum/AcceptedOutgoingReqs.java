@@ -63,6 +63,7 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
                         String borrower_scan=(String)doc.getData().get("borrower_scan") ;
                         Log.d("MyDebug", "lat is: " + lat);
                         String longitude = (String) data.get("longitude");
+                        Log.d("mydebug", "long is " + longitude);
                         bookData.add(new Book(title, author, owner, borrower, desc, isbn, status, bid, lat, longitude, owner_scan, borrower_scan));
                     }
                 }
@@ -82,6 +83,7 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
     public void onBookClick(int position, String owner) {
         //open either location selector or previously selected location
         Book book = bookData.get(position);
+        Log.d("mydebug", "long is " + book.getLongitude());
         if (book.getLatitude().equals("")) {
             //borrowers cant select location
             Snackbar sb = Snackbar.make(findViewById(R.id.accepted_outgoing), "the owner hasn't set this yet...",Snackbar.LENGTH_SHORT);

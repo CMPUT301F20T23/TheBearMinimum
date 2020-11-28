@@ -16,13 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 
 /**
@@ -126,12 +128,20 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
         textView1.setText(book.getTitle());
         TextView textView2 = holder.userNameTextView;
         TextView textView3 = holder.statusTextView;
-        String lStatus = "";
-        if (book.getLatitude().equals(""))
-            lStatus = "select a location";
-        else
-            lStatus = "location selected";
-        textView3.setText("location status: " + lStatus);
+
+        FirebaseFirestore.getInstance().collection("books").document(book.getBid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (value.exists()) {
+                    String locationStatus = (String) value.getData().get("latitude");
+                    if (locationStatus.length() > 0) {
+                        textView3.setText("location status: selected");
+                    } else {
+                        textView3.setText("location status: select a location");
+                    }
+                }
+            }
+        });
 
         FirebaseFirestore.getInstance().collection("books").document(book.getBid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

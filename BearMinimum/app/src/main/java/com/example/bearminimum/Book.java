@@ -33,8 +33,8 @@ public class Book implements Serializable {
         this.ISBN = ISBN;
         this.status = status;
         this.bid = bid;
-        this.latitude = "";
-        this.longitude = "";
+        this.latitude = lat;
+        this.longitude = longitude;
         this.owner_scan=owner_scan;
         this.borrower_scan=borrower_scan;
 
