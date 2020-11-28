@@ -85,7 +85,8 @@ public class ScanBook extends AppCompatActivity {
                                             String owner_scan=document.getString("owner_scan");
                                             String borrower_scan=document.getString("borrower_scan");
 
-                                            if ((!bookstatus.equals("accepted")) ||(!bookstatus.equals("borrowed"))) {
+                                            // in order to access, the status must be either accepted or borrowed
+                                            if ((!bookstatus.equals("accepted")) && (!bookstatus.equals("borrowed"))) {
                                                 Toast.makeText(ScanBook.this, "Invalid Request.", Toast.LENGTH_SHORT).show();
                                             }
                                             else {
@@ -143,7 +144,7 @@ public class ScanBook extends AppCompatActivity {
 
                                             }
                                             if (bookstatus.equals("borrowed") && owner_scan.equals("True") && borrower_scan.equals("True")){
-                                                db.collection("books").document(docID).update("status", "borrowed");
+                                                db.collection("books").document(docID).update("status", "available");
                                                 db.collection("books").document(docID).update("owner_scan", "False");
                                                 db.collection("books").document(docID).update("borrower_scan", "False");
 
