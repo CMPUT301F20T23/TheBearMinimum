@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         filterSpinner.setAdapter(spinnerAdapter);
 
         Snackbar sb = Snackbar.make(findViewById(R.id.drawer_layout), "signed in as " + currentUser.getDisplayName(),Snackbar.LENGTH_SHORT);
+
         sb.getView().setBackgroundColor(getResources().getColor(R.color.blue));
         sb.show();
 
@@ -338,10 +339,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, AcceptedIncomingReqs.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_notifications) {
-            Intent intent = new Intent(this, SpecficBookRequest.class);
+            Intent intent = new Intent(this, ViewNotificationsActivity.class);
             startActivity(intent);
         } else if (item.getItemId() == R.id.nav_accepted_outgoing_requests) {
             Intent intent = new Intent(this, AcceptedOutgoingReqs.class);
+
             startActivity(intent);
         }
         drawerLayout.close();
@@ -387,4 +389,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         startActivity(intent);
     }
+
 }

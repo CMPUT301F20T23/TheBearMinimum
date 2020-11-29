@@ -20,15 +20,11 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -221,6 +218,8 @@ public class LoginActivity extends AppCompatActivity {
         newUser.put("email", user.getEmail());
         newUser.put("uid", user.getUid());
         newUser.put("phonenumber", "");
+        //for notifications
+        newUser.put("topics", Arrays.asList());
 
         db.collection("users").document(user.getUid())
                 .set(newUser)
@@ -236,6 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("MyDebug", "Error writing new user document", e);
                     }
                 });
+
     }
 
     /**
