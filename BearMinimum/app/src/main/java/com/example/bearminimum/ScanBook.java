@@ -85,6 +85,7 @@ public class ScanBook extends AppCompatActivity {
                                             String bookstatus = document.getString("status");
                                             String bookowner = document.getString("owner");
                                             String bookborrower= requesters.get(0);
+                                            String bborrower=document.getString("borrower");
                                             String owner_scan=document.getString("owner_scan");
                                             String borrower_scan=document.getString("borrower_scan");
 
@@ -129,14 +130,14 @@ public class ScanBook extends AppCompatActivity {
 
                                                 }
                                                 //borrower first time scan the book
-                                                else if((bookstatus.equals("borrowed")) && userID.equals(bookborrower) && borrower_scan.equals("False")){
+                                                else if((bookstatus.equals("borrowed")) && userID.equals(bborrower) && borrower_scan.equals("False")){
                                                     db.collection("books").document(docID).update("borrower_scan", "True");
                                                     borrower_scan = "True";
                                                     Toast.makeText(ScanBook.this, "You are now confirming the book as returned ", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower has already scanned the book
-                                                else if((bookstatus.equals("borrowed")) && userID.equals(bookborrower) && borrower_scan.equals("True")){
+                                                else if((bookstatus.equals("borrowed")) && userID.equals(bborrower) && borrower_scan.equals("True")){
                                                     Toast.makeText(ScanBook.this, "Book is already confirmed as returned ", Toast.LENGTH_SHORT).show();
 
                                                 }
