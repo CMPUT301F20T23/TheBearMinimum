@@ -20,15 +20,11 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,13 +32,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -227,6 +218,9 @@ public class LoginActivity extends AppCompatActivity {
         newUser.put("email", user.getEmail());
         newUser.put("uid", user.getUid());
         newUser.put("phonenumber", "");
+        //for notifications
+        newUser.put("topics", Arrays.asList());
+        newUser.put("notifications", Arrays.asList());
 
         db.collection("users").document(user.getUid())
                 .set(newUser)
@@ -243,26 +237,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-        //create notification doc for user
-        Date d = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        Map<String, Object> newNotifDoc = new HashMap<>();
-        newNotifDoc.put("requests", Arrays.asList());
-        newNotifDoc.put("date", df.format(d));
-        db.collection("notifications").document(user.getUid())
-                .set(newNotifDoc)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("NotifDoc", "notif doc created");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("NotifDoc", "failed to create new notif doc");
-                    }
-                });
     }
 
     /**
