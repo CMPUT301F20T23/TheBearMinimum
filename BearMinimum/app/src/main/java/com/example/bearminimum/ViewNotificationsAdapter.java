@@ -1,20 +1,32 @@
 package com.example.bearminimum;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificationsAdapter.ViewHolder> {
 
@@ -30,6 +42,8 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
     private ArrayList<NotificationObject> notifsList;
     //item click listener
     private ViewNotificationsAdapter.OnResultClickListener mOnResultClickListener;
+    //holds notication object swiped
+    private NotificationObject swipedNotif;
     //Firebase
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -177,6 +191,49 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
         } else {
             return 0;
         }
+    }
+
+    /**
+     * Deletes the item that was swiped
+     * @param position      position of the item
+     */
+
+    public void deleteItem(int position, Context context) {
+        //get the notification object that was swiped
+        swipedNotif = notifsList.get(position);
+
+        //current user
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        //build the notification so we can delete it
+        //get info from the notification object
+        String title = swipedNotif.getTitle();
+        String ownerId = swipedNotif.getOwnerId();
+        String bookId = swipedNotif.getBookId();
+        String topic = swipedNotif.getTopic();
+        String requesterId = swipedNotif.getRequesterId();
+        String type = String.valueOf(swipedNotif.getType());
+
+        //create notification
+        String body = ownerId+"-"+bookId+"-"+requesterId;
+        String notification = topic+"."+title+"."+body+"."+type;
+
+        //delete the notification from the user's notification doc
+        DocumentReference doc = db.collection("notifications").document(userId);
+        doc.update("notifications", FieldValue.arrayRemove(notification))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, notification + " successfully removed");
+                    }
+                });
+
+        //remove notification object from list
+        notifsList.remove(position);
+        notifyItemRemoved(position);
+
+        //show message when all deleted
+        Toast.makeText(context, "Notification deleted!", Toast.LENGTH_LONG).show();
     }
 
 }

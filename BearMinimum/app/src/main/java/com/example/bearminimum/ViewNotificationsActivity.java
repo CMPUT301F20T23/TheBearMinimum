@@ -2,22 +2,29 @@ package com.example.bearminimum;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class ViewNotificationsActivity extends AppCompatActivity implements ViewNotificationsAdapter.OnResultClickListener{
 
@@ -27,6 +34,8 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
     private ViewNotificationsAdapter notifAdapter;
     private RecyclerView recyclerView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //get current user
+    private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
     @Override
@@ -49,8 +58,10 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         notifAdapter = new ViewNotificationsAdapter(notifList, this);
-
         recyclerView.setLayoutManager(layoutManager);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(notifAdapter, getApplicationContext()));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
 
@@ -60,9 +71,6 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
 
     private void getNotifs() {
         notifList = new ArrayList<>();
-
-        //get current user
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //get all notifications under user
         db.collection("notifications").document(userId)
@@ -102,4 +110,6 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
     public void onResultClick(int position) {
         NotificationObject sendNotification = notifList.get(position);
     }
+
+
 }
