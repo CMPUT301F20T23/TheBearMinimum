@@ -1,6 +1,7 @@
 package com.example.bearminimum;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,7 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +24,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +51,12 @@ public class AddBookActivity extends AppCompatActivity {
     private Button isbnAddBookButton;
     private FirebaseFirestore db;
 
+    private boolean valid = false;
+
+    private final static int SEARCH_REQUEST = 876;
+    private final static int SEARCH_OK = 1;
+    private final static int SEARCH_INVALID = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +69,18 @@ public class AddBookActivity extends AppCompatActivity {
         addbook_button = findViewById(R.id.addbook_button);
         isbnAddBookButton = findViewById(R.id.isbn_add_book_button);
 
+        editTitleEditText.setVisibility(View.INVISIBLE);
+        editAuthorEditText.setVisibility(View.INVISIBLE);
+        editDescrEditText.setVisibility(View.INVISIBLE);
+        addbook_button.setVisibility(View.INVISIBLE);
+        editISBNEditText.setVisibility(View.INVISIBLE);
 
         isbnAddBookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddBookActivity.this, isbn_search_book.class);
+                Intent intent = new Intent(getBaseContext(), isbn_search_book.class);
                 Log.i("ISBN","FAIL");
-                startActivity(intent);
-                finish();
+                startActivityForResult(intent, SEARCH_REQUEST);
             }
         });
 
@@ -77,6 +97,11 @@ public class AddBookActivity extends AppCompatActivity {
                 final String bookDescr = editDescrEditText.getText().toString();
 
                 if (bookTitle.length() > 0 && bookAuthor.length() > 0 && bookISBN.length() > 0) {
+                    if (bookISBN.length() != 10 && bookISBN.length() != 13) {
+                        Toast.makeText(getBaseContext(), "ISBN must be 10 or 13 digits", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else
+                        valid = false;
                     data.put("title", bookTitle);
                     data.put("author", bookAuthor);
                     data.put("isbn", bookISBN);
@@ -84,8 +109,12 @@ public class AddBookActivity extends AppCompatActivity {
                     data.put("bookid", "");
                     data.put("borrower", "~");
                     data.put("status", "available");
+                    data.put("owner_scan","False");
+                    data.put("borrower_scan","False");
                     data.put("owner", FirebaseAuth.getInstance().getCurrentUser().getUid());
                     data.put("requests", new ArrayList<String>());
+                    data.put("latitude", "");
+                    data.put("longitude", "");
                     db.collection("books")
                             .add(data)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -102,16 +131,26 @@ public class AddBookActivity extends AppCompatActivity {
                                 }
                             });
                     finish();
-
-
+                } else {
+                    Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid fields provided", Toast.LENGTH_SHORT).show();
                 }
-                ;
             }
-
         });
+    }
 
-
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_INVALID) {
+            Log.d("addbook", "got invalid search result");
+            editTitleEditText.setVisibility(View.VISIBLE);
+            editAuthorEditText.setVisibility(View.VISIBLE);
+            editDescrEditText.setVisibility(View.VISIBLE);
+            editISBNEditText.setVisibility(View.VISIBLE);
+            addbook_button.setVisibility(View.VISIBLE);
+            Toast.makeText(findViewById(R.id.add_book_activity).getContext(), "invalid isbn, try manual entry", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_OK) {
+            finish();
+        }
     }
 }

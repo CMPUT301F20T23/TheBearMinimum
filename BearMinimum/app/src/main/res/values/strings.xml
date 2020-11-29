@@ -55,4 +55,6 @@
     <string name="request_book">request book</string>
     <string name="withdraw_request">withdraw request</string>
     <string name="request_channel_id">request channel</string>
+    <string name="google_maps_key" />
+
 </resources>

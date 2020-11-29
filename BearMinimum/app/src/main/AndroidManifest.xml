@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bearminimum">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
         android:name=".App"
@@ -12,6 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme"
         >
 
@@ -29,18 +34,47 @@
             android:name="com.google.firebase.messaging.request_channel"
             android:value="request_channel" />
 
+        android:theme="@style/AppTheme">
+        <activity android:name=".ScanBook"></activity>
+        <activity android:name=".AcceptedOutgoingReqs"></activity>
+        <activity android:name=".AcceptedIncomingReqs" />
+        <activity android:name=".SpecficBookRequest" />
+        <activity android:name=".OutgoingReqsActivity" />
 
-        <activity android:name=".AddBookActivity"></activity>
-        <activity android:name=".isbn_search_book"></activity>
-        <activity android:name=".isbnAddBook"></activity>
-        <activity android:name=".ViewBookActivity"></activity>
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
+        <!-- To use multiple models: android:value="barcode,model2,model3" -->
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/maps_api_key" />
+
+        <activity android:name=".AddBookActivity" />
+        <activity android:name=".isbn_search_book" />
+        <activity android:name=".isbnAddBook" />
+        <activity android:name=".ViewBookActivity" />
+
         <activity android:name=".HandleIncomingReqsActivity" />
         <activity android:name=".IncomingReqs" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".ProfileActivity" />
+
         <activity android:name=".ViewNotificationsActivity"/>
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+  
+        <activity android:name=".MapActivity" />
+        <activity android:name=".LocationActivity" />
+        <activity android:name=".BarCodeHelper" />
+        <activity android:name=".BarCodeHelper_outgoing" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
         <activity
             android:name=".AuthPage"
             android:label="@string/app_name"
@@ -50,9 +84,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SearchActivity" />
+
+        <activity android:name=".FetchCode"
+            android:screenOrientation="fullSensor"
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="stateAlwaysHidden">
+        </activity>
     </application>
 
 

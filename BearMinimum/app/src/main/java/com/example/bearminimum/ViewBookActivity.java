@@ -120,12 +120,15 @@ public class ViewBookActivity extends AppCompatActivity {
         ISBN=getIntent().getStringExtra("ISBN");
         descr=getIntent().getStringExtra("DESCRIPTION");
         bookid = getIntent().getStringExtra("BOOKID");
+        String status = getIntent().getStringExtra("STATUS");
+        if (status.equals("borrowed") || status.equals("accepted"))
+            requestButton.setVisibility(View.GONE);
 
         StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/book_cover_images/" + bookid);
         //load profile image
         Glide.with(this.getBaseContext())
                 .load(storageRef)
-                .placeholder(R.drawable.logo_books)
+                .placeholder(R.drawable.book_logo_white)
                 .apply(new RequestOptions().override(imageView.getHeight()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -277,11 +280,15 @@ public class ViewBookActivity extends AppCompatActivity {
         descr=getIntent().getStringExtra("DESCRIPTION");
         bookid = getIntent().getStringExtra("BOOKID");
 
+        String status = getIntent().getStringExtra("STATUS");
+        if (status.equals("borrowed") || status.equals("accepted") || status.equals("requested"))
+            apply.setVisibility(View.GONE);
+
         StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/book_cover_images/" + bookid);
         //load profile image
         Glide.with(this.getBaseContext())
                 .load(storageRef)
-                .placeholder(R.drawable.logo_books)
+                .placeholder(R.drawable.book_logo_white)
                 .apply(new RequestOptions().override(imageView.getHeight()))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -384,6 +391,7 @@ public class ViewBookActivity extends AppCompatActivity {
      * @param bookID    id of the book being deleted
      */
     public void deleteBook(String bookID) {
+            storageReference.child("book_cover_images/" + bookid).delete();
             FirebaseFirestore.getInstance().collection("books")
                     .document(bookID)
                     .delete()
