@@ -37,7 +37,6 @@
         <activity android:name=".ScanBook"></activity>
         <activity android:name=".AcceptedOutgoingReqs"></activity>
         <activity android:name=".AcceptedIncomingReqs" />
-        <activity android:name=".SpecficBookRequest" />
         <activity android:name=".OutgoingReqsActivity" />
 
         <meta-data

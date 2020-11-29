@@ -121,9 +121,8 @@ public class SendNotification {
     /**
      * Sends notifications to all users subscribed to a topic
      * @param notif         a notification object (NotificationObject class)
-     * @param topic     String of the topic
      */
-    public static void sendToTopic (NotificationObject notif, String topic) {
+    public static void sendToTopic (NotificationObject notif) {
         //Firebase
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -135,6 +134,7 @@ public class SendNotification {
         String ownerId = notif.getOwnerId();
         String bookId = notif.getBookId();
         String type = String.valueOf(notif.getType());
+        String topic = notif.getTopic();
 
         //store subscriber ids
         ArrayList<String> subscriberIds = new ArrayList<>();

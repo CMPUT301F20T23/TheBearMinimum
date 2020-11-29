@@ -235,6 +235,22 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
                     }
                 });
 
+        //also delete from shown notification field
+        DocumentReference ref = db.collection("notifications").document(userId);
+        ref.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            //if field exists, then delete it
+                            if (task.getResult().get("shown") != null) {
+                                ref.update("shown", FieldValue.arrayRemove(notification));
+                            }
+                        }
+                    }
+                });
+
         //remove notification object from list
         notifsList.remove(position);
         notifyItemRemoved(position);

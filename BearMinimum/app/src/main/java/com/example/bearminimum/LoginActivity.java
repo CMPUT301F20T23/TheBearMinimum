@@ -236,6 +236,24 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
+        //create notification doc for user
+        Map<String, Object> newNotif = new HashMap<>();
+        newNotif.put("notifications", Arrays.asList());
+        db.collection("notifications").document(user.getUid())
+                .set(newNotif)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("notif doc", "succesfully added doc");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("notif doc", "Error writing new notif doc", e);
+                    }
+                });
+
     }
 
     /**
