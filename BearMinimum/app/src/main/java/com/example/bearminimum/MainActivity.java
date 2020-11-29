@@ -43,6 +43,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -391,8 +392,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showNotifications () {
         //get all notifications of user
         DocumentReference notifRef = db.collection("notifications").document(currentUser.getUid());
-        notifRef
-                .get()
+        notifRef.get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -402,37 +402,101 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             if(!notifications.isEmpty()) {
                                 //check if shown array exists
-                                if (task.getResult().get("shown") != null) {
-                                    //shown array exists
-                                    List<String> shown = (List<String>) task.getResult().get("shown");
 
-                                    //only send notifications not yet shown
-                                    //then add them to the shown list
-                                    for (String notif : notifications) {
-                                        if (!shown.contains(notif)) {
-                                            //notif not in shown, display it
-                                            ArrayList<String> data = parseInfo(notif);
-                                            SendNotification.displayNotification(getApplicationContext(), data.get(0), data.get(1));
+                                Log.d("NOTIF", "NOTIFICATIONS NOT EMPTY");
 
-                                            //then add to shown list
-                                            notifRef.update("shown", FieldValue.arrayUnion(notif));
-                                        }
+                                for (String notif : notifications) {
+                                    ArrayList<String> data = parseInfo(notif);
+                                    String title = data.get(0);
+                                    String ownerId = data.get(1);
+                                    String bookId = data.get(2);
+                                    String requesterId = data.get(3);
+                                    int type = Integer.valueOf(data.get(4));
+
+                                    //create and send notifications
+                                    Task<DocumentSnapshot> bookTask = db.collection("books").document(bookId).get();
+
+                                    //build and send according to notification type
+                                    if (type == 1) {
+                                        //request
+
+                                        db.collection("users").document(requesterId).get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            String username = task.getResult().get("username").toString();
+
+                                                            //get book title
+                                                            if (bookTask.isSuccessful()) {
+                                                                String bookTitle = bookTask.getResult().get("title").toString();
+
+                                                                //build message
+                                                                String body = username + " has requested your book " + bookTitle;
+                                                                SendNotification.displayNotification(getApplicationContext(), title, body);
+                                                                Log.d("NOTIF", "REQUEST NOTIF");
+
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
+
+                                    } else if (type == 2) {
+                                        //accept
+
+                                        db.collection("users").document(ownerId).get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            String username = task.getResult().get("username").toString();
+
+                                                            //get book title
+                                                            if (bookTask.isSuccessful()) {
+                                                                String bookTitle = bookTask.getResult().get("title").toString();
+
+                                                                //build message
+                                                                String body = username + " has accepted your request for " + bookTitle;
+                                                                SendNotification.displayNotification(getApplicationContext(), title, body);
+                                                                Log.d("NOTIF", "ACCEPT NOTIF");
+
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
+
+                                    } else if (type == 3) {
+                                        //decline
+
+                                        db.collection("users").document(ownerId).get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            String username = task.getResult().get("username").toString();
+
+                                                            //get book title
+                                                            if (bookTask.isSuccessful()) {
+                                                                String bookTitle = bookTask.getResult().get("title").toString();
+
+                                                                //build message
+                                                                String body = username + " has declined your request for " + bookTitle;
+                                                                SendNotification.displayNotification(getApplicationContext(), title, body);
+                                                                Log.d("NOTIF", "DECLINE NOTIF");
+
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
                                     }
 
-                                } else {
-                                    //shown array doesn't exist, show all notifications
-                                    for (String notif : notifications) {
-
-                                        //notif not in shown, display it
-                                        ArrayList<String> data = parseInfo(notif);
-                                        SendNotification.displayNotification(getApplicationContext(), data.get(0), data.get(1));
-
-                                        //then add to shown list
-                                        notifRef.update("shown", FieldValue.arrayUnion(notif));
-
-                                    }
                                 }
                             }
+
+
                         }
                     }
                 });
@@ -450,63 +514,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //split the notification to get the info
         String[] separated = notification.split("\\.");
-        String topic = separated[0];
         String title = separated[1];
         String message = separated[2];
-        int type = Integer.valueOf(separated[3]);
-
-        String[] splitTopic = topic.split("-");
-        String ownerId = splitTopic[0];
-        String bookId = splitTopic[1];
+        String type = separated[3];
 
         String[] splitMessage = message.split("-");
+        String ownerId = splitMessage[0];
+        String bookId = splitMessage[1];
         String requesterId = splitMessage[2];
 
-        //build message body
-        Task<DocumentSnapshot> userTask = db.collection("users").document(ownerId).get();
-        Task<DocumentSnapshot> bookTask = db.collection("books").document(bookId).get();
-        Task<DocumentSnapshot> reqTask = db.collection("users").document(requesterId).get();
-
-        String ownerUsername;
-        String bookTitle;
-        String reqUsername;
-        if (userTask.isSuccessful()) {
-            ownerUsername = userTask.getResult().get("username").toString();
-        } else {
-            ownerUsername = "could not obtain user";
-        }
-        if (bookTask.isSuccessful()) {
-            bookTitle = bookTask.getResult().get("title").toString();
-        } else {
-            bookTitle = "could not obtain title";
-        }
-        if (reqTask.isSuccessful()) {
-            reqUsername = reqTask.getResult().get("username").toString();
-        } else {
-            reqUsername = "could not obtain user";
-        }
-
-
-        //build based on notification type
-        String body;
-        if (type == 1) {
-            //request
-            body = reqUsername + " has requested your book " + bookTitle;
-        } else if (type == 2) {
-            //accept
-            body = ownerUsername + " has accepted your request for " + bookTitle;
-        } else if (type == 3) {
-            //reject
-            body = ownerUsername + " has rejected your request for " + bookTitle;
-        } else {
-            body = "could not obtain message";
-        }
-
-        data.add(title);
-        data.add(body);
+        data.addAll(Arrays.asList(title, ownerId, bookId, requesterId, type));
 
         return data;
     }
+
+
 
 
 }
