@@ -64,8 +64,6 @@ public class ScanBook extends AppCompatActivity {
                 //Firestore
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 db = FirebaseFirestore.getInstance();
-
-
                 String bookISBN = ownerdenote.getText().toString();
 
                 try {
