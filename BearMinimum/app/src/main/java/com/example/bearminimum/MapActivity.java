@@ -90,6 +90,7 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
                 //get the location of the marker and convert to string
                 latitude = String.valueOf(marker.getPosition().latitude);
                 longitude = String.valueOf(marker.getPosition().longitude);
+                Log.d("MAPACT", "marker: " + latitude + ", " + longitude);
 
                 //update the selected book
                 Map<String, Object> data = new HashMap<>();
@@ -112,8 +113,35 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         getLocationPermission();
-        getDeviceLocation();
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
 
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                Log.d("MAPACT", "drag end: " + marker.getPosition().latitude + ", " + marker.getPosition().longitude);
+            }
+        });
+        if (getIntent().getStringExtra("latitude").equals("")) {
+            Log.d("MAP", "using device location");
+            getDeviceLocation();
+        } else {
+            Log.d("MAP", "using stored location");
+            LatLng misc = new LatLng(Double.parseDouble(getIntent().getStringExtra("latitude")), Double.parseDouble(getIntent().getStringExtra("longitude")));
+            marker = map.addMarker(new MarkerOptions()
+                    .position(misc)
+                    .title("generic")
+                    .draggable(true));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(Double.parseDouble(getIntent().getStringExtra("latitude")), Double.parseDouble(getIntent().getStringExtra("longitude"))), DEFAULT_ZOOM));
+        }
     }
 
     /**
@@ -190,6 +218,7 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
                 }
             }
         }
-        getDeviceLocation();
+        if (getIntent().getStringExtra("latitude").equals(""))
+            getDeviceLocation();
     }
 }

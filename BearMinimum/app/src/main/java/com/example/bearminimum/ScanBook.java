@@ -60,10 +60,12 @@ public class ScanBook extends AppCompatActivity {
         // Owner scan ISBN to denote book as borrowed
         owner_button.setOnClickListener(new View.OnClickListener(){
             @Override
-                public void onClick(View V) {
+            public void onClick(View V) {
                 //Firestore
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 db = FirebaseFirestore.getInstance();
+
+
                 String bookISBN = ownerdenote.getText().toString();
 
                 try {
@@ -74,7 +76,13 @@ public class ScanBook extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
+                                        if (task.getResult().size() == 0) {
+                                            Toast.makeText(ScanBook.this, "this book does not exist", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
                                         for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                            List<String> requesters = (List<String>) document.getData().get("requests");
                                             Log.d("QIXIN", document.getId() + " => " + document.getData());
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             String docID = document.getId();
@@ -82,83 +90,94 @@ public class ScanBook extends AppCompatActivity {
                                             String bookstatus = document.getString("status");
                                             String bookowner = document.getString("owner");
                                             String bborrower=document.getString("borrower");
+                                            String bookborrower;
+                                            if (requesters.isEmpty()) {
+                                                bookborrower = bborrower;
+                                            } else {
+                                                bookborrower = requesters.get(0);
+                                            }
+
+
                                             String owner_scan=document.getString("owner_scan");
                                             String borrower_scan=document.getString("borrower_scan");
 
                                             // in order to access, the status must be either accepted or borrowed
                                             if ((!bookstatus.equals("accepted")) && (!bookstatus.equals("borrowed"))) {
-                                                Toast.makeText(ScanBook.this, "Invalid Request.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ScanBook.this, "this book has not been accepted nor is it borrowed", Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
                                             else {
-                                                List<String> requesters = (List<String>) document.getData().get("requests");
                                                 //owner first time scan the book
                                                 if((bookstatus.equals("accepted")) && userID.equals(bookowner) && owner_scan.equals("False")){
                                                     db.collection("books").document(docID).update("owner_scan", "True");
                                                     owner_scan = "True";
-                                                    Toast.makeText(ScanBook.this, "You are now denoting the book as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "lending scan successful", Toast.LENGTH_SHORT).show();
                                                 }
                                                 //owner has already scanned the book
                                                 else if((bookstatus.equals("accepted")) && userID.equals(bookowner) && owner_scan.equals("True")){
-                                                    Toast.makeText(ScanBook.this, "Book is already denoted as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "already scanned", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower first time scan the book
                                                 else if((bookstatus.equals("accepted")) && userID.equals(requesters.get(0)) && borrower_scan.equals("False")){
                                                     db.collection("books").document(docID).update("borrower_scan", "True");
                                                     borrower_scan = "True";
-                                                    Toast.makeText(ScanBook.this, "You are now confirming the book as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "borrow scan successful", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower has already scanned the book
                                                 else if((bookstatus.equals("accepted")) && userID.equals(requesters.get(0)) && borrower_scan.equals("True")){
-                                                    Toast.makeText(ScanBook.this, "Book is already confirmed as borrowed ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "already scanned", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //owner first time scan the book
                                                 else if((bookstatus.equals("borrowed")) && userID.equals(bookowner) && owner_scan.equals("False")){
                                                     db.collection("books").document(docID).update("owner_scan", "True");
                                                     owner_scan = "True";
-                                                    Toast.makeText(ScanBook.this, "You are now denoting the book as returned ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "return scan successful", Toast.LENGTH_SHORT).show();
                                                 }
                                                 //owner has already scanned the book
                                                 else if((bookstatus.equals("borrowed")) && userID.equals(bookowner) && owner_scan.equals("True")){
-                                                    Toast.makeText(ScanBook.this, "Book is already denoted as returned ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "already scanned", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower first time scan the book
                                                 else if((bookstatus.equals("borrowed")) && userID.equals(bborrower) && borrower_scan.equals("False")){
                                                     db.collection("books").document(docID).update("borrower_scan", "True");
                                                     borrower_scan = "True";
-                                                    Toast.makeText(ScanBook.this, "You are now confirming the book as returned ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "return scan successful", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower has already scanned the book
                                                 else if((bookstatus.equals("borrowed")) && userID.equals(bborrower) && borrower_scan.equals("True")){
-                                                    Toast.makeText(ScanBook.this, "Book is already confirmed as returned ", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(ScanBook.this, "already scanned", Toast.LENGTH_SHORT).show();
 
                                                 }
-                                                if (bookstatus.equals("accepted") && owner_scan.equals("True") && borrower_scan.equals("True")){
-                                                    db.collection("books").document(docID).update("status", "borrowed");
-                                                    db.collection("books").document(docID).update("borrower", requesters.get(0));
-                                                    db.collection("books").document(docID).update("latitude", "");
-                                                    db.collection("books").document(docID).update("longitude", "");
-                                                    db.collection("books").document(docID).update("owner_scan", "False");
-                                                    db.collection("books").document(docID).update("borrower_scan", "False");
-
-
-                                                }
-                                                if (bookstatus.equals("borrowed") && owner_scan.equals("True") && borrower_scan.equals("True")){
-                                                    db.collection("books").document(docID).update("status", "available");
-                                                    db.collection("books").document(docID).update("borrower", "~");
-                                                    db.collection("books").document(docID).update("owner_scan", "False");
-                                                    db.collection("books").document(docID).update("borrower_scan", "False");
-                                                    db.collection("books").document(docID).update("requests", new ArrayList<String>());
 
                                             }
 
                                             //update book status when both owner and borrower scan the book
+                                            if (bookstatus.equals("accepted") && owner_scan.equals("True") && borrower_scan.equals("True")){
+                                                db.collection("books").document(docID).update("status", "borrowed");
+                                                db.collection("books").document(docID).update("borrower", bookborrower);
+                                                db.collection("books").document(docID).update("requests", new ArrayList<String>());
+                                                db.collection("books").document(docID).update("latitude", "");
+                                                db.collection("books").document(docID).update("longitude", "");
+                                                db.collection("books").document(docID).update("owner_scan", "False");
+                                                db.collection("books").document(docID).update("borrower_scan", "False");
 
+
+                                            }
+                                            if (bookstatus.equals("borrowed") && owner_scan.equals("True") && borrower_scan.equals("True")){
+                                                if (requesters.isEmpty()){
+                                                    db.collection("books").document(docID).update("status", "available");
+                                                }else{
+                                                    db.collection("books").document(docID).update("status", "requested");
+                                                }
+
+                                                db.collection("books").document(docID).update("borrower", "~");
+                                                db.collection("books").document(docID).update("owner_scan", "False");
+                                                db.collection("books").document(docID).update("borrower_scan", "False");
 
 
                                             }
@@ -173,7 +192,7 @@ public class ScanBook extends AppCompatActivity {
 
 
                             });
-                //catch exception when isbn for the book doesn't exist
+                    //catch exception when isbn for the book doesn't exist
                 } catch (NullPointerException e){
 
                     Log.d("QIXIN","exception");

@@ -121,7 +121,7 @@ public class ViewBookActivity extends AppCompatActivity {
         descr=getIntent().getStringExtra("DESCRIPTION");
         bookid = getIntent().getStringExtra("BOOKID");
         String status = getIntent().getStringExtra("STATUS");
-        if (status.equals("borrowed"))
+        if (status.equals("borrowed") || status.equals("accepted"))
             requestButton.setVisibility(View.GONE);
 
         StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/book_cover_images/" + bookid);
@@ -247,6 +247,10 @@ public class ViewBookActivity extends AppCompatActivity {
         ISBN=getIntent().getStringExtra("ISBN");
         descr=getIntent().getStringExtra("DESCRIPTION");
         bookid = getIntent().getStringExtra("BOOKID");
+
+        String status = getIntent().getStringExtra("STATUS");
+        if (status.equals("borrowed") || status.equals("accepted") || status.equals("requested"))
+            apply.setVisibility(View.GONE);
 
         StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/book_cover_images/" + bookid);
         //load profile image
