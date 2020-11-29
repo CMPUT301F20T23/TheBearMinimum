@@ -35,15 +35,4 @@
         android:textColor="@color/white"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/air_scan_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:fontFamily="@font/josefina_light"
-        android:text="scan"
-        android:textAllCaps="false"
-        android:textColor="@color/blue"
-        android:textSize="20sp"
-        android:onClick="MyClickHandler"/>
 </LinearLayout>
