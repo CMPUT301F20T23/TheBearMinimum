@@ -21,10 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -61,8 +58,6 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
     private boolean searchingBooks = true;
     private RecyclerView recyclerView;
 
-    private String filterStr = "";
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,11 +85,10 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
 
             @Override
             public void afterTextChanged(Editable editable) {
-                filterStr = editable.toString();
                 if (searchingBooks)
-                    filterBooks(filterStr);
+                    filterBooks(editable.toString());
                 else
-                    filterUsers(filterStr);
+                    filterUsers(editable.toString());
             }
         });
 
@@ -231,12 +225,13 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
         // - available/requested but not accepted/borrowed
         booksRef.whereNotEqualTo("owner", userID)
                 .whereIn("status", Arrays.asList("available", "requested"))
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        bookList.clear();
-                        if (!value.isEmpty()) {
-                            for (DocumentSnapshot document : value.getDocuments()) {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            Log.d(TAG, "got books");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
                                 //create book object from each document
                                 //then append to list
                                 String title = document.getString("title");
@@ -257,11 +252,11 @@ public class SearchActivity extends AppCompatActivity implements BookSearchAdapt
                             }
                         } else {
                             Log.d(TAG, "error getting book documents");
+
                         }
-                        filterBooks(filterStr);
-                        bookAdapter.notifyDataSetChanged();
+                        filterBooks("");
                     }
-                });
+        });
         filteredBookList = (ArrayList<Book>) bookList.clone();
     }
 

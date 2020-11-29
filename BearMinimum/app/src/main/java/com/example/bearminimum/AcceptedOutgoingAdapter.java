@@ -74,6 +74,7 @@ public class AcceptedOutgoingAdapter extends RecyclerView.Adapter<AcceptedOutgoi
         public TextView bookTextView;
         public TextView userNameTextView;
         public TextView statusTextView;
+        public Button scanButton;
 
         //constructor that accepts new row
         //view lookups to find each subview
@@ -83,6 +84,7 @@ public class AcceptedOutgoingAdapter extends RecyclerView.Adapter<AcceptedOutgoi
             bookTextView = (TextView) itemView.findViewById(R.id.aor_book_name);
             userNameTextView = (TextView) itemView.findViewById(R.id.aor_owner);
             statusTextView = (TextView) itemView.findViewById(R.id.aor_location_status);
+            scanButton = (Button) itemView.findViewById(R.id.aor_scan_button);
             this.onBookClickListener = onBookClickListener;
 
             itemView.setOnClickListener(this);
@@ -151,6 +153,19 @@ public class AcceptedOutgoingAdapter extends RecyclerView.Adapter<AcceptedOutgoi
                             textView2.setText("owned by: failed to fetch");
                     }
                 });
+
+        Button scanBtn = holder.scanButton;
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //launch scan activity
+                Log.i("Riky","here I am");
+                Intent intent = new Intent(v.getContext(),BarCodeHelper_outgoing.class);
+                ((Activity) v.getContext()).startActivityForResult(intent, 1);
+                //Log.i("Riky",isbnNum);
+                //Log.d("MyDebug", "book scan requested");
+            }
+        });
     }
 
 
