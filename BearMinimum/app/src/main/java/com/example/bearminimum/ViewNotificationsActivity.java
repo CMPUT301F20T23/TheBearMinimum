@@ -37,7 +37,6 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         getNotifs();
         setUpViewNotificationAdapter();
         recyclerView.setAdapter(notifAdapter);
-
     }
 
 
@@ -66,7 +65,7 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //get all notifications under user
-        db.collection("users").document(userId)
+        db.collection("notifications").document(userId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -75,27 +74,28 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
                             //get all notifications
                             List<String> notifications = (List<String>) task.getResult().get("notifications");
 
-                            //for each item, parse and create a notification object
-                            for (String aNotif : notifications) {
-                                //split the notification to get the info
-                                String[] separated = aNotif.split("-");
-                                String topic = separated[0];
-                                String title = separated[1];
-                                String body = separated[2];
-                                int type = Integer.valueOf(separated[3]);
+                            if (!notifications.isEmpty()) {
+                                //for each item, parse and create a notification object
+                                for (String aNotif : notifications) {
+                                    //split the notification to get the info
+                                    String[] separated = aNotif.split("\\.");
+                                    String topic = separated[0];
+                                    String title = separated[1];
+                                    String body = separated[2];
+                                    int type = Integer.valueOf(separated[3]);
 
-                                NotificationObject newNotif = new NotificationObject(topic,title,body,type);
-                                notifList.add(newNotif);
+                                    NotificationObject newNotif = new NotificationObject(topic, title, body, type);
+                                    notifList.add(newNotif);
+                                }
+                                notifAdapter.notifyDataSetChanged();
+                                Log.d(TAG, "successfully got notifications for user " + userId);
                             }
-
-                            Log.d(TAG, "successfully got notifications for user " + userId);
 
                         } else {
                             Log.d(TAG, "failed to get notifications for user " + userId);
                         }
                     }
                 });
-
     }
 
     @Override

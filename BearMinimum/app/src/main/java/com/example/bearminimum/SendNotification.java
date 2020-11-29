@@ -69,7 +69,7 @@ public class SendNotification {
         
         //create notification
         String body = ownerId+"-"+bookId+"-"+requesterId;
-        String notification = topic+"-"+title+"-"+body+"-"+type;
+        String notification = topic+"."+title+"."+body+"."+type;
 
         //add notification to specified receiver
         DocumentReference receiverDoc = db.collection("notifications").document(receiverId);
@@ -156,7 +156,7 @@ public class SendNotification {
         for (String receiver : subscriberIds) {
             //create notification
             String body = ownerId+"-"+bookId+"-"+receiver;
-            String notification = topic+"-"+title+"-"+body+"-"+type;
+            String notification = topic+"."+title+"."+body+"."+type;
             
             DocumentReference receiverDoc = db.collection("notifications").document(receiver);
             receiverDoc.update("notifications", FieldValue.arrayUnion(notification))

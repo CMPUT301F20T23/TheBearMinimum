@@ -30,6 +30,8 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
     private ArrayList<NotificationObject> notifsList;
     //item click listener
     private ViewNotificationsAdapter.OnResultClickListener mOnResultClickListener;
+    //Firebase
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     //constructor
@@ -79,8 +81,93 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
         NotificationObject currentNotif = notifsList.get(position);
 
         holder.titleView.setText(currentNotif.getTitle());
-        holder.messageView.setText(currentNotif.getBody());
 
+        //get info from notification object
+        int type = Integer.valueOf(currentNotif.getType());
+        String requesterId = currentNotif.getRequesterId();
+        String ownerId = currentNotif.getOwnerId();
+        String bookId = currentNotif.getBookId();
+
+        Task<DocumentSnapshot> bookTask = db.collection("books").document(bookId).get();
+
+        if (type == 1) {
+            //is a request notification
+
+            db.collection("users").document(requesterId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                //get username
+                                String username = task.getResult().get("username").toString();
+
+                                //get book title
+                                if (bookTask.isSuccessful()) {
+                                    String bookTitle = bookTask.getResult().get("title").toString();
+
+                                    //build message
+                                    String body = username + " has requested your book " + bookTitle;
+                                    holder.messageView.setText(body);
+
+                                }
+                            }
+                        }
+                    });
+
+        } else if (type == 2) {
+            //is an accept notification
+
+            db.collection("users").document(ownerId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                //get username
+                                String username = task.getResult().get("username").toString();
+
+                                //get book title
+                                if (bookTask.isSuccessful()) {
+                                    String bookTitle = bookTask.getResult().get("title").toString();
+
+                                    //build message
+                                    String body = username + " has accepted your request for " + bookTitle;
+                                    holder.messageView.setText(body);
+
+                                }
+                            }
+                        }
+                    });
+
+        } else if (type == 3) {
+            //is a reject notification
+
+            db.collection("users").document(ownerId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                //get username
+                                String username = task.getResult().get("username").toString();
+
+                                //get book title
+                                if (bookTask.isSuccessful()) {
+                                    String bookTitle = bookTask.getResult().get("title").toString();
+
+                                    //build message
+                                    String body = username + " has rejected your request for " + bookTitle;
+                                    holder.messageView.setText(body);
+
+                                }
+                            }
+                        }
+                    });
+        }
     }
 
     @Override
