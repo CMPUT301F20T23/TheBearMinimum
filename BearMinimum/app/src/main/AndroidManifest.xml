@@ -33,8 +33,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.request_channel"
             android:value="request_channel" />
-
-        android:theme="@style/AppTheme">
+        
         <activity android:name=".ScanBook"></activity>
         <activity android:name=".AcceptedOutgoingReqs"></activity>
         <activity android:name=".AcceptedIncomingReqs" />
