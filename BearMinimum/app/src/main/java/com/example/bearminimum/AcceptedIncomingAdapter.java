@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -165,10 +166,9 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             @Override
             public void onClick(View view) {
                 //launch scan activity
-                Intent intent2 = new Intent(view.getContext(), BarCodeHelper.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                view.getContext().startActivity(intent2);
-                Log.d("MyDebug", "Scann book");
+                Log.i("Riky","here I am");
+                Intent intent = new Intent(view.getContext(),BarCodeHelper_outgoing.class);
+                ((Activity) view.getContext()).startActivityForResult(intent, 1);
 
             }
         });
