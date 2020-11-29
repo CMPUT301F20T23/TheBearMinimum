@@ -1,5 +1,6 @@
 package com.example.bearminimum;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -10,6 +11,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +34,7 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
     private ArrayList<Book> bookData;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private CollectionReference booksRef;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,34 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
         adapter = new AcceptedOutgoingAdapter(bookData, this);
         recycler.setAdapter(adapter);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent D) {
+        super.onActivityResult(requestCode, resultCode, D);
+
+        if (resultCode == 4){
+            db = FirebaseFirestore.getInstance();
+            Log.i("Riky","Tester6666");
+            String isbn_num = D.getStringExtra("isbn_number");
+            db.collection("books").whereEqualTo("owner", user.getUid())
+                    .whereEqualTo("isbn", isbn_num)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot doc : task.getResult()){
+                                    doc.getReference().update("status", "borrowed");
+                                    Log.d("AcceptedIncomingReqs", "status changed to available");
+                                }
+
+                            }
+                        }
+                    });
+
+        }
+    }
+
 
     @Override
     public void onBookClick(int position, String owner) {
