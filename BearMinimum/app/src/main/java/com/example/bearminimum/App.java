@@ -19,7 +19,7 @@ import com.google.firebase.FirebaseApp;
  */
 
 public class App extends Application {
-    private static final String CHANNEL_ID = "request_channel";
+    public static final String CHANNEL_ID = "book_requests_channel";
 
 
     @Override
