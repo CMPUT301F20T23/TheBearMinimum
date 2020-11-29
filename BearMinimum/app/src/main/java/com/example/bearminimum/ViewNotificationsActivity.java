@@ -78,7 +78,7 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
                             //for each item, parse and create a notification object
                             for (String aNotif : notifications) {
                                 //split the notification to get the info
-                                String[] separated = aNotif.split("/");
+                                String[] separated = aNotif.split("-");
                                 String topic = separated[0];
                                 String title = separated[1];
                                 String body = separated[2];

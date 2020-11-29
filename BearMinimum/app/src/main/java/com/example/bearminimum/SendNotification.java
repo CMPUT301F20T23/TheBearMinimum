@@ -64,8 +64,8 @@ public class SendNotification {
         String type = String.valueOf(notif.getType());
         
         //create notification
-        String body = ownerId+"/"+bookId+"/"+requesterId;
-        String notification = topic+"/"+title+"/"+body+"/"+type;
+        String body = ownerId+"-"+bookId+"-"+requesterId;
+        String notification = topic+"-"+title+"-"+body+"-"+type;
 
         //add notification to specified receiver
         DocumentReference receiverDoc = db.collection("users").document(receiverId);
@@ -129,8 +129,8 @@ public class SendNotification {
         //for all users obtained, send a notification
         for (String receiver : subscriberIds) {
             //create notification
-            String body = ownerId+"/"+bookId+"/"+receiver;
-            String notification = topic+"/"+title+"/"+body+"/"+type;
+            String body = ownerId+"-"+bookId+"-"+receiver;
+            String notification = topic+"-"+title+"-"+body+"-"+type;
             
             DocumentReference receiverDoc = db.collection("users").document(receiver);
             receiverDoc.update("notifications", FieldValue.arrayUnion(notification))
