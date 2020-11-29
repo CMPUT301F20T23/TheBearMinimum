@@ -84,6 +84,10 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         //get borrower
         borrower = getIntent().getExtras().getString("borrower");
 
+        //initial geolocation
+        latitude = getIntent().getStringExtra("latitude");
+        longitude = getIntent().getStringExtra("longitude");
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,8 +116,17 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         getLocationPermission();
-        getDeviceLocation();
-
+        if (latitude.equals(""))
+            getDeviceLocation();
+        else {
+            LatLng misc = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+            marker = map.addMarker(new MarkerOptions()
+                    .position(misc)
+                    .title("generic")
+                    .draggable(true));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)), DEFAULT_ZOOM));
+        }
     }
 
     /**

@@ -116,18 +116,13 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedI
     public void onBookClick(int position, String owner) {
         //open either location selector or previously selected location
         Book book = bookData.get(position);
-        if (book.getLatitude().equals("")) {
-            //launch location selector
-            Intent intent = new Intent(this, MapActivity.class);
-            intent.putExtra("bookid", book.getBid());
-            intent.putExtra("borrower", book.getBorrower());
-            startActivity(intent);
-        } else {
-            //launch location viewer
-            Intent intent = new Intent(this, LocationActivity.class);
-            intent.putExtra("bookid", book.getBid());
-            startActivity(intent);
-        }
+        //launch location selector
+        Intent intent = new Intent(this, MapActivity.class);
+        intent.putExtra("bookid", book.getBid());
+        intent.putExtra("borrower", book.getBorrower());
+        intent.putExtra("latitude", book.getLatitude());
+        intent.putExtra("longitude", book.getLongitude());
+        startActivity(intent);
     }
 
 
