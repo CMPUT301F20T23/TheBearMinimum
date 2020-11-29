@@ -26,6 +26,14 @@ import java.util.List;
 
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
+/**
+ * ViewNotificationsActivity
+ *
+ * This activity displays all notifications of the current user
+ *
+ * Nov. 29, 2020
+ */
+
 public class ViewNotificationsActivity extends AppCompatActivity implements ViewNotificationsAdapter.OnResultClickListener{
 
     private static final String TAG = "view_notifs";

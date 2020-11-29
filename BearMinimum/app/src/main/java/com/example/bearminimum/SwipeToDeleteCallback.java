@@ -10,6 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * SwipeToDeleteCallback
+ *
+ * Allows users to swipe an item on a recyclerView to delete the item
+ *
+ * Nov. 29, 2020
+ */
+
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     //variables

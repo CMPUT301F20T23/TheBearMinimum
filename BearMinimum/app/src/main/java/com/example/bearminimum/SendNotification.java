@@ -26,6 +26,15 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 import static com.example.bearminimum.App.CHANNEL_ID;
 
+/**
+ * SendNotification
+ *
+ * Sends notifications to users or subscribers of a topic
+ * Can also display the notification as a push notification
+ *
+ * Nov. 29, 2020
+ */
+
 
 public class SendNotification {
 

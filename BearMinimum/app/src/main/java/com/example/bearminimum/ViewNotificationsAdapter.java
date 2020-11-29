@@ -28,6 +28,13 @@ import java.util.ArrayList;
 import static android.content.ContentValues.TAG;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
+/**
+ * ViewNotificationAdapter
+ * adapter for the RecyclerView in ViewNotificationsActivity to allow for
+ * custom views
+ * Used to display notifications
+ */
+
 public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificationsAdapter.ViewHolder> {
 
     /**

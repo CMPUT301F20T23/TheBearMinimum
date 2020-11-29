@@ -1,14 +1,12 @@
 package com.example.bearminimum;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
+/**
+ * NotificationObject
+ *
+ * Creates a single notification object that stores info of the notification
+ *
+ * Nov. 29, 2020
+ */
 
 public class NotificationObject {
     //variables

@@ -297,4 +297,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = ViewBookActivity.createIntent(book, this, true);
         startActivity(intent);
     }
+
 }
