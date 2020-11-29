@@ -181,7 +181,7 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
                                     String bookTitle = bookTask.getResult().get("title").toString();
 
                                     //build message
-                                    String body = username + " has rejected your request for " + bookTitle;
+                                    String body = username + " has declined your request for " + bookTitle;
                                     holder.messageView.setText(body);
 
                                 }
@@ -232,22 +232,6 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, notification + " successfully removed");
-                    }
-                });
-
-        //also delete from shown notification field
-        DocumentReference ref = db.collection("notifications").document(userId);
-        ref.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            //if field exists, then delete it
-                            if (task.getResult().get("shown") != null) {
-                                ref.update("shown", FieldValue.arrayRemove(notification));
-                            }
-                        }
                     }
                 });
 
