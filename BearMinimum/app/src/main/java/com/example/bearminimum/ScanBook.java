@@ -105,8 +105,10 @@ public class ScanBook extends AppCompatActivity {
                                             if ((!bookstatus.equals("accepted")) && (!bookstatus.equals("borrowed"))) {
                                                 Toast.makeText(ScanBook.this, "this book has not been accepted nor is it borrowed", Toast.LENGTH_SHORT).show();
                                                 return;
-                                            }
-                                            else {
+                                            } else if (document.getString("latitude").equals("")) {
+                                                Toast.makeText(ScanBook.this, "set a location before scanning!", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            } else {
                                                 //owner first time scan the book
                                                 if((bookstatus.equals("accepted")) && userID.equals(bookowner) && owner_scan.equals("False")){
                                                     db.collection("books").document(docID).update("owner_scan", "True");
@@ -161,8 +163,6 @@ public class ScanBook extends AppCompatActivity {
                                                 db.collection("books").document(docID).update("status", "borrowed");
                                                 db.collection("books").document(docID).update("borrower", bookborrower);
                                                 db.collection("books").document(docID).update("requests", new ArrayList<String>());
-                                                db.collection("books").document(docID).update("latitude", "");
-                                                db.collection("books").document(docID).update("longitude", "");
                                                 db.collection("books").document(docID).update("owner_scan", "False");
                                                 db.collection("books").document(docID).update("borrower_scan", "False");
 
@@ -178,8 +178,8 @@ public class ScanBook extends AppCompatActivity {
                                                 db.collection("books").document(docID).update("borrower", "~");
                                                 db.collection("books").document(docID).update("owner_scan", "False");
                                                 db.collection("books").document(docID).update("borrower_scan", "False");
-
-
+                                                db.collection("books").document(docID).update("latitude", "");
+                                                db.collection("books").document(docID).update("longitude", "");
                                             }
                                         }
                                     }

@@ -10,16 +10,33 @@
     <uses-feature android:name="android.hardware.camera.autofocus"/>
 
     <application
+        android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+
+        android:theme="@style/AppTheme"
+        >
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_ic_notification" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+        <meta-data
+            android:name="com.google.firebase.messaging.request_channel"
+            android:value="request_channel" />
+        
         <activity android:name=".ScanBook"></activity>
         <activity android:name=".AcceptedOutgoingReqs"></activity>
         <activity android:name=".AcceptedIncomingReqs" />
-        <activity android:name=".SpecficBookRequest" />
         <activity android:name=".OutgoingReqsActivity" />
 
         <meta-data
@@ -38,11 +55,16 @@
         <activity android:name=".isbn_search_book" />
         <activity android:name=".isbnAddBook" />
         <activity android:name=".ViewBookActivity" />
+
         <activity android:name=".HandleIncomingReqsActivity" />
         <activity android:name=".IncomingReqs" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".ProfileActivity" />
+
+        <activity android:name=".ViewNotificationsActivity"/>
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+  
         <activity android:name=".MapActivity" />
         <activity android:name=".LocationActivity" />
         <activity android:name=".BarCodeHelper" />
@@ -51,7 +73,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
         <activity
             android:name=".AuthPage"
             android:label="@string/app_name"
@@ -70,5 +91,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
     </application>
+
+
 
 </manifest>

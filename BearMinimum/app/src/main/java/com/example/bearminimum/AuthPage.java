@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,10 +26,7 @@ public class AuthPage extends AppCompatActivity {
 
     //ui elements
     private Button signinBtn;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-
 
     /**
      * creates an intent and returns it to where it was
