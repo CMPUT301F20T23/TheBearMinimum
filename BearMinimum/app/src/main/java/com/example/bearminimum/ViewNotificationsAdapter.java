@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,14 +27,14 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
     }
 
     //holds books to display
-    private ArrayList<Notif> notifsList;
+    private ArrayList<NotificationObject> notifsList;
     //item click listener
     private ViewNotificationsAdapter.OnResultClickListener mOnResultClickListener;
 
 
     //constructor
     //needs a list of notifications to display
-    public ViewNotificationsAdapter(ArrayList<Notif> notifsList, ViewNotificationsAdapter.OnResultClickListener onResultClickListener) {
+    public ViewNotificationsAdapter(ArrayList<NotificationObject> notifsList, ViewNotificationsAdapter.OnResultClickListener onResultClickListener) {
         this.notifsList = notifsList;
         this.mOnResultClickListener = onResultClickListener;
     }
@@ -78,24 +76,10 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
 
     @Override
     public void onBindViewHolder(@NonNull ViewNotificationsAdapter.ViewHolder holder, int position) {
-        Notif currentNotif = notifsList.get(position);
+        NotificationObject currentNotif = notifsList.get(position);
 
         holder.titleView.setText(currentNotif.getTitle());
-
-        FirebaseFirestore.getInstance().collection("users")
-                .document(currentNotif.getRequesterUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            holder.messageView.setText(task.getResult().getString("username") + currentNotif.getMessage());
-                        } else {
-                            holder.messageView.setText("could not fetch requester username");
-                        }
-                    }
-                });
-
+        holder.messageView.setText(currentNotif.getBody());
 
     }
 

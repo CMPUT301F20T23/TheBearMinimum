@@ -15,20 +15,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewNotificationsActivity extends AppCompatActivity implements ViewNotificationsAdapter.OnResultClickListener{
 
     private static final String TAG = "view_notifs";
     //to display notifications
-    private ArrayList<Notif> notifList;
+    private ArrayList<NotificationObject> notifList;
     private ViewNotificationsAdapter notifAdapter;
     private RecyclerView recyclerView;
-    private FirebaseFirestore db;
-    private NotificationManagerCompat notificationManagerCompat;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -36,20 +34,10 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_notifications);
 
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-
-
-
-        //TODO:
-        // pass in intent bundle with list of notifs from main
-
         getNotifs();
         setUpViewNotificationAdapter();
         recyclerView.setAdapter(notifAdapter);
 
-        for (Notif notif : notifList) {
-            notif.sendNotif(getApplicationContext(), notificationManagerCompat);
-        }
     }
 
 
@@ -73,52 +61,45 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
 
     private void getNotifs() {
         notifList = new ArrayList<>();
-        db = FirebaseFirestore.getInstance();
 
-        //current user
-        String userId = FirebaseAuth.getInstance().getUid();
+        //get current user
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        //get all requests for user's book
-        db.collection("notifications")
-                .document(userId)
+        //get all notifications under user
+        db.collection("users").document(userId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "got document");
-                            ArrayList<String> requests = (ArrayList<String>) task.getResult().get("requests");
+                            //get all notifications
+                            List<String> notifications = (List<String>) task.getResult().get("notifications");
 
-                            //process into notif instances
-                            int notif_id = 1;
-                            for (String requestID : requests) {
-                                notifList.add(new Notif(notif_id, requestID));
-                                notif_id += 1;
-                                Log.d(TAG, "processing: " + requestID);
+                            //for each item, parse and create a notification object
+                            for (String aNotif : notifications) {
+                                //split the notification to get the info
+                                String[] separated = aNotif.split("/");
+                                String topic = separated[0];
+                                String title = separated[1];
+                                String body = separated[2];
+                                int type = Integer.valueOf(separated[3]);
+
+                                NotificationObject newNotif = new NotificationObject(topic,title,body,type);
+                                notifList.add(newNotif);
                             }
-                            Log.d(TAG, "done all request notifications " + notifList.size() );
-                        } else {
-                            Log.d(TAG, "couldn't get document");
-                        }
 
-                        //notify adapter list changed
-                        notifAdapter.notifyDataSetChanged();
+                            Log.d(TAG, "successfully got notifications for user " + userId);
+
+                        } else {
+                            Log.d(TAG, "failed to get notifications for user " + userId);
+                        }
                     }
                 });
-
-
-        Log.d(TAG, "does list still exist " + notifList);
-
-
-
-        //TODO:
-        // get notifications for book requested by user (accepted or declined)
-
 
     }
 
     @Override
     public void onResultClick(int position) {
-        Notif notif = notifList.get(position);
+        NotificationObject sendNotification = notifList.get(position);
     }
 }
