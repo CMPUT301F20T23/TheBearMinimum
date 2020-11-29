@@ -72,7 +72,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
         public TextView bookTextView;
         public TextView userNameTextView;
         public TextView statusTextView;
-        public Button scanButton;
 
         //constructor that accepts new row
         //view lookups to find each subview
@@ -82,7 +81,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             bookTextView = (TextView) itemView.findViewById(R.id.air_book_name);
             userNameTextView = (TextView) itemView.findViewById(R.id.air_requester);
             statusTextView = (TextView) itemView.findViewById(R.id.air_location_status);
-            scanButton = (Button) itemView.findViewById(R.id.air_scan_button);
             this.onBookClickListener = onBookClickListener;
 
             itemView.setOnClickListener(this);
@@ -159,19 +157,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
                             textView2.setText("requested by: failed to fetch");
                     }
                 });
-
-        Button scanBtn = holder.scanButton;
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //launch scan activity
-                Intent intent2 = new Intent(view.getContext(), BarCodeHelper.class);
-                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                view.getContext().startActivity(intent2);
-                Log.d("MyDebug", "Scann book");
-
-            }
-        });
     }
     //return total count of items in the list
     @Override
