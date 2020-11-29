@@ -84,8 +84,17 @@ public class ScanBook extends AppCompatActivity {
                                             String userID = user.getUid();
                                             String bookstatus = document.getString("status");
                                             String bookowner = document.getString("owner");
-                                            String bookborrower= requesters.get(0);
                                             String bborrower=document.getString("borrower");
+                                            String bookborrower;
+                                            if (requesters.isEmpty()){
+                                                bookborrower = bborrower;
+                                            } else if (!(requesters.get(0).equals(bborrower)) || bborrower.equals("~")){
+                                                bookborrower = bborrower;
+                                            } else{
+                                                bookborrower = requesters.get(0);
+                                            }
+
+
                                             String owner_scan=document.getString("owner_scan");
                                             String borrower_scan=document.getString("borrower_scan");
 
@@ -147,8 +156,8 @@ public class ScanBook extends AppCompatActivity {
                                             //update book status when both owner and borrower scan the book
                                             if (bookstatus.equals("accepted") && owner_scan.equals("True") && borrower_scan.equals("True")){
                                                 db.collection("books").document(docID).update("status", "borrowed");
-                                                db.collection("books").document(docID).update("borrower", requesters.get(0));
-                                                db.collection("books").document(docID).update("requests", new ArrayList<String>());
+                                                db.collection("books").document(docID).update("borrower", bookborrower);
+                                                db.collection("books").document(docID).update("requests", requesters.remove(0));
                                                 db.collection("books").document(docID).update("latitude", "");
                                                 db.collection("books").document(docID).update("longitude", "");
                                                 db.collection("books").document(docID).update("owner_scan", "False");
@@ -157,7 +166,12 @@ public class ScanBook extends AppCompatActivity {
 
                                             }
                                             if (bookstatus.equals("borrowed") && owner_scan.equals("True") && borrower_scan.equals("True")){
-                                                db.collection("books").document(docID).update("status", "available");
+                                                if (requesters.isEmpty()){
+                                                    db.collection("books").document(docID).update("status", "available");
+                                                }else{
+                                                    db.collection("books").document(docID).update("status", "requested");
+                                                }
+
                                                 db.collection("books").document(docID).update("borrower", "~");
                                                 db.collection("books").document(docID).update("owner_scan", "False");
                                                 db.collection("books").document(docID).update("borrower_scan", "False");
