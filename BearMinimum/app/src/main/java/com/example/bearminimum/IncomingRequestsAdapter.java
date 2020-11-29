@@ -164,6 +164,7 @@ public class IncomingRequestsAdapter extends BaseAdapter implements ListAdapter 
         db.collection("books").document(bookid).update("requests", FieldValue.arrayRemove(userid));
         list.remove(position);
 
+        //send notification
         db.collection("books").document(bookid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -180,8 +181,12 @@ public class IncomingRequestsAdapter extends BaseAdapter implements ListAdapter 
 
                         //send reject notification
                         SendNotification.sendToUser(newNotif, userid);
+
+                        //also unsubscribe user from the topic
+                        TopicSubscription.unsubscribeToTopic(topic, userid);
                     }
                 });
+
 
     }
 }
