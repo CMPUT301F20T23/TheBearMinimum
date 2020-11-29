@@ -77,6 +77,7 @@ public class ScanBook extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                                             List<String> requesters = (List<String>) document.getData().get("requests");
                                             Log.d("QIXIN", document.getId() + " => " + document.getData());
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -84,7 +85,7 @@ public class ScanBook extends AppCompatActivity {
                                             String userID = user.getUid();
                                             String bookstatus = document.getString("status");
                                             String bookowner = document.getString("owner");
-                                            String bookborrower= requesters.get(0);
+                                            //String bookborrower= requesters.get(0);
                                             String bborrower=document.getString("borrower");
                                             String owner_scan=document.getString("owner_scan");
                                             String borrower_scan=document.getString("borrower_scan");
@@ -107,14 +108,14 @@ public class ScanBook extends AppCompatActivity {
 
                                                 }
                                                 //borrower first time scan the book
-                                                else if((bookstatus.equals("accepted")) && userID.equals(bookborrower) && borrower_scan.equals("False")){
+                                                else if((bookstatus.equals("accepted")) && userID.equals(requesters.get(0)) && borrower_scan.equals("False")){
                                                     db.collection("books").document(docID).update("borrower_scan", "True");
                                                     borrower_scan = "True";
                                                     Toast.makeText(ScanBook.this, "You are now confirming the book as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
                                                 //borrower has already scanned the book
-                                                else if((bookstatus.equals("accepted")) && userID.equals(bookborrower) && borrower_scan.equals("True")){
+                                                else if((bookstatus.equals("accepted")) && userID.equals(requesters.get(0)) && borrower_scan.equals("True")){
                                                     Toast.makeText(ScanBook.this, "Book is already confirmed as borrowed ", Toast.LENGTH_SHORT).show();
 
                                                 }
