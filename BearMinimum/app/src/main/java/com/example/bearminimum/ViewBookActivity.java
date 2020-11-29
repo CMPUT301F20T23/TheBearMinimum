@@ -199,8 +199,14 @@ public class ViewBookActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 //subscribe user to the topic (ownerId+bookId)
                                 String ownerId = task.getResult().get("owner").toString();
-                                String topic = ownerId+"/"+bookid;
+                                String topic = ownerId+"-"+bookid;
                                 TopicSubscription.subscribeToTopic(topic, currentUser);
+
+                                //also send a notification to the book owner
+                                String title = "book request";
+                                String body = ownerId+"-"+bookid+"-"+currentUser;
+                                NotificationObject newNotif = new NotificationObject(topic,title,body,1);
+                                SendNotification.sendToUser(newNotif, ownerId);
                             }
                         }
                     });
@@ -222,7 +228,7 @@ public class ViewBookActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 //unsubscribe user from the topic (ownerId+bookId)
                                 String ownerId = task.getResult().get("owner").toString();
-                                String topic = ownerId+"/"+bookid;
+                                String topic = ownerId+"-"+bookid;
                                 TopicSubscription.unsubscribeToTopic(topic, currentUser);
                             }
                         }

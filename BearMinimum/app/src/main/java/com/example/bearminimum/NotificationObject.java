@@ -32,8 +32,8 @@ public class NotificationObject {
         this.body = body;
         this.type = type;
 
-        //split the topic name to get the info
-        String[] separated = topic.split("-");
+        //split body to get the info
+        String[] separated = body.split("-");
         this.ownerId = separated[0];
         this.bookId = separated[1];
         this.requesterId = separated[2];

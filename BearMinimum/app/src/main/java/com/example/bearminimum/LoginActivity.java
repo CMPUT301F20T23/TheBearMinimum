@@ -220,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
         newUser.put("phonenumber", "");
         //for notifications
         newUser.put("topics", Arrays.asList());
-        newUser.put("notifications", Arrays.asList());
 
         db.collection("users").document(user.getUid())
                 .set(newUser)

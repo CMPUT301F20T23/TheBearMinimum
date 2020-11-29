@@ -45,30 +45,38 @@ public class TopicSubscription {
         DocumentReference topicDoc = db.collection("topics").document(topic);
 
         //check if doc exists
-        if (!topicDoc.get().getResult().exists()) {
-            //create and store firestore document
-            Map<String, Object> newTopic = new HashMap<>();
-            newTopic.put("subscribers", Arrays.asList(uid));
-            topicDoc.set(newTopic).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, uid + " added to newly created topic");
+        topicDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (!task.getResult().exists()) {
+                        //create and store firestore document
+                        Map<String, Object> newTopic = new HashMap<>();
+                        newTopic.put("subscribers", Arrays.asList(uid));
+                        topicDoc.set(newTopic).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, uid + " added to newly created topic");
+                                } else {
+                                    Log.d(TAG, topic + " topic couldn't be created. Subscription failed");
+                                }
+                            }
+                        });
                     } else {
-                        Log.d(TAG, topic + " topic couldn't be created. Subscription failed");
+                        //doc exists so add value in
+                        topicDoc.update("subscribers", FieldValue.arrayUnion(uid))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, uid + " successfully subscribed to topic");
+                                    }
+                                });
                     }
                 }
-            });
-        } else {
-            //doc exists so add value in
-            topicDoc.update("subscribers", FieldValue.arrayUnion(uid))
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, uid + " successfully subscribed to topic");
-                        }
-                    });
-        }
+            }
+        });
+
 
         //add topic to user doc
         DocumentReference userDoc = db.collection("users").document(uid);
