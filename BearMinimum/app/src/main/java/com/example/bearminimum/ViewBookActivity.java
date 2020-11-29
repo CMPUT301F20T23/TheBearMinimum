@@ -75,6 +75,9 @@ public class ViewBookActivity extends AppCompatActivity {
         intent.putExtra("BOOKID", book.getBid());
         intent.putExtra("ISOWNED", isOwned);
         intent.putExtra("STATUS", book.getStatus());
+        intent.putExtra("BORROWER", book.getBorrower());
+        intent.putExtra("latitude", book.getLatitude());
+        intent.putExtra("longitude", book.getLongitude());
         return intent;
     }
 
@@ -115,6 +118,9 @@ public class ViewBookActivity extends AppCompatActivity {
         //for requesting books
         ToggleButton requestButton = findViewById(R.id.request_button);
 
+        Button locationBtn = findViewById(R.id.set_pickup);
+        locationBtn.setVisibility(View.GONE);
+
         name=getIntent().getStringExtra("NAME");
         author=getIntent().getStringExtra("AUTHOR");
         ISBN=getIntent().getStringExtra("ISBN");
@@ -123,6 +129,20 @@ public class ViewBookActivity extends AppCompatActivity {
         String status = getIntent().getStringExtra("STATUS");
         if (status.equals("borrowed") || status.equals("accepted"))
             requestButton.setVisibility(View.GONE);
+        if (status.equals("borrowed")) {
+            locationBtn.setVisibility(View.VISIBLE);
+            locationBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), MapActivity.class);
+                    intent.putExtra("bookid", getIntent().getStringExtra("BOOKID"));
+                    intent.putExtra("borrower", getIntent().getStringExtra("BORROWER"));
+                    intent.putExtra("latitude", getIntent().getStringExtra("latitude"));
+                    intent.putExtra("longitude", getIntent().getStringExtra("longitude"));
+                    startActivity(intent);
+                }
+            });
+        }
 
         StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/book_cover_images/" + bookid);
         //load profile image
@@ -268,6 +288,8 @@ public class ViewBookActivity extends AppCompatActivity {
         Button removeImg = findViewById(R.id.removeImage);
         Button deleteBook = findViewById(R.id.delete_book_btn);
         Button apply = findViewById(R.id.edit_book_apply_btn);
+        Button viewLocation = findViewById(R.id.view_pickup);
+        viewLocation.setVisibility(View.GONE);
         imageView = findViewById(R.id.imgBook);
         t1 = findViewById(R.id.bookName);
         t2 = findViewById(R.id.bookAuthor);
@@ -283,6 +305,18 @@ public class ViewBookActivity extends AppCompatActivity {
         String status = getIntent().getStringExtra("STATUS");
         if (status.equals("borrowed") || status.equals("accepted") || status.equals("requested"))
             apply.setVisibility(View.GONE);
+        if (status.equals("borrowed")) {
+            viewLocation.setVisibility(View.VISIBLE);
+            viewLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //launch location viewer
+                    Intent intent = new Intent(getBaseContext(), LocationActivity.class);
+                    intent.putExtra("bookid", getIntent().getStringExtra("BOOKID"));
+                    startActivity(intent);
+                }
+            });
+        }
 
         StorageReference storageRef = storage.getReferenceFromUrl("gs://thebearminimum-adecf.appspot.com/book_cover_images/" + bookid);
         //load profile image
