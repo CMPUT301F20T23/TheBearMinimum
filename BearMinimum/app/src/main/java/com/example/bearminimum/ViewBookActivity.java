@@ -192,6 +192,19 @@ public class ViewBookActivity extends AppCompatActivity {
                     //add uid of current user into the requests array
                     requestedBook.update("requests", FieldValue.arrayUnion(currentUser));
 
+                    //get book owner id
+                    requestedBook.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                //subscribe user to the topic (ownerId+bookId)
+                                String ownerId = task.getResult().get("owner").toString();
+                                String topic = ownerId+"/"+bookid;
+                                TopicSubscription.subscribeToTopic(topic, currentUser);
+                            }
+                        }
+                    });
+
                     //update status accordingly
                     String status = getIntent().getStringExtra("STATUS");
                     if (status.equals("available")) {
@@ -201,6 +214,19 @@ public class ViewBookActivity extends AppCompatActivity {
                     //button pressed, book request withdrawn
                     //remove uid of current user in the requests array
                     requestedBook.update("requests", FieldValue.arrayRemove(currentUser));
+
+                    //get book owner id
+                    requestedBook.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                //unsubscribe user from the topic (ownerId+bookId)
+                                String ownerId = task.getResult().get("owner").toString();
+                                String topic = ownerId+"/"+bookid;
+                                TopicSubscription.unsubscribeToTopic(topic, currentUser);
+                            }
+                        }
+                    });
 
                     //update status accordingly
                     requestedBook.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
