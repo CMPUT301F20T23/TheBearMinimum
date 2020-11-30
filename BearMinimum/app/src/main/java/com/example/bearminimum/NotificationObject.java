@@ -56,6 +56,15 @@ public class NotificationObject {
     }
 
     /**
+     * returns the body of the notification
+     * @return      String of the notification body
+     */
+
+    public String getBody() {
+        return body;
+    }
+
+    /**
      * returns the uid of the book's owner of the topic
      * @return      String of the owner's id
      */
