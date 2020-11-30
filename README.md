@@ -24,7 +24,7 @@ UML diagram represents the relationships between entities and their attributes a
 
 
 Prototype shows the user interface as it is implemented.
-![Prototype](https://user-images.githubusercontent.com/59704757/98313751-c45bc680-1f91-11eb-9e43-efb40ab46192.png)
+![Prototype](https://user-images.githubusercontent.com/59704757/100560338-c18f8100-3272-11eb-9eb3-9bf32d837450.png)
 <br /><br /><br /><br /><br /><br />
 
 ## **StoryBoard**
@@ -32,7 +32,7 @@ Prototype shows the user interface as it is implemented.
 
 
 StoryBoard shows the user interface as it is implemented.
-![StoryBoard](https://user-images.githubusercontent.com/59704757/98313784-d76e9680-1f91-11eb-99c9-9fea4e9b4faa.png)
+![StoryBoard](https://user-images.githubusercontent.com/59704757/100560330-b50b2880-3272-11eb-9419-eec70b10cc9c.png)
 <br /><br /><br /><br /><br /><br />
 
 This is a modified StoryBoard with clarifications on implementation.
