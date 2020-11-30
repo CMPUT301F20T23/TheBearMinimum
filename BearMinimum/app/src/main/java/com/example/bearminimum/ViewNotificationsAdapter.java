@@ -48,7 +48,7 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
     //holds books to display
     private ArrayList<NotificationObject> notifsList;
     //item click listener
-    private ViewNotificationsAdapter.OnResultClickListener mOnResultClickListener;
+    private OnResultClickListener mOnResultClickListener;
     //holds notication object swiped
     private NotificationObject swipedNotif;
     //Firebase
@@ -57,7 +57,7 @@ public class ViewNotificationsAdapter extends RecyclerView.Adapter<ViewNotificat
 
     //constructor
     //needs a list of notifications to display
-    public ViewNotificationsAdapter(ArrayList<NotificationObject> notifsList, ViewNotificationsAdapter.OnResultClickListener onResultClickListener) {
+    public ViewNotificationsAdapter(ArrayList<NotificationObject> notifsList, OnResultClickListener onResultClickListener) {
         this.notifsList = notifsList;
         this.mOnResultClickListener = onResultClickListener;
     }
