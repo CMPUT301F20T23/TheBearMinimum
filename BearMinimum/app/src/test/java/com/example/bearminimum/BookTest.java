@@ -34,5 +34,32 @@ public class BookTest {
     public void setAttributes() {
         Book book = createMockBook();
 
+        //set new values to all fields
+        book.setTitle("bard");
+        book.setAuthor("poly");
+        book.setOwner("polypuff");
+        book.setBorrower("sam");
+        book.setDescription("no bad plays only bard plays");
+        book.setISBN("01111222233334444");
+        book.setStatus("borrowed");
+        book.setBid("reeeeeeeeeeeee");
+        book.setLatitude("194.466");
+        book.setLongitude("207.842");
+        book.setOwner_scan("True");
+        book.setBorrower_scan("True");
+
+        //assert return values are equal to newly set values
+        assert(book.getTitle().equals("bard"));
+        assert(book.getAuthor().equals("poly"));
+        assert(book.getOwner().equals("polypuff"));
+        assert(book.getBorrower().equals("sam"));
+        assert(book.getDescription().equals("no bad plays only bard plays"));
+        assert(book.getISBN().equals("01111222233334444"));
+        assert(book.getStatus().equals("borrowed"));
+        assert(book.getBid().equals("reeeeeeeeeeeee"));
+        assert(book.getLatitude().equals("194.466"));
+        assert(book.getLongitude().equals("207.842"));
+        assert(book.getOwner_scan().equals("True"));
+        assert(book.getBorrower_scan().equals("True"));
     }
 }
