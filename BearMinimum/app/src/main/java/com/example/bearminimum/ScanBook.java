@@ -32,6 +32,7 @@ import java.util.List;
 
 /**
  * this class handles book scan transactions like borrowing and returning
+ * when both user scan the barcode the transaction success
  */
 public class ScanBook extends AppCompatActivity {
 
@@ -60,11 +61,10 @@ public class ScanBook extends AppCompatActivity {
             }
         });
 
-        // Owner scan ISBN to denote book as borrowed
+
         owner_button.setOnClickListener(new View.OnClickListener(){
             @Override
                 public void onClick(View V) {
-                //Firestore
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 db = FirebaseFirestore.getInstance();
 
