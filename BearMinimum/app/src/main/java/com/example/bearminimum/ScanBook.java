@@ -172,12 +172,7 @@ public class ScanBook extends AppCompatActivity {
 
                                             }
                                             if (bookstatus.equals("borrowed") && owner_scan.equals("True") && borrower_scan.equals("True")){
-                                                if (requesters.isEmpty()){
-                                                    db.collection("books").document(docID).update("status", "available");
-                                                }else{
-                                                    db.collection("books").document(docID).update("status", "requested");
-                                                }
-
+                                                db.collection("books").document(docID).update("status", "available");
                                                 db.collection("books").document(docID).update("borrower", "~");
                                                 db.collection("books").document(docID).update("owner_scan", "False");
                                                 db.collection("books").document(docID).update("borrower_scan", "False");
