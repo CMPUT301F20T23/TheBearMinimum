@@ -87,6 +87,7 @@ public class ScanBook extends AppCompatActivity {
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             String docID = document.getId();
                                             String userID = user.getUid();
+                                            Log.d("scanbook", "uid is " + userID);
                                             String bookstatus = document.getString("status");
                                             String bookowner = document.getString("owner");
                                             String bborrower=document.getString("borrower");

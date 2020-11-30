@@ -149,6 +149,8 @@ public class isbn_search_book extends AppCompatActivity {
                     data.put("requests", new ArrayList<String>());
                     data.put("latitude", "");
                     data.put("longitude", "");
+                    data.put("owner_scan","False");
+                    data.put("borrower_scan","False");
                     db.collection("books")
                             .add(data)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
