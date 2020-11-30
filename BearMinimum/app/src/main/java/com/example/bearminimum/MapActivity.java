@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -154,6 +155,7 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
                 == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
         } else {
+            Log.d("location permissions","permission request");
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
@@ -214,10 +216,26 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true;
+                } else {
+                    Toast.makeText(MapActivity.this, "location permission not granted, using default location", Toast.LENGTH_LONG).show();
+                    useDefaultLocation();
                 }
             }
         }
         if (getIntent().getStringExtra("latitude").equals(""))
             getDeviceLocation();
+    }
+
+    private void useDefaultLocation() {
+        //default to edmonton
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(53.564439795215634, -113.49549423687328), 10));
+        // Add a misc marker at current location
+        // and move the map's camera to the same location.
+        LatLng misc = new LatLng(53.564439795215634, -113.49549423687328);
+        marker = map.addMarker(new MarkerOptions()
+                .position(misc)
+                .title("generic")
+                .draggable(true));
     }
 }

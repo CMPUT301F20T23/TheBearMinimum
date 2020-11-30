@@ -16,7 +16,7 @@ book lending and borrowing, book content searching, and status checking. <br /><
 
 UML diagram represents the relationships between entities and their attributes and functional implementations.
 
-![General UML diagram](https://user-images.githubusercontent.com/58434423/98071801-c43cb900-1e21-11eb-946f-3a2d8d95da5c.png)
+![General UML diagram](https://media.discordapp.net/attachments/763449164204998716/782910982451363870/Nov29UML.png?width=1124&height=935)
 <br /><br /><br /><br /><br /><br />
 
 ## **Prototype**
