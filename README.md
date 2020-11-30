@@ -35,10 +35,6 @@ StoryBoard shows the user interface as it is implemented.
 ![StoryBoard](https://user-images.githubusercontent.com/59704757/100560330-b50b2880-3272-11eb-9419-eec70b10cc9c.png)
 <br /><br /><br /><br /><br /><br />
 
-This is a modified StoryBoard with clarifications on implementation.
-![StoryBoard](https://user-images.githubusercontent.com/60022442/98420460-794ebb80-2044-11eb-8823-58f86027cf5f.png)
-<br /><br /><br /><br /><br /><br />
-
 
 ## License
 
