@@ -111,6 +111,123 @@ public class MainActivityTest {
     }
 
     /**
+     * check navigation to notifications page
+     */
+    @Test
+    public void navToNotificationsActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("notifications");
+
+        assertTrue(solo.waitForActivity(ViewNotificationsActivity.class,2000));
+        assertTrue(solo.waitForText("notification", 1, 2000));
+    }
+
+    /**
+     * check navigation to incoming requests page
+     */
+    @Test
+    public void navToIncomingReqActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("incoming requests");
+
+        assertTrue(solo.waitForActivity(IncomingReqs.class,2000));
+        assertTrue(solo.waitForText("books with requests", 1, 2000));
+    }
+
+    /**
+     * check navigation to outgoing requests page
+     */
+    @Test
+    public void navToOutgoingReqsActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("outgoing requests");
+
+        assertTrue(solo.waitForActivity(OutgoingReqsActivity.class,2000));
+        assertTrue(solo.waitForText("outgoing requests", 1, 2000));
+    }
+
+    /**
+     * check navigation to accepted incoming requests
+     */
+    @Test
+    public void navToAcceptedIncomingReqsActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("accepted incoming requests");
+
+        assertTrue(solo.waitForActivity(AcceptedIncomingReqs.class,2000));
+        assertTrue(solo.waitForText("accepted incoming requests", 1, 2000));
+    }
+
+    /**
+     * check navigation to accepted outgoing requests
+     */
+    @Test
+    public void navToAcceptedOutgoingReqsActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("accepted outgoing requests");
+
+        assertTrue(solo.waitForActivity(AcceptedOutgoingReqs.class,2000));
+        assertTrue(solo.waitForText("accepted outgoing requests", 1, 2000));
+    }
+
+    /**
+     * check navigation to scan book activity
+     */
+    @Test
+    public void navToScanBookActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("scan book");
+
+        assertTrue(solo.waitForActivity(ScanBook.class,2000));
+        assertTrue(solo.waitForText("scan by ISBN", 1, 2000));
+        assertTrue(solo.waitForText("enter ISBN number", 1, 2000));
+        assertTrue(solo.waitForText("yes", 1, 2000));
+        assertTrue(solo.waitForText("scan", 1, 2000));
+    }
+
+    /**
+     * check navigation to search activity
+     */
+    @Test
+    public void navToSearchActivity() {
+        // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+
+        //nav to notifications page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("search");
+
+        assertTrue(solo.waitForActivity(SearchActivity.class,2000));
+        assertTrue(solo.waitForText("enter your search", 1, 2000));
+        assertTrue(solo.waitForText("books",1, 2000));
+        assertTrue(solo.waitForText("users", 1, 2000));
+    }
+
+    /**
      * logout and finish
      */
     @After
