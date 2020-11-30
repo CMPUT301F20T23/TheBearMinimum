@@ -5,7 +5,7 @@ import org.junit.Test;
 public class NotificationObjectTest {
 
     public NotificationObject createMockNotification() {
-
+        return null;
     }
 
     @Test
