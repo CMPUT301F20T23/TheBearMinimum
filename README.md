@@ -40,7 +40,7 @@ StoryBoard shows the user interface as it is implemented.
 
 
 A demo video to explain the app and features.
-![Demo Video](https://www.youtube.com/watch?v=bSqYWIz5o0A&feature=youtu.be)
+[Demo Video](https://www.youtube.com/watch?v=bSqYWIz5o0A&feature=youtu.be)
 <br /><br /><br /><br /><br /><br />
 
 
