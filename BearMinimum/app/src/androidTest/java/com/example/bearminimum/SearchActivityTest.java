@@ -103,6 +103,12 @@ public class SearchActivityTest {
 
         //assert user found
         assertTrue(solo.waitForText("ham", 1, 2000));
+
+        //also click to check if it works
+        solo.clickOnText("ham",2);
+        assertTrue(solo.waitForActivity(ProfileActivity.class, 2000));
+        assertTrue(solo.waitForText("ham", 1, 2000));
+        assertTrue(solo.waitForText("ham@gmail.com", 1, 2000));
     }
 
     /**
