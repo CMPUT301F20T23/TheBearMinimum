@@ -59,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
     private Button signout;
     private Button checkName;
 
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseFirestore db;
     private CollectionReference usersRef;
     private DocumentReference userRef;
@@ -82,7 +82,6 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
      * @param isCurrentUser     a boolean
      * @return                  an Intent object
      */
-
     public static Intent createIntent(String userid, Context context, boolean isCurrentUser) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra("UID", userid);
@@ -112,8 +111,6 @@ public class ProfileActivity extends AppCompatActivity implements Reauth.OnFragm
             showOwnedProfile();
         else
             showOtherProfile(userid);
-
-
     }
 
     /**

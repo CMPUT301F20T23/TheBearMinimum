@@ -14,6 +14,9 @@ import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.zxing.Result;
 
+/**
+ * This class handles barcode scanning for the add by isbn activity
+ */
 public class BarCodeHelper extends AppCompatActivity {
     private CodeScanner mCodeScanner;
 
@@ -30,9 +33,9 @@ public class BarCodeHelper extends AppCompatActivity {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //return scanned isbn
                         Toast.makeText(activity, result.getText(), Toast.LENGTH_SHORT).show();
                         Intent intent4 = new Intent(BarCodeHelper.this,isbn_search_book.class);
-                        //Log.i("Riky",result.getText());
                         intent4.putExtra("isbn_number",result.getText());
                         setResult(4,intent4);
                         finish();

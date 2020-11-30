@@ -33,10 +33,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
  *
  * basic adapter extending RecyclerView.Adapter
  * custom ViewHolder to access our views
- * Used to display books in the MainActivity RecyclerView
+ * Used to display books that have accepted incoming requests
  *
  */
-
 public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomingAdapter.ViewHolder> {
     /**
      * Interface
@@ -73,7 +72,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
         public TextView bookTextView;
         public TextView userNameTextView;
         public TextView statusTextView;
-        public Button scanButton;
 
         //constructor that accepts new row
         //view lookups to find each subview
@@ -83,7 +81,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             bookTextView = (TextView) itemView.findViewById(R.id.air_book_name);
             userNameTextView = (TextView) itemView.findViewById(R.id.air_requester);
             statusTextView = (TextView) itemView.findViewById(R.id.air_location_status);
-            scanButton = (Button) itemView.findViewById(R.id.air_scan_button);
             this.onBookClickListener = onBookClickListener;
 
             itemView.setOnClickListener(this);
@@ -144,6 +141,7 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             }
         });
 
+        //set requester name from firebase
         FirebaseFirestore.getInstance().collection("books").document(book.getBid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -160,18 +158,6 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
                             textView2.setText("requested by: failed to fetch");
                     }
                 });
-
-        Button scanBtn = holder.scanButton;
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //launch scan activity
-                Log.i("Riky","here I am");
-                Intent intent = new Intent(view.getContext(),BarCodeHelper_outgoing.class);
-                ((Activity) view.getContext()).startActivityForResult(intent, 1);
-
-            }
-        });
     }
     //return total count of items in the list
     @Override

@@ -33,7 +33,6 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
  *
  * Nov. 29, 2020
  */
-
 public class ViewNotificationsActivity extends AppCompatActivity implements ViewNotificationsAdapter.OnResultClickListener{
 
     private static final String TAG = "view_notifs";
@@ -45,7 +44,6 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
     //get current user
     private String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +54,9 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
         recyclerView.setAdapter(notifAdapter);
     }
 
-
     /**
      * Sets up a ViewNotification adapter for the RecyclerView
      */
-
     private void setUpViewNotificationAdapter() {
         recyclerView = findViewById(R.id.notification_recycler);
         recyclerView.setHasFixedSize(true);
@@ -76,7 +72,6 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
     /**
      * gets notifications under current user
      */
-
     private void getNotifs() {
         notifList = new ArrayList<>();
 
@@ -118,6 +113,4 @@ public class ViewNotificationsActivity extends AppCompatActivity implements View
     public void onResultClick(int position) {
         NotificationObject sendNotification = notifList.get(position);
     }
-
-
 }

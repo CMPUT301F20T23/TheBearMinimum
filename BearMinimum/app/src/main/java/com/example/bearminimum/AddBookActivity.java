@@ -39,7 +39,6 @@ import java.util.HashMap;
  *
  * Nov. 6, 2020
  */
-
 public class AddBookActivity extends AppCompatActivity {
 
     private EditText editTitleEditText;
@@ -62,6 +61,7 @@ public class AddBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
 
+        //initialize variables
         editTitleEditText = findViewById(R.id.editTitle);
         editAuthorEditText = findViewById(R.id.editAuthor);
         editISBNEditText = findViewById(R.id.editISBN);
@@ -141,6 +141,7 @@ public class AddBookActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //if the scanned isbn couldn't be found in google books, offer manual input
         if (requestCode == SEARCH_REQUEST && resultCode == SEARCH_INVALID) {
             Log.d("addbook", "got invalid search result");
             editTitleEditText.setVisibility(View.VISIBLE);
