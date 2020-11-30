@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * SwipeToDeleteCallback
  *
  * Allows users to swipe an item on a recyclerView to delete the item
+ * referenced: https://medium.com/@zackcosborn/step-by-step-recyclerview-swipe-to-delete-and-undo-7bbae1fce27e
  *
  * Nov. 29, 2020
  */
