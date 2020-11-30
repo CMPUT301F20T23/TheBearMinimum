@@ -18,9 +18,10 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SearchActivityTest {
+public class RequestBookTest {
     private Solo solo;
 
     @Rule
@@ -50,11 +51,11 @@ public class SearchActivityTest {
     }
 
     /**
-     * test search for a specific book
-     *      searching for outsider
+     * test requesting a book
+     * check for the requested book in outgoing request activity
      */
     @Test
-    public void searchBook() {
+    public void checkRequestBook() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
@@ -72,19 +73,36 @@ public class SearchActivityTest {
         assertTrue(solo.waitForText("The Outsider", 1, 2000));
         assertTrue(solo.waitForText("ham", 1, 2000));
 
-        //also click to see book info
-        solo.clickOnText("ham");
+        //click on book and request it
+        solo.clickOnText("The Outsider");
+        //wait for the activity to show
         assertTrue(solo.waitForActivity(ViewBookActivity.class, 2000));
+        assertTrue(solo.waitForText("request book", 1, 2000));
+        solo.clickOnButton("request book");
+        assertTrue(solo.waitForText("withdraw request", 1, 2000));
+
+        //check if book exists in outgoing request activity
+        solo.goBack();
+        assertTrue(solo.waitForActivity(SearchActivity.class, 2000));
+        solo.goBack();
+        assertTrue(solo.waitForActivity(MainActivity.class, 2000));
+
+        //nav to outgoing request activity page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("outgoing requests");
+
+        //check for book
+        assertTrue(solo.waitForActivity(OutgoingReqsActivity.class, 2000));
         assertTrue(solo.waitForText("The Outsider", 1, 2000));
-        assertTrue(solo.waitForText("Albert Camus", 1, 2000));
+        assertTrue(solo.waitForText("ham", 1, 2000));
     }
 
     /**
-     * test search for a specific user
-     *      searching for ham
+     * test withdrawing a request
+     * check if book exists in outgoing request activity
      */
     @Test
-    public void searchUser() {
+    public void checkWithdrawRequestBook() {
         // Asserts that the current activity is the MainActivity. Otherwise, show “Wrong Activity”
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
 
@@ -95,14 +113,35 @@ public class SearchActivityTest {
         assertTrue(solo.waitForActivity(SearchActivity.class,2000));
         assertTrue(solo.waitForText("enter your search", 1, 2000));
 
-        //change to search for user
-        solo.clickOnButton("users");
-
         //type in the search
-        solo.enterText(0, "ham");
+        solo.enterText(0, "outsider");
 
-        //assert user found
+        //assert book found
+        assertTrue(solo.waitForText("The Outsider", 1, 2000));
         assertTrue(solo.waitForText("ham", 1, 2000));
+
+        //click on book and request it
+        solo.clickOnText("The Outsider");
+        //wait for the activity to show
+        assertTrue(solo.waitForActivity(ViewBookActivity.class, 2000));
+        assertTrue(solo.waitForText("withdraw request", 1, 2000));
+        solo.clickOnButton("withdraw request");
+        assertTrue(solo.waitForText("request book", 1, 2000));
+
+        //check if book exists in outgoing request activity
+        solo.goBack();
+        assertTrue(solo.waitForActivity(SearchActivity.class, 2000));
+        solo.goBack();
+        assertTrue(solo.waitForActivity(MainActivity.class, 2000));
+
+        //nav to outgoing request activity page
+        solo.clickOnImageButton(0); // open menu
+        solo.clickOnText("outgoing requests");
+
+        //check for book
+        assertTrue(solo.waitForActivity(OutgoingReqsActivity.class, 2000));
+        assertFalse(solo.waitForText("The Outsider", 1, 2000));
+        assertFalse(solo.waitForText("ham", 1, 2000));
     }
 
     /**
@@ -113,5 +152,4 @@ public class SearchActivityTest {
         FirebaseAuth.getInstance().signOut();
         solo.finishOpenedActivities();
     }
-
 }
