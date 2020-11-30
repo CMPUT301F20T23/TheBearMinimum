@@ -56,7 +56,6 @@ public class isbnAddBook extends AppCompatActivity {
      *
      * @param view
      */
-
     public void isbn_add_button(View view){
 
         String name = textViewName.getText().toString();
@@ -82,15 +81,10 @@ public class isbnAddBook extends AppCompatActivity {
      *
      * @param view
      */
-
     public void isbn_cancel_button(View view){
         Intent intent1 = new Intent(isbnAddBook.this,isbn_search_book.class);
 
         setResult(0,intent1);
         finish();
     }
-
-
-
-
 }

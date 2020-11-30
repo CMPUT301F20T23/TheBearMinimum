@@ -39,6 +39,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * this class is an activty for viewing and setting the location associated with a book
+ */
 public class MapActivity extends MainActivity implements OnMapReadyCallback{
 
     private Button confirmButton;
@@ -113,22 +116,18 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         getLocationPermission();
+        //marker doesn't seem to update its position unless this listener is here
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
-            public void onMarkerDragStart(Marker marker) {
-
-            }
-
+            public void onMarkerDragStart(Marker marker) {}
             @Override
-            public void onMarkerDrag(Marker marker) {
-
-            }
-
+            public void onMarkerDrag(Marker marker) {}
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 Log.d("MAPACT", "drag end: " + marker.getPosition().latitude + ", " + marker.getPosition().longitude);
             }
         });
+        //if no location is set, use the devices current location
         if (getIntent().getStringExtra("latitude").equals("")) {
             Log.d("MAP", "using device location");
             getDeviceLocation();
@@ -161,11 +160,11 @@ public class MapActivity extends MainActivity implements OnMapReadyCallback{
         }
     }
 
+    /**
+     * Get the best and most recent location of the device, which may be null in rare
+     * cases when a location is not available.
+     */
     private void getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             if (locationPermissionGranted) {
                 Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();

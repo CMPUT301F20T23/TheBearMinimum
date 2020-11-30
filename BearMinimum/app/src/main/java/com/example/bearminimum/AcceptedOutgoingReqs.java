@@ -44,6 +44,7 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
         bookData = new ArrayList<>();
         initAdapter();
 
+        //get books that are accepted and the current user requested
         booksRef = FirebaseFirestore.getInstance().collection("books");
         Query query = booksRef.whereArrayContains("requests", user.getUid()).whereEqualTo("status", "accepted");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -76,40 +77,15 @@ public class AcceptedOutgoingReqs extends AppCompatActivity implements AcceptedO
         });
     }
 
+    /**
+     * setup recycler adapter
+     */
     private void initAdapter() {
         recycler = findViewById(R.id.accepted_outgoing_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new AcceptedOutgoingAdapter(bookData, this);
         recycler.setAdapter(adapter);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent D) {
-        super.onActivityResult(requestCode, resultCode, D);
-
-        if (resultCode == 4){
-            db = FirebaseFirestore.getInstance();
-            Log.i("Riky","Tester6666");
-            String isbn_num = D.getStringExtra("isbn_number");
-            db.collection("books").whereEqualTo("owner", user.getUid())
-                    .whereEqualTo("isbn", isbn_num)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot doc : task.getResult()){
-                                    doc.getReference().update("status", "borrowed");
-                                    Log.d("AcceptedIncomingReqs", "status changed to available");
-                                }
-
-                            }
-                        }
-                    });
-
-        }
-    }
-
 
     @Override
     public void onBookClick(int position, String owner) {

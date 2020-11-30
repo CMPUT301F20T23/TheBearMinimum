@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * this class is an activity that shows a location for viewing only
+ */
 public class LocationActivity extends MainActivity implements OnMapReadyCallback{
 
     private Marker marker;
@@ -91,6 +94,9 @@ public class LocationActivity extends MainActivity implements OnMapReadyCallback
         this.map = googleMap;
     }
 
+    /**
+     * sets the map markers location and positions the camera there
+     */
     private void setLocation() {
         // Add a misc marker at Edmonton location
         // and move the map's camera to the same location.
