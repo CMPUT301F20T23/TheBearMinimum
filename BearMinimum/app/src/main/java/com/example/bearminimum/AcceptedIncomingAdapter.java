@@ -33,10 +33,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
  *
  * basic adapter extending RecyclerView.Adapter
  * custom ViewHolder to access our views
- * Used to display books in the MainActivity RecyclerView
+ * Used to display books that have accepted incoming requests
  *
  */
-
 public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomingAdapter.ViewHolder> {
     /**
      * Interface
@@ -142,6 +141,7 @@ public class AcceptedIncomingAdapter extends RecyclerView.Adapter<AcceptedIncomi
             }
         });
 
+        //set requester name from firebase
         FirebaseFirestore.getInstance().collection("books").document(book.getBid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

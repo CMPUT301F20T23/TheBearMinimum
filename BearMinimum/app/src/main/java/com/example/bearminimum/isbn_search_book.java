@@ -182,6 +182,11 @@ public class isbn_search_book extends AppCompatActivity {
 
     }
     /******************ISBN add BOOK START ******************************/
+    /**
+     * parses the returned json file
+     * @param response the json object to parse
+     * @return array containing relevant info
+     */
     public String[] jsonParser(JSONObject response) {
         String[] result = new String[5]; // volume information holder
         try {
@@ -219,6 +224,9 @@ public class isbn_search_book extends AppCompatActivity {
 
     /******************ISBN add BOOK END ******************************/
 
+    /**
+     * ensures runtime camera permissions are set
+     */
     private void getCameraPermission() {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.CAMERA)
@@ -248,6 +256,9 @@ public class isbn_search_book extends AppCompatActivity {
 
     }
 
+    /**
+     * start barcode scanner activity
+     */
     private void startScanActivity() {
         Log.i("Riky","yes");
         Intent intent4 = new Intent(isbn_search_book.this, BarCodeHelper.class);

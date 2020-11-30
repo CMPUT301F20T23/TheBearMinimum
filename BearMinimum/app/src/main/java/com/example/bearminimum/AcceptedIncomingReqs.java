@@ -26,6 +26,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * AcceptedIncomingReqs
+ * this class is an activity for managing accepted incoming requests
+ */
 public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedIncomingAdapter.OnBookClickListener{
 
     private RecyclerView recyclerView;
@@ -43,6 +47,7 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedI
         bookData = new ArrayList<>();
         initAdapter();
 
+        //get all books that are owned by the current user and have status accepted
         booksRef = FirebaseFirestore.getInstance().collection("books");
         Query query = booksRef.whereEqualTo("owner", user.getUid()).whereEqualTo("status", "accepted");
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -74,34 +79,9 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedI
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent D) {
-        super.onActivityResult(requestCode, resultCode, D);
-
-        if (resultCode == 4){
-            db = FirebaseFirestore.getInstance();
-            Log.i("Riky","Tester6666");
-            String isbn_num = D.getStringExtra("isbn_number");
-            db.collection("books").whereEqualTo("owner", user.getUid())
-                    .whereEqualTo("isbn", isbn_num)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot doc : task.getResult()){
-                                    doc.getReference().update("status", "available");
-                                    Log.d("AcceptedIncomingReqs", "status changed to available");
-                                }
-
-                            }
-                        }
-                    });
-            
-        }
-    }
-
-
+    /**
+     * setup the recycler adapter
+     */
     private void initAdapter() {
         recyclerView = findViewById(R.id.accepted_incoming_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -124,7 +104,4 @@ public class AcceptedIncomingReqs extends AppCompatActivity implements AcceptedI
         intent.putExtra("longitude", book.getLongitude());
         startActivity(intent);
     }
-
-
-
 }

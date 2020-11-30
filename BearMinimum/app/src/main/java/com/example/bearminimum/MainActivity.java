@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         filterSpinner.setAdapter(spinnerAdapter);
 
+        //display currently signed in account
         db.collection("users").document(currentUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude, owner_scan, borrower_scan);
                         Log.i("Test",status);
 
-                        bookDataList.add(book); // Adding the cities and provinces from FireStore
+                        bookDataList.add(book);
                     }
                     String borrower = (String) doc.getData().get("borrower");
                     if (borrower.equals(currentUser.getUid())) {
@@ -230,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String borrower_scan=(String)doc.getData().get("borrower_scan") ;
                         Book book = new Book(BookName, author,owner,Borrower,Description,isbn,status, BookId, lat, longitude, owner_scan, borrower_scan);
 
-                        borrowedBookData.add(book); // Adding the cities and provinces from FireStore
+                        borrowedBookData.add(book);
                     }
                 }
                 filterList(selectedFilter);
@@ -240,6 +241,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /**
+     * initialize recycler view
+     * @param books the recycler view to initialize
+     */
     private void initRecycler(RecyclerView books) {
         //set layout manager to position the items
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -251,7 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     /******************Collection/ filter status START*********************/
-    // here we get all information from database and create a bookList for current user
 
     /**
      * Filters a list of Book objects based on the selected filter
@@ -260,7 +264,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param Clicked  The current String type filter selected from the spinner.
      *                 Obtained from function OnItemSelected.
      */
-
     private void filterList(String Clicked){
         selectedFilter = Clicked;
         stateFilter.clear();
@@ -355,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
+    //filter according to spinner selection
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
@@ -518,7 +521,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param notification      notification string to parse
      * @return
      */
-
     private ArrayList<String> parseInfo (String notification) {
         ArrayList<String> data = new ArrayList<>();
 
@@ -537,8 +539,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         return data;
     }
-
-
-
-
 }

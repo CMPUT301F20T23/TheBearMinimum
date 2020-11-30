@@ -141,6 +141,7 @@ public class AcceptedOutgoingAdapter extends RecyclerView.Adapter<AcceptedOutgoi
             }
         });
 
+        //show owner name from firebase
         FirebaseFirestore.getInstance().collection("users").document(book.getOwner()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

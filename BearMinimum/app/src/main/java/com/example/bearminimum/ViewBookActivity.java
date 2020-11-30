@@ -379,6 +379,10 @@ public class ViewBookActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * applies any changes made to book information
+     * @param v
+     */
     private void applyChanges(View v) {
         if (t1.getText().length() > 0 && t2.getText().length() > 0 && t3.getText().length() > 0 && t4.getText().length() > 0) {
             FirebaseFirestore.getInstance().collection("books").document(getIntent().getExtras().getString("BOOKID"))

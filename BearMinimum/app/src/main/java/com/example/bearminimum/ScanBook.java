@@ -30,6 +30,9 @@ import com.google.zxing.integration.android.IntentResult;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * this class handles book scan transactions like borrowing and returning
+ */
 public class ScanBook extends AppCompatActivity {
 
     private EditText ownerdenote;
@@ -64,7 +67,6 @@ public class ScanBook extends AppCompatActivity {
                 //Firestore
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 db = FirebaseFirestore.getInstance();
-
 
                 String bookISBN = ownerdenote.getText().toString();
 
@@ -195,22 +197,16 @@ public class ScanBook extends AppCompatActivity {
                             });
                 //catch exception when isbn for the book doesn't exist
                 } catch (NullPointerException e){
-
                     Log.d("QIXIN","exception");
                     Toast.makeText(ScanBook.this,"ISBN search not exist",Toast.LENGTH_SHORT).show();
-
                 }
-
-
             }
-
         });
-
-
-
     }
 
-    // Open camera to scan a barcode
+    /**
+     * Open camera to scan a barcode
+     */
     public void scanBarcode(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(FetchCode.class);
@@ -258,7 +254,9 @@ public class ScanBook extends AppCompatActivity {
         }
     }
 
-    // If the camera permission is received, then scanning barcode is allowed
+    /**
+     * check and obtain runtime camera permissions
+     */
     private void getCameraPermission() {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.CAMERA)
@@ -285,8 +283,5 @@ public class ScanBook extends AppCompatActivity {
                 }
             }
         }
-
     }
-
-
 }
